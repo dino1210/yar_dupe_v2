@@ -18,8 +18,9 @@ export default function Home() {
           <MonthlySalesChart />
         </div>
 
-        <div className="col-span-10 xl:col-span-5">
-        <RecentOrders />
+        <div className="col-span-12 xl:col-span-5">
+  <RecentOrders />
+
         </div>
       </div>
     </>

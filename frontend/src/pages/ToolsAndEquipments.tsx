@@ -1,15 +1,24 @@
 import PageBreadcrumb from "../components/common/PageBreadCrumb";
 import PageMeta from "../components/common/PageMeta";
+import BasicTableOne from "../components/tables/BasicTables/BasicTableOne"; // Import BasicTableOne
 
-export default function Categories() {
+
+export default function TooolsAndEquipments() {
   return (
     <div>
       <PageMeta
-        title="Categories"
-        description="This is React.js Blank Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
+        title="Resources: Tools and Equipments"
+        description=""
       />
-      <PageBreadcrumb pageTitle="Categories" />
-      
+      <PageBreadcrumb pageTitle="Tools and Equipments Table" />
+      <div className="min-h-screen rounded-2xl border border-gray-200 bg-white px-5 py-7 dark:border-gray-800 dark:bg-white/[0.03] xl:px-10 xl:py-7">
+
+        {/* Table Section */}
+        <div className="mt-1">
+          {/* Basic Table rendered here */}
+          <BasicTableOne />
+        </div>
+      </div>
     </div>
   );
 }
