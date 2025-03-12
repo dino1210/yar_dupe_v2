@@ -19,8 +19,7 @@ export default function Home() {
         </div>
 
         <div className="col-span-12 xl:col-span-5">
-  <RecentOrders />
-
+          <RecentOrders />
         </div>
       </div>
     </>
