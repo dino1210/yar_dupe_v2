@@ -1,6 +1,6 @@
 import PageBreadcrumb from "../components/common/PageBreadCrumb";
 import PageMeta from "../components/common/PageMeta";
-import BasicTableOne from "../components/tables/BasicTables/BasicTableOne"; // Import BasicTableOne
+import ToolsAndEquipmentsTable from "../components/tables/ToolsAndEquipmentsTable"; // Import BasicTableOne
 
 
 export default function TooolsAndEquipments() {
@@ -16,7 +16,7 @@ export default function TooolsAndEquipments() {
         {/* Table Section */}
         <div className="mt-1">
           {/* Basic Table rendered here */}
-          <BasicTableOne />
+          <ToolsAndEquipmentsTable />
         </div>
       </div>
     </div>
