@@ -82,7 +82,7 @@ const fetchTools = async (): Promise<Tool[]> => {
   ];
 };
 
-export default function VehiclesTable() {
+export default function CategoriesTable() {
   const [tools, setTools] = useState<Tool[]>([]);
 
   useEffect(() => {
