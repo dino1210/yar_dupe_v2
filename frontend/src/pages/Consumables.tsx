@@ -1,6 +1,6 @@
 import PageBreadcrumb from "../components/common/PageBreadCrumb";
 import PageMeta from "../components/common/PageMeta";
-import BasicTableOne from "../components/tables/BasicTableOne"; // Import BasicTableOne
+import ConsumablesTable from "../components/tables/ConsumablesTable"; 
 
 export default function Categories() {
   return (
@@ -15,7 +15,7 @@ export default function Categories() {
         {/* Table Section */}
         <div className="mt-1">
           {/* Basic Table rendered here */}
-          <BasicTableOne />
+          <ConsumablesTable />
         </div>
       </div>
     </div>
