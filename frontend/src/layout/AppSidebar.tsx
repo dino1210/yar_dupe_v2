@@ -18,6 +18,7 @@ type NavItem = {
   subItems?: { name: string; path: string; pro?: boolean; new?: boolean }[];
 };
 
+
 const navItems: NavItem[] = [
   {
     icon: <GridIcon />,

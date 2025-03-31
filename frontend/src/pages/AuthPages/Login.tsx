@@ -5,27 +5,69 @@ import { CircleUserRound } from "lucide-react";
 const Login = () => {
   const navigate = useNavigate();
 
-  // State for login form
+  // Login State
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loginError, setLoginError] = useState("");
 
-  // State for registration form (Modal)
+  // Registration State
   const [modalOpen, setModalOpen] = useState(false);
   const [regUsername, setRegUsername] = useState("");
   const [regEmail, setRegEmail] = useState("");
   const [regPassword, setRegPassword] = useState("");
-  const [error] = useState("");
+  const [regError, setRegError] = useState("");
+  const [regSuccess, setRegSuccess] = useState("");
 
   // Function to handle login
-  const handleLogin = () => {
-    navigate("/home");
+  const handleLogin = async () => {
+    console.log("Attempting login with:", { email, password }); // Debugging line
+  
+    try {
+      const response = await fetch("http://localhost:5000/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+  
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || "Login failed");
+  
+      localStorage.setItem("token", data.token);
+      navigate("/home");
+    } catch (err) {
+      console.error("Login error:", err); // Debugging line
+      setLoginError(err instanceof Error ? err.message : "An unexpected error occurred.");
+    }
+  };
+  
+  
+
+  // Function to handle registration
+  const handleRegister = async () => {
+    try {
+      setRegError("");
+      setRegSuccess("");
+
+      const response = await fetch("http://localhost:5000/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: regUsername, email: regEmail, password: regPassword }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message);
+
+      setRegSuccess("Registration successful! You can now log in.");
+      setTimeout(() => setModalOpen(false), 2000); // Close modal after success
+    } catch (err) {
+      setRegError(err.message);
+    }
   };
 
   return (
-    <div
-      className="relative flex min-h-screen bg-cover bg-center justify-center items-center px-4"
-      style={{ backgroundImage: "url('/src/images/login-bg.jpg')" }}
-    >
+    <div className="relative flex min-h-screen bg-cover bg-center justify-center items-center px-4"
+      style={{ backgroundImage: "url('/src/images/login-bg.jpg')" }}>
+      
       <div className="absolute inset-0 bg-black opacity-80"></div>
 
       {/* Branding - Hidden on Mobile */}
@@ -39,7 +81,7 @@ const Login = () => {
         <h3 className="text-xl">Inventory Management System</h3>
       </div>
 
-      {/* Login Form - Always Visible */}
+      {/* Login Form */}
       <div className="relative flex flex-col items-center p-6 sm:p-8 bg-white w-full max-w-sm shadow-lg rounded-3xl">
         <form className="w-full">
           <div className="mb-4">
@@ -73,16 +115,7 @@ const Login = () => {
             />
           </div>
 
-          <div className="flex items-center justify-between mb-6">
-            <a href="#" className="text-xs text-blue-600 hover:underline">
-              Forgot password?
-            </a>
-            <button type="button" onClick={() => setModalOpen(true)} className="text-xs text-blue-600 hover:underline">
-              Create an account
-            </button>
-          </div>
-
-          {error && <p className="text-red-500 text-xs">{error}</p>}
+          {loginError && <p className="text-red-500 text-xs">{loginError}</p>}
 
           <button
             type="button"
@@ -91,6 +124,15 @@ const Login = () => {
           >
             Sign In
           </button>
+
+          <div className="flex items-center justify-between mt-4">
+            <a href="#" className="text-xs text-blue-600 hover:underline">
+              Forgot password?
+            </a>
+            <button type="button" onClick={() => setModalOpen(true)} className="text-xs text-blue-600 hover:underline">
+              Create an account
+            </button>
+          </div>
         </form>
       </div>
 
@@ -133,13 +175,14 @@ const Login = () => {
               />
             </div>
 
-            {error && <p className="text-red-500 text-xs">{error}</p>}
+            {regError && <p className="text-red-500 text-xs">{regError}</p>}
+            {regSuccess && <p className="text-green-500 text-xs">{regSuccess}</p>}
 
             <div className="flex justify-between">
               <button onClick={() => setModalOpen(false)} className="text-xs text-blue-600 hover:underline">
                 Cancel
               </button>
-              <button className="px-4 py-2 text-xs text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition">
+              <button onClick={handleRegister} className="px-4 py-2 text-xs text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition">
                 Register
               </button>
             </div>

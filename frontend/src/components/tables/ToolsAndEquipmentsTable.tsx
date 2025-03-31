@@ -9,7 +9,6 @@ interface Tool {
   tag: string;
   category: string;
   description: string;
-  remarks: string;
   totalQuantity: number;
   itemDescription: string;
   dateModified: string;
@@ -25,7 +24,6 @@ const fetchTools = async (): Promise<Tool[]> => {
       tag: "AG-001",
       category: "Power Tools",
       description: "Used for grinding and cutting",
-      remarks: "In good condition",
       totalQuantity: 5,
       itemDescription: "Heavy-duty angle grinder",
       dateModified: "2025-03-25",
@@ -37,7 +35,6 @@ const fetchTools = async (): Promise<Tool[]> => {
       tag: "AG-001",
       category: "Power Tools",
       description: "Used for grinding and cutting",
-      remarks: "In good condition",
       totalQuantity: 5,
       itemDescription: "Heavy-duty angle grinder",
       dateModified: "2025-03-25",
@@ -49,7 +46,6 @@ const fetchTools = async (): Promise<Tool[]> => {
       tag: "AG-001",
       category: "Power Tools",
       description: "Used for grinding and cutting",
-      remarks: "In good condition",
       totalQuantity: 5,
       itemDescription: "Heavy-duty angle grinder",
       dateModified: "2025-03-25",
@@ -61,7 +57,6 @@ const fetchTools = async (): Promise<Tool[]> => {
       tag: "AG-001",
       category: "Power Tools",
       description: "Used for grinding and cutting",
-      remarks: "In good condition",
       totalQuantity: 5,
       itemDescription: "Heavy-duty angle grinder",
       dateModified: "2025-03-25",
@@ -73,7 +68,6 @@ const fetchTools = async (): Promise<Tool[]> => {
       tag: "AG-001",
       category: "Power Tools",
       description: "Used for grinding and cutting",
-      remarks: "In good condition",
       totalQuantity: 5,
       itemDescription: "Heavy-duty angle grinder",
       dateModified: "2025-03-25",
@@ -101,7 +95,6 @@ export default function ToolsAndEquipmentsTable() {
                 "Tag/Code",
                 "Category",
                 "Description",
-                "Remarks",
                 "Total Quantity",
                 "Item Description",
                 "Date Modified",
@@ -135,9 +128,6 @@ export default function ToolsAndEquipmentsTable() {
                 </TableCell>
                 <TableCell className="px-4 py-3 text-gray-500 text-theme-sm text-start dark:text-gray-400">
                   {tool.description}
-                </TableCell>
-                <TableCell className="px-4 py-3 text-gray-500 text-theme-sm text-start dark:text-gray-400">
-                  {tool.remarks}
                 </TableCell>
                 <TableCell className="px-4 py-3 text-gray-500 text-theme-sm text-start dark:text-gray-400">
                   {tool.totalQuantity}
