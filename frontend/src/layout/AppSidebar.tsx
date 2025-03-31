@@ -3,15 +3,13 @@ import { Link, useLocation } from "react-router";
 
 // Assume these icons are imported from an icon library
 import {
-  CalenderIcon,
   ChevronDownIcon,
   DocsIcon,
   GridIcon,
   HorizontaLDots,
-  PieChartIcon,
 } from "../icons";
 import { useSidebar } from "../context/SidebarContext";
-import { Box, Boxes, CalendarCog, Package2, Settings, User } from "lucide-react";
+import { Boxes, CalendarCog, Package2, Settings, User } from "lucide-react";
 
 type NavItem = {
   name: string;
