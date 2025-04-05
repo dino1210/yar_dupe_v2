@@ -33,6 +33,7 @@ const Login = () => {
       if (!response.ok) throw new Error(data.message || "Login failed");
   
       localStorage.setItem("token", data.token);
+      localStorage.setItem("role", data.role);
       navigate("/home");
     } catch (err) {
       console.error("Login error:", err); // Debugging line
@@ -78,7 +79,7 @@ const Login = () => {
         <h2 className="text-3xl font-light mb-2" style={{ color: "#17A2B8" }}>
           Maintenance and Services
         </h2>
-        <h3 className="text-xl">Inventory Management System</h3>
+        <h3 className="text-xl">Resource Management System</h3>
       </div>
 
       {/* Login Form */}

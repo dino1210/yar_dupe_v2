@@ -40,7 +40,7 @@ const navItems: NavItem[] = [
     name: "Inventory Management",
     path: "/calendar",
     subItems: [
-      { name: "Check-In/Check-Out", path: "/check", pro: false },
+      { name: "Issued-In / Issued-Out", path: "/check", pro: false },
       { name: "Categories", path: "/categories", pro: false }
     ]
   },
