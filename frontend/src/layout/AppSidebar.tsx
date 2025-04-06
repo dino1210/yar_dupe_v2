@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router";
 
-// Assume these icons are imported from an icon library
 import {
   ChevronDownIcon,
   DocsIcon,
@@ -9,7 +8,7 @@ import {
   HorizontaLDots,
 } from "../icons";
 import { useSidebar } from "../context/SidebarContext";
-import { Boxes, CalendarCog, Package2, Settings, User } from "lucide-react";
+import { Boxes, CalendarCog, Package2, Settings, User, FileClock } from "lucide-react";
 
 type NavItem = {
   name: string;
@@ -28,7 +27,7 @@ const navItems: NavItem[] = [
   {
     icon: <Package2 />,
     name: "Resources",
-    path: "/calendar",
+    path: "/resources",
     subItems: [
       { name: "Tools and Equipments", path: "/tools", pro: false },
       { name: "Consumables", path: "/consumables", pro: false },
@@ -36,13 +35,19 @@ const navItems: NavItem[] = [
     ]
   },
   {
-    icon: <Boxes />,
-    name: "Inventory Management",
-    path: "/calendar",
+    icon: <FileClock />,
+    name: "Resources Logs",
+    path: "/resources-logs",
     subItems: [
-      { name: "Issued-In / Issued-Out", path: "/check", pro: false },
-      { name: "Categories", path: "/categories", pro: false }
+      { name: "Tools and Equipments Logs", path: "/tools-logs", pro: false },
+      { name: "Consumables Logs", path: "/consumables-logs", pro: false },
+      { name: "Vehicles Logs", path: "/vehicles-logs", pro: false },
     ]
+  },
+  {
+    icon: <Boxes />,
+    name: "Categories",
+    path: "/categories",
   },
   {
     icon: <DocsIcon />,

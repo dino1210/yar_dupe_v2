@@ -131,7 +131,7 @@ export default function ConsumablesTable() {
                 <TableCell
                   key={index}
                   isHeader
-                  className="px-10 py-3 font-medium text-gray-500 text-start text-theme-sm dark:text-gray-50 whitespace-nowrap"
+                  className="px-10 py-3 font-medium text-gray-500 text-center text-theme-sm dark:text-gray-50 whitespace-nowrap"
                 >
                   {header}
                 </TableCell>

@@ -25,6 +25,7 @@ import Settings from "./pages/Settings" ;
 import ToolsAndEquipments from "./pages/ToolsAndEquipments"
 import Consumables from "./pages/Consumables"
 import Vehicles from "./pages/Vehicles"
+import ResourcesLogs from "./pages/ResourcesLogs";
 
 
 export default function App() {
@@ -48,6 +49,7 @@ export default function App() {
             <Route path="/tools" element={<ToolsAndEquipments />} />
             <Route path="/consumables" element={<Consumables />} />
             <Route path="/vehicles" element={<Vehicles />} />
+            <Route path="/inventory-logs" element={<ResourcesLogs/>} />
 
 
 

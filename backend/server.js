@@ -6,6 +6,7 @@ const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const toolsRoutes = require("./routes/toolsRoutes");
 const consumablesRoutes = require("./routes/consumablesRoutes");
+const vehiclesRoutes = require("./routes/vehiclesRoutes")
 const path = require("path");
 
 dotenv.config();
@@ -20,6 +21,8 @@ app.use("/api", userRoutes);
 app.use("/api/tools/", toolsRoutes);
 app.use("/api/consumables/", consumablesRoutes)
 app.use("/api/user", userRoutes);
+app.use("/api/vehicles", vehiclesRoutes);
+
 
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 
