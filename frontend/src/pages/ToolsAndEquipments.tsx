@@ -1,11 +1,11 @@
 import PageBreadcrumb from "../components/common/PageBreadCrumb";
 import PageMeta from "../components/common/PageMeta";
-import ToolsAndEquipmentsTable from "../components/tables/ToolsAndEquipmentsTable"; // Import BasicTableOne
+import ToolsAndEquipmentsTable from "./Tables/ToolsAndEquipmentsTable"; // Import BasicTableOne
 
 
 export default function TooolsAndEquipments() {
   return (
-    <div>
+    <div className="overflow-y-hidden">
       <PageMeta
         title="Resources: Tools and Equipments"
         description=""

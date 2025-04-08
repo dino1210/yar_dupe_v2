@@ -25,12 +25,15 @@ import Settings from "./pages/Settings" ;
 import ToolsAndEquipments from "./pages/ToolsAndEquipments"
 import Consumables from "./pages/Consumables"
 import Vehicles from "./pages/Vehicles"
-import ResourcesLogs from "./pages/ResourcesLogs";
+import ToolsAndEquipmentsLogs from "./pages/LogsPages/ToolsAndequipmentsLogs";
+import ConsumablesLogs from "./pages/LogsPages/ConsumablesLogs";
+import VehiclesLogs from "./pages/LogsPages/VehiclesLogs";
 
 
 export default function App() {
   return (
     <>
+    <div className="overflow-hidden">
       <Router>
         <ScrollToTop />
         <Routes>
@@ -49,7 +52,10 @@ export default function App() {
             <Route path="/tools" element={<ToolsAndEquipments />} />
             <Route path="/consumables" element={<Consumables />} />
             <Route path="/vehicles" element={<Vehicles />} />
-            <Route path="/inventory-logs" element={<ResourcesLogs/>} />
+            <Route path="/consumables-logs" element={<ConsumablesLogs/>} />
+            <Route path="/tools-logs" element={<ToolsAndEquipmentsLogs/>} />
+            <Route path="/vehicles-logs" element={<VehiclesLogs/>}  />
+            
 
 
 
@@ -80,6 +86,7 @@ export default function App() {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
+      </div>
     </>
   );
 }

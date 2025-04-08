@@ -126,13 +126,10 @@ const Login = () => {
             Sign In
           </button>
 
-          <div className="flex items-center justify-between mt-4">
-            <a href="#" className="text-xs text-blue-600 hover:underline">
-              Forgot password?
+          <div className="flex items-center justify-end mt-4">
+            <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&pp=0gcJCdgAo7VqN5tD" className="text-xs text-blue-600 hover:underline">
+              Contact Administrator
             </a>
-            <button type="button" onClick={() => setModalOpen(true)} className="text-xs text-blue-600 hover:underline">
-              Create an account
-            </button>
           </div>
         </form>
       </div>

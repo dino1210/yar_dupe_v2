@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
-import { Table, TableBody, TableCell, TableHeader, TableRow } from "../ui/table";
-import Badge from "../ui/badge/Badge";
+import { Table, TableBody, TableCell, TableHeader, TableRow } from "../../components/ui/table";
+import Badge from "../../components/ui/badge/Badge";
+import { CircleOff, Pencil, Trash2, RotateCcw, ArrowDownAZ, ArrowUpAZ, Plus, } from "lucide-react";
+import axios from "axios";
 
 // Define the expected structure
 interface Tool {
@@ -18,6 +20,12 @@ interface Tool {
   qr: string;
 }
 
+interface Category {
+  id: number;
+  category_name: string;
+  category_type: string;
+}
+
 export default function ToolsAndEquipmentsTable() {
   const [tools, setTools] = useState<Tool[]>([]);
   const [loading, setLoading] = useState(true);
@@ -27,17 +35,44 @@ export default function ToolsAndEquipmentsTable() {
   const [dataLimit, setDataLimit] = useState<number>(5); // State for data limit
   const [currentPage, setCurrentPage] = useState(1); // State for current page
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  const [isAscending, setIsAscending] = useState(true);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newTool, setNewTool] = useState<Tool>({
+    id: 0,
+    picture: '',
+    name: '',
+    brand: '',
+    category: '',
+    tag: '',
+    description: '',
+    purchase_date: '',
+    warranty: '',
+    status: '',
+    remarks: '',
+    qr: '',
+  })
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/tools")
-      .then((response) => response.json())
-      .then((data) => {
-        setTools(data);
+    axios.get("http://localhost:5000/api/tools")
+      .then((response) => {
+        setTools(response.data);
         setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching tools:", error);
         setLoading(false);
+      });
+
+
+      axios.get("http://localhost:5000/api/categories")
+      .then((response) => {
+        setCategories(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching categories", error)
       });
   }, []);
 
@@ -60,24 +95,54 @@ export default function ToolsAndEquipmentsTable() {
   const currentTools = filteredTools.slice((currentPage - 1) * dataLimit, currentPage * dataLimit);
 
   const handleEdit = (toolId: number) => {
-    console.log("Edit user with ID:", toolId);
+    console.log("Edit tool with ID:", toolId);
   };
 
   const handleDelete = (toolId: number) => {
-    console.log("Delete user with ID:", toolId);
+    console.log("Delete tool with ID:", toolId);
   };
+
+  const handleAddTool = () => {
+    fetch("http://localhost:5000/api/tools", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(newTool),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setTools((prevTools) => [...prevTools, data]);
+        setIsModalOpen(false);
+        setNewTool({
+          id: 0,
+          picture: '',
+          name: '',
+          brand: '',
+          category: '',
+          tag: '',
+          description: '',
+          purchase_date: '',
+          warranty: '',
+          status: '',
+          remarks: '',
+          qr: ''
+        });
+      })
+      .catch((error) => {
+        console.error("Error adding tool:", error);
+      });
+  };
+
 
   return (
     <div className="overflow-hidden rounded-xl border w-[62rem] border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
-      <div className="max-w-full overflow-x-auto">
         {/* Filter Controls */}
-        <div className="border-b border-gray-100 dark:border-gray-700 px-5 py-3 flex flex-col sm:flex-row gap-2">
+        <div className="sticky top-0 overflow-x-auto z-10 px-5 py-3 flex flex-col sm:flex-row gap-2 bg-white dark:bg-gray-800 shadow-sm">
           <input
             type="text"
             placeholder="Search by name or tag"
             value={search}
-
-
             onChange={(e) => setSearch(e.target.value)}
             className="border p-2 text-xs rounded-md w-full sm:w-1/3 bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
           />
@@ -95,9 +160,10 @@ export default function ToolsAndEquipmentsTable() {
             onChange={(e) => setCategoryFilter(e.target.value)}
             className="border p-2 text-xs rounded-md w-full sm:w-1/4 bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
           >
-            <option value="">Categories</option>
-            <option value="Tools">Tools</option>
-            <option value="Equipments">Equipments</option>
+            <option value="">Category</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.category_name}>{category.category_name}</option>
+            ))}
           </select>
           <select
             value={categoryFilter}
@@ -109,17 +175,37 @@ export default function ToolsAndEquipmentsTable() {
             <option value="Equipments">Equipments</option>
           </select>
           <button
+      type="button"
+      onClick={() => setIsAscending(!isAscending)}
+      className="border p-2 text-xs rounded-md bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
+    >
+      {isAscending ? (
+        <ArrowDownAZ className="w-auto h-5" />
+      ) : (
+        <ArrowUpAZ className="w-auto h-5" />
+      )}
+    </button>
+          <button
             type="button"
-            className="px-3 py-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            className="border p-2 text-xs rounded-md bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
           >
-            Add
+            <RotateCcw className="w-auto h-5"/>
           </button>
+          <button
+  onClick={() => setIsModalOpen(true)}
+  type="button"
+  className="flex items-center gap-2 px-2 text-xs rounded-md bg-white dark:bg-blue-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
+>
+  New
+  <Plus className="w-4 h-4" />
+</button>
         </div>
-
+        <div className="max-w-full overflow-x-auto">
         {/* Table */}
+        <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-800">
         <Table className="">
           {/* Table Header */}
-          <TableHeader className="border-b text-sm border-gray-100 dark:border-white/[0.05]">
+          <TableHeader className="border-b border-t text-sm border-gray-100 dark:border-white/[0.05]">
             <TableRow>
               {[
                 "Images",
@@ -138,7 +224,7 @@ export default function ToolsAndEquipmentsTable() {
                 <TableCell
                   key={index}
                   isHeader
-                  className="px-10 py-3 font-medium text-gray-500 text-start text-theme-sm dark:text-gray-50 whitespace-nowrap"
+                  className="px-10 py-3 font-medium text-gray-500 text-center text-theme-sm dark:text-gray-50 whitespace-nowrap"
                 >
                   {header}
                 </TableCell>
@@ -187,7 +273,7 @@ export default function ToolsAndEquipmentsTable() {
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                     <Badge
                       size="sm"
-                      color={tool.status === "Active" ? "success" : "error"}
+                      color={tool.status === "Available" ? "success" : "error"}
                     >
                       {tool.status}
                     </Badge>
@@ -205,17 +291,26 @@ export default function ToolsAndEquipmentsTable() {
                   </TableCell>
                   <TableCell className="px-8 py-3 text-xs text-gray-500 dark:text-gray-400 text-center">
                     <div className="flex items-center justify-center space-x-2 w-full h-full">
-                      <button
+                    <button
                         onClick={() => handleEdit(tool.id)}
-                        className="px-3 py-1 text-xs font-medium text-white bg-blue-500 rounded-lg hover:bg-blue-600"
+                        className="px-3 py-1 text-xs font-medium text-white bg-blue-800 rounded-lg hover:bg-blue-900"
+                        title="Delete"
                       >
-                        Edit
+                        <Pencil className="w-3 h-7"/>
                       </button>
                       <button
                         onClick={() => handleDelete(tool.id)}
-                        className="px-3 py-1 text-xs font-medium text-white bg-red-500 rounded-lg hover:bg-red-600"
+                        className="px-3 py-1 text-xs font-medium text-white bg-red-800 rounded-lg hover:bg-red-900"
+                        title="Edit"
                       >
-                        Delete
+                        <Trash2 className="w-3 h-7"/>
+                      </button>
+                      <button
+                        onClick={() => handleDelete(tool.id)}
+                        className="px-3 py-1 text-xs font-medium text-white bg-orange-800 rounded-lg hover:bg-orange-900"
+                        title="Disable"
+                      >
+                        <CircleOff className="w-3 h-7"/>
                       </button>
                     </div>
                   </TableCell>
@@ -231,6 +326,9 @@ export default function ToolsAndEquipmentsTable() {
             )}
           </TableBody>
         </Table>
+        </div>
+        </div>
+        
 
         {/* Data Limit Selector */}
         <div className="px-5 py-3 flex space-x-5 items-center">
@@ -294,10 +392,68 @@ export default function ToolsAndEquipmentsTable() {
                 </button>
               </div>
             </div>
-
           )}
+
+
+{isModalOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+            <div className="relative bg-white rounded-lg p-6 max-w-lg w-full">
+              <h2 className="text-lg font-medium mb-4">Add New Tool</h2>
+              <form className="space-y-4">
+                <input
+                  type="text"
+                  className="border p-2 rounded-md w-full"
+                  placeholder="Tool Name"
+                  value={newTool.name}
+                  onChange={(e) => setNewTool({ ...newTool, name: e.target.value })}
+                />
+                <input
+                  type="text"
+                  className="border p-2 rounded-md w-full"
+                  placeholder="Brand"
+                  value={newTool.brand}
+                  onChange={(e) => setNewTool({ ...newTool, brand: e.target.value })}
+                />
+                <input
+                  type="text"
+                  className="border p-2 rounded-md w-full"
+                  placeholder="Category"
+                  value={newTool.category}
+                  onChange={(e) => setNewTool({ ...newTool, category: e.target.value })}
+                />
+                <input
+                  type="text"
+                  className="border p-2 rounded-md w-full"
+                  placeholder="Tag"
+                  value={newTool.tag}
+                  onChange={(e) => setNewTool({ ...newTool, tag: e.target.value })}
+                />
+                <textarea
+                  className="border p-2 rounded-md w-full"
+                  placeholder="Description"
+                  value={newTool.description}
+                  onChange={(e) => setNewTool({ ...newTool, description: e.target.value })}
+                />
+                <button
+                  type="button"
+                  onClick={handleAddTool}
+                  className="px-4 py-2 bg-blue-700 text-white rounded-lg"
+                >
+                  Add Tool
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIsModalOpen(false)}
+                  className="px-4 py-2 bg-gray-400 text-white rounded-lg"
+                >
+                  Cancel
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
+
         </div>
-      </div>
     </div>
   );
 }

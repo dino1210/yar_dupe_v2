@@ -5,25 +5,17 @@ import {
   TableCell,
   TableHeader,
   TableRow,
-} from "../ui/table";
-import Badge from "../ui/badge/Badge";
+} from "../../components/ui/table";
+import { Pencil, Trash2, CircleOff } from "lucide-react";
 
 // Define Consumable structure
 interface Consumable {
-  id: number;
-  picture: string;
-  tag: string;
-  name: string;
-  quantity: number;
-  minStock: number;
-  unit: string;
-  location: string;
-  date: string;
-  status: string;
-  qr: string;
+    id: number;
+    category_type: string;
+    category_name: string;
 }
 
-export default function ConsumablesTable() {
+export default function ConsumablesLogsTable() {
   const [consumables, setConsumables] = useState<Consumable[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
@@ -33,14 +25,14 @@ export default function ConsumablesTable() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/consumables")
+    fetch("http://localhost:5000/api/categories")
       .then((response) => response.json())
       .then((data) => {
         setConsumables(data);
         setLoading(false);
       })
       .catch((error) => {
-        console.error("Error fetching consumables", error);
+        console.error("Error fetching categories", error);
         setLoading(false);
       });
   }, []);
@@ -50,10 +42,10 @@ export default function ConsumablesTable() {
   // Filtered data based on search and status
   const filteredConsumables = consumables.filter((item) => {
     const matchesSearch =
-      item.name.toLowerCase().includes(search.toLowerCase()) ||
-      item.tag.toLowerCase().includes(search.toLowerCase());
+      item.category_type.toLowerCase().includes(search.toLowerCase()) ||
+      item.category_name.toLowerCase().includes(search.toLowerCase());
 
-    const matchesStatus = statusFilter ? item.status === statusFilter : true;
+    const matchesStatus = statusFilter ? item.category_type === statusFilter : true;
 
     return matchesSearch && matchesStatus;
   });
@@ -90,9 +82,10 @@ export default function ConsumablesTable() {
             onChange={(e) => setStatusFilter(e.target.value)}
             className="border text-xs p-2 rounded-md w-full sm:w-1/4 bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
           >
-            <option value="">All Status</option>
-            <option value="Available">Available</option>
-            <option value="Low Stock">Low Stock</option>
+            <option value="">Category Type</option>
+            <option value="Available">Tools And Equipments</option>
+            <option value="Low Stock">Consumables</option>
+            <option value="Low Stock">Vehicles</option>
           </select>
           <select
             value={statusFilter}
@@ -107,7 +100,7 @@ export default function ConsumablesTable() {
             type="button"
             className="px-3 py-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
-            Add Consumable
+            Add a Category
           </button>
         </div>
 
@@ -116,16 +109,8 @@ export default function ConsumablesTable() {
           <TableHeader className="border-b text-sm border-gray-100 dark:border-gray-700">
             <TableRow>
               {[
-                "Image",
-                "Item Name",
-                "Tag/Code",
-                "Quantity",
-                "Min. Stock",
-                "Unit",
-                "Location",
-                "Date Modified",
-                "Status",
-                "QR Code",
+                "Category Type",
+                "Category Name",
                 "Actions",
               ].map((header, index) => (
                 <TableCell
@@ -145,73 +130,37 @@ export default function ConsumablesTable() {
               currentConsumables.map((item) => (
                 <TableRow key={item.id}>
                   <TableCell className="px-5 py-4 sm:px-6 text-center">
-                    <img
-                      src={`http://localhost:5000/assets/images/consumables/${item.picture}`}
-                      alt={`${item.name}'s Profile`}
-                      className="w-16 h-16 rounded-lg object-cover cursor-pointer border border-gray-300  "
-                      onClick={() =>
-                        setSelectedImage(
-                          `http://localhost:5000/assets/images/consumables/${item.picture}`
-                        )
-                      }
-                    />
-                  </TableCell>
-                  <TableCell className="px-5 py-4 sm:px-6 text-center">
                     <span className="block font-medium text-gray-800 text-theme-xs dark:text-white/70">
-                      {item.name}
+                      {item.category_type}
                     </span>
                   </TableCell>
                   <TableCell className="px-5 py-4 sm:px-6 text-center">
                     <span className="block font-medium text-gray-800 text-theme-xs dark:text-gray-400">
-                      {item.tag}
+                      {item.category_name}
                     </span>
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                    {item.quantity}
-                  </TableCell>
-                  <TableCell className="ppx-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                    {item.minStock}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                    {item.unit}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                    {item.location}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-start dark:text-gray-400">
-                    {item.date}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                    <Badge
-                      size="sm"
-                      color={
-                        item.status === "Available" ? "success" : "warning"
-                      }
-                    >
-                      {item.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                    <img
-                      src={`http://localhost:5000/assets/qr/consumables/${item.qr}`}
-                      alt={`${item.name}'s Profile`}
-                      className="w-auto h-15 mx-auto rounded-lg object-cover cursor-pointer"
-                      onClick={() => setSelectedImage(`http://localhost:5000/assets/qr/consumables/${item.qr}`)}
-                    />
                   </TableCell>
                   <TableCell className="px-8 py-3 text-xs text-gray-500 dark:text-gray-400 text-center">
                     <div className="flex items-center justify-center space-x-2 w-full h-full">
-                      <button
+                    <button
                         onClick={() => handleEdit(item.id)}
-                        className="px-3 py-1 text-xs font-medium text-white bg-blue-500 rounded-lg hover:bg-blue-600"
+                        className="px-3 py-1 text-xs font-medium text-blue-900 bg-blue-600 bg-opacity-70 rounded-lg hover:bg-blue-900"
+                        title="Edit"
                       >
-                        Edit
+                        <Pencil className="w-3 h-7"/>
                       </button>
                       <button
                         onClick={() => handleDelete(item.id)}
-                        className="px-3 py-1 text-xs font-medium text-white bg-red-500 rounded-lg hover:bg-red-600"
+                        className="px-3 py-1 text-xs font-medium text-white bg-red-800 rounded-lg hover:bg-red-900"
+                        title="Delete"
                       >
-                        Delete
+                        <Trash2 className="w-3 h-7"/>
+                      </button>
+                      <button
+                        onClick={() => handleDelete(item.id)}
+                        className="px-3 py-1 text-xs font-medium text-white bg-orange-800 rounded-lg hover:bg-orange-900"
+                        title="Disable"
+                      >
+                        <CircleOff className="w-3 h-7"/>
                       </button>
                     </div>
                   </TableCell>
@@ -220,8 +169,8 @@ export default function ConsumablesTable() {
               ))
             ) : (
               <TableRow>
-                <TableCell className="px-5 py-4 text-center text-gray-500 dark:text-gray-400">
-                  No consumables found
+                <TableCell className="px-5 py-4 text-start text-red-500 dark:text-red-400">
+                  Error Fetching Categories
                 </TableCell>
               </TableRow>
             )}

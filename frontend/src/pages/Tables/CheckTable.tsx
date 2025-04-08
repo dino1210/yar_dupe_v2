@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Table, TableBody, TableCell, TableHeader, TableRow } from "../ui/table";
-import Badge from "../ui/badge/Badge";
+import { Table, TableBody, TableCell, TableHeader, TableRow } from "../../components/ui/table";
+import Badge from "../../components/ui/badge/Badge";
 
 // Define the expected structure
 interface Tool {
@@ -82,7 +82,7 @@ const fetchTools = async (): Promise<Tool[]> => {
   ];
 };
 
-export default function CategoriesTable() {
+export default function CheckTable() {
   const [tools, setTools] = useState<Tool[]>([]);
 
   useEffect(() => {

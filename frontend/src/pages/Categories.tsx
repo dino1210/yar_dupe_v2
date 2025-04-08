@@ -1,6 +1,6 @@
 import PageBreadcrumb from "../components/common/PageBreadCrumb";
 import PageMeta from "../components/common/PageMeta";
-import CategoriesTable from "../components/tables/CategoriesTable"; 
+import CategoriesTable from "./Tables/CategoriesTable"; 
 
 export default function Categories() {
   return (

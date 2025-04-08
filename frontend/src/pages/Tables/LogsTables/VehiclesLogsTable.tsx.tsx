@@ -5,29 +5,26 @@ import {
   TableCell,
   TableHeader,
   TableRow,
-} from "../ui/table";
-import Badge from "../ui/badge/Badge";
+} from "../../../components/ui/table";
+import Badge from "../../../components/ui/badge/Badge";
 
 // Define Consumable structure
-interface Vehicles {
+interface Consumable {
   id: number;
   picture: string;
+  tag: string;
   name: string;
-  brand: string;
-  plate_no: string;
-  category: string;
-  fuel_type: string;
+  quantity: number;
+  minStock: number;
+  unit: string;
   location: string;
-  acquisition_date: string;
+  date: string;
   status: string;
-  remarks: string;
-  maintenance_due: string;
-  assigned_driver: string;
   qr: string;
 }
 
-export default function ConsumablesTable() {
-  const [vehicles, setVehicles] = useState<Vehicles[]>([]);
+export default function ConsumablesLogsTable() {
+  const [consumables, setConsumables] = useState<Consumable[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState("");
@@ -36,14 +33,14 @@ export default function ConsumablesTable() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/vehicles")
+    fetch("http://localhost:5000/api/consumables")
       .then((response) => response.json())
       .then((data) => {
-        setVehicles(data);
+        setConsumables(data);
         setLoading(false);
       })
       .catch((error) => {
-        console.error("Error fetching vehicles", error);
+        console.error("Error fetching consumables", error);
         setLoading(false);
       });
   }, []);
@@ -51,10 +48,10 @@ export default function ConsumablesTable() {
   if (loading) return <p>Loading...</p>;
 
   // Filtered data based on search and status
-  const filteredConsumables = vehicles.filter((item) => {
+  const filteredConsumables = consumables.filter((item) => {
     const matchesSearch =
       item.name.toLowerCase().includes(search.toLowerCase()) ||
-      item.brand.toLowerCase().includes(search.toLowerCase());
+      item.tag.toLowerCase().includes(search.toLowerCase());
 
     const matchesStatus = statusFilter ? item.status === statusFilter : true;
 
@@ -110,7 +107,7 @@ export default function ConsumablesTable() {
             type="button"
             className="px-3 py-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
-            Add +
+            Add Consumable
           </button>
         </div>
 
@@ -120,18 +117,15 @@ export default function ConsumablesTable() {
             <TableRow>
               {[
                 "Image",
-                "Name",
-                "Brand",
-                "Plate No.",
-                "Category",
-                "Fuel Type",
+                "Item Name",
+                "Tag/Code",
+                "Quantity",
+                "Min. Stock",
+                "Unit",
                 "Location",
-                "Acquisition Date",
+                "Date Modified",
                 "Status",
-                "Remarks",
-                "Maintenance Due",
-                "Asigned Driver",
-                "QR",
+                "QR Code",
                 "Actions",
               ].map((header, index) => (
                 <TableCell
@@ -152,12 +146,12 @@ export default function ConsumablesTable() {
                 <TableRow key={item.id}>
                   <TableCell className="px-5 py-4 sm:px-6 text-center">
                     <img
-                      src={`http://localhost:5000/assets/images/vehicles/${item.picture}`}
+                      src={`http://localhost:5000/assets/images/consumables/${item.picture}`}
                       alt={`${item.name}'s Profile`}
                       className="w-16 h-16 rounded-lg object-cover cursor-pointer border border-gray-300  "
                       onClick={() =>
                         setSelectedImage(
-                          `http://localhost:5000/assets/images/vehicles/${item.picture}`
+                          `http://localhost:5000/assets/images/consumables/${item.picture}`
                         )
                       }
                     />
@@ -169,23 +163,23 @@ export default function ConsumablesTable() {
                   </TableCell>
                   <TableCell className="px-5 py-4 sm:px-6 text-center">
                     <span className="block font-medium text-gray-800 text-theme-xs dark:text-gray-400">
-                      {item.brand}
+                      {item.tag}
                     </span>
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                    {item.plate_no}
+                    {item.quantity}
                   </TableCell>
                   <TableCell className="ppx-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                    {item.category}
+                    {item.minStock}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                    {item.fuel_type}
+                    {item.unit}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                     {item.location}
                   </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                    {item.acquisition_date}
+                  <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-start dark:text-gray-400">
+                    {item.date}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                     <Badge
@@ -198,20 +192,11 @@ export default function ConsumablesTable() {
                     </Badge>
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                    {item.remarks}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                    {item.maintenance_due}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                    {item.assigned_driver}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                     <img
-                      src={`http://localhost:5000/assets/qr/vehicles/${item.qr}`}
+                      src={`http://localhost:5000/assets/qr/consumables/${item.qr}`}
                       alt={`${item.name}'s Profile`}
                       className="w-auto h-15 mx-auto rounded-lg object-cover cursor-pointer"
-                      onClick={() => setSelectedImage(`http://localhost:5000/assets/qr/vehicles/${item.qr}`)}
+                      onClick={() => setSelectedImage(`http://localhost:5000/assets/qr/consumables/${item.qr}`)}
                     />
                   </TableCell>
                   <TableCell className="px-8 py-3 text-xs text-gray-500 dark:text-gray-400 text-center">
@@ -236,7 +221,7 @@ export default function ConsumablesTable() {
             ) : (
               <TableRow>
                 <TableCell className="px-5 py-4 text-center text-gray-500 dark:text-gray-400">
-                  Error Fetching Vehicles
+                  No consumables found
                 </TableCell>
               </TableRow>
             )}

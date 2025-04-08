@@ -1,6 +1,6 @@
 import PageBreadcrumb from "../components/common/PageBreadCrumb";
 import PageMeta from "../components/common/PageMeta";
-import CheckTable from "../components/tables/CheckTable"; 
+import CheckTable from "./Tables/CheckTable"; 
 
 export default function Check() {
   return (

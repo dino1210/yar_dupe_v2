@@ -1,6 +1,6 @@
 import PageBreadcrumb from "../components/common/PageBreadCrumb";
 import PageMeta from "../components/common/PageMeta";
-import UserManagementTable from "../components/tables/UserManagementTable"; 
+import UserManagementTable from "./Tables/UserManagementTable"; 
 
 export default function UserManagement() {
   return (
