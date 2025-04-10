@@ -33,7 +33,7 @@ import VehiclesLogs from "./pages/LogsPages/VehiclesLogs";
 export default function App() {
   return (
     <>
-    <div className="overflow-hidden">
+    <div className="">
       <Router>
         <ScrollToTop />
         <Routes>

@@ -7,8 +7,9 @@ import {
   TableRow,
 } from "../../components/ui/table";
 import Badge from "../../components/ui/badge/Badge";
-import { Pencil, Trash2, CircleOff, } from "lucide-react";
+import { Pencil, Trash2, CircleOff, Plus } from "lucide-react";
 import axios from "axios";
+import AddResourceModal from "../../components/ui/modal/AddResourceModal";
 
 // Define Consumable structure
 interface Consumable {
@@ -35,8 +36,19 @@ export default function ConsumablesTable() {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
   useEffect(() => {
-    axios.get("http://localhost:5000/api/consumables")
+    axios
+      .get("http://localhost:5000/api/consumables")
       .then((response) => {
         setConsumables(response.data);
         setLoading(false);
@@ -80,15 +92,15 @@ export default function ConsumablesTable() {
       <div className="max-w-full overflow-x-auto">
         {/* Search and Filters */}
         <div className="border-b border-gray-100 dark:border-gray-700 px-5 py-3 flex flex-col sm:flex-row gap-2">
-        <div className="relative w-full sm:w-1/3">
-        <input
-          type="text"
-          placeholder="Search by name or tag"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="border p-2 text-xs rounded-md w-full pl-10 bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
-        />
-      </div>
+          <div className="relative w-full sm:w-1/3">
+            <input
+              type="text"
+              placeholder="Search by name or tag"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="border p-2 text-xs rounded-md w-full pl-10 bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
+            />
+          </div>
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
@@ -107,12 +119,19 @@ export default function ConsumablesTable() {
             <option value="Available">Available</option>
             <option value="Low Stock">Low Stock</option>
           </select>
-          <button
+          <button 
+            onClick={handleOpenModal}
             type="button"
-            className="px-3 py-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            className="flex items-center gap-2 px-2 text-xs rounded-md bg-white dark:bg-blue-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
           >
-            Add Consumable
-          </button>
+             New
+            <Plus className="w-4 h-4" />
+            </button>
+          <AddResourceModal
+            isOpen={isModalOpen}
+            onClose={handleCloseModal}
+            resourceType="Tool" // The resource type is passed here to conditionally render fields
+          />
         </div>
 
         {/* Table */}
@@ -204,35 +223,38 @@ export default function ConsumablesTable() {
                       src={`http://localhost:5000/assets/qr/consumables/${item.qr}`}
                       alt={`${item.name}'s Profile`}
                       className="w-auto h-15 mx-auto rounded-lg object-cover cursor-pointer"
-                      onClick={() => setSelectedImage(`http://localhost:5000/assets/qr/consumables/${item.qr}`)}
+                      onClick={() =>
+                        setSelectedImage(
+                          `http://localhost:5000/assets/qr/consumables/${item.qr}`
+                        )
+                      }
                     />
                   </TableCell>
                   <TableCell className="px-8 py-3 text-xs text-gray-500 dark:text-gray-400 text-center">
                     <div className="flex items-center justify-center space-x-2 w-full h-full">
-                    <button
+                      <button
                         onClick={() => handleEdit(item.id)}
                         className="px-3 py-1 text-xs font-medium text-white bg-blue-800 rounded-lg hover:bg-blue-900"
                         title="Edit"
                       >
-                        <Pencil className="w-3 h-7"/>
+                        <Pencil className="w-3 h-7" />
                       </button>
                       <button
                         onClick={() => handleDelete(item.id)}
                         className="px-3 py-1 text-xs font-medium text-white bg-red-800 rounded-lg hover:bg-red-900"
                         title="Delete"
                       >
-                        <Trash2 className="w-3 h-7"/>
+                        <Trash2 className="w-3 h-7" />
                       </button>
                       <button
                         onClick={() => handleDelete(item.id)}
                         className="px-3 py-1 text-xs font-medium text-white bg-orange-800 rounded-lg hover:bg-orange-900"
                         title="Disable"
                       >
-                        <CircleOff className="w-3 h-7"/>
+                        <CircleOff className="w-3 h-7" />
                       </button>
                     </div>
                   </TableCell>
-
                 </TableRow>
               ))
             ) : (
@@ -247,7 +269,7 @@ export default function ConsumablesTable() {
 
         {/* Data Limit Selector */}
         <div className="px-5 py-3 flex space-x-5 items-center">
-        <div>
+          <div>
             <select
               value={dataLimit}
               onChange={(e) => setDataLimit(Number(e.target.value))}
@@ -272,7 +294,11 @@ export default function ConsumablesTable() {
               <button
                 key={index}
                 onClick={() => setCurrentPage(index + 1)}
-                className={`px-3 py-2 text-xs font-medium ${currentPage === index + 1 ? "bg-blue-700 text-white" : "bg-white text-blue-700"} border px-3 py-2 text-xs rounded-md bg-white dark:bg-gray-900 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 dark:hover:bg-gray-800`}
+                className={`px-3 py-2 text-xs font-medium ${
+                  currentPage === index + 1
+                    ? "bg-blue-700 text-white"
+                    : "bg-white text-blue-700"
+                } border px-3 py-2 text-xs rounded-md bg-white dark:bg-gray-900 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 dark:hover:bg-gray-800`}
               >
                 {index + 1}
               </button>
@@ -307,10 +333,7 @@ export default function ConsumablesTable() {
                 </button>
               </div>
             </div>
-
           )}
-
-
         </div>
       </div>
     </div>
