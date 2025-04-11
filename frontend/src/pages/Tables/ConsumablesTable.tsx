@@ -9,7 +9,7 @@ import {
 import Badge from "../../components/ui/badge/Badge";
 import { Pencil, Trash2, CircleOff, Plus } from "lucide-react";
 import axios from "axios";
-import AddResourceModal from "../../components/ui/modal/AddResourceModal";
+import AddResourceModal from "../../components/ui/modal/AddResourceModal/AddResourceModal";
 
 // Define Consumable structure
 interface Consumable {
@@ -130,7 +130,7 @@ export default function ConsumablesTable() {
           <AddResourceModal
             isOpen={isModalOpen}
             onClose={handleCloseModal}
-            resourceType="Tool" // The resource type is passed here to conditionally render fields
+            resourceType="Consumables" // The resource type is passed here to conditionally render fields
           />
         </div>
 

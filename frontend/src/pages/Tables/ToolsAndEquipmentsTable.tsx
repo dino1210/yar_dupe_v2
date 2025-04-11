@@ -18,7 +18,7 @@ import {
   Funnel,
 } from "lucide-react";
 import axios from "axios";
-import AddResourceModal from "../../components/ui/modal/AddResourceModal";
+import AddResourceModal from "../../components/ui/modal/AddResourceModal/AddResourceModal";
 
 // Define the expected structure
 interface Tool {
@@ -65,17 +65,22 @@ export default function ToolsAndEquipmentsTable() {
     setIsModalOpen(false);
   };
 
-  useEffect(() => {
+  const fetchTools = () => {
+    setLoading(true);
     axios
-      .get("http://localhost:5000/api/tools")
+      .get(`${import.meta.env.VITE_API_BASE_URL}/api/tools`)
       .then((response) => {
-        setTools(response.data);
+        setTools(response.data.tools);
         setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching tools:", error);
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    fetchTools();
 
     axios
       .get("http://localhost:5000/api/categories")
@@ -88,6 +93,11 @@ export default function ToolsAndEquipmentsTable() {
   }, []);
 
   if (loading) return <p>Loading...</p>;
+
+  const handleAddSuccess = () => {
+    fetchTools(); // Re-fetch tools after successful addition
+    setIsModalOpen(false);
+  };
 
   // Filter tools based on search, category, and status
   const filteredTools = tools.filter((tool) => {
@@ -193,7 +203,8 @@ export default function ToolsAndEquipmentsTable() {
           <AddResourceModal
             isOpen={isModalOpen}
             onClose={handleCloseModal}
-            resourceType="Tool" // The resource type is passed here to conditionally render fields
+            onAddSuccess={handleAddSuccess}
+            resourceType="Tool"
           />
       </div>
       <div className="max-w-full overflow-x-auto">

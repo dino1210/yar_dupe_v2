@@ -25,12 +25,13 @@ app.use(cors());
 // Auth 
 app.use("/auth", authRoutes);
 app.use("/api", userRoutes);
-app.use("/api/tools/", toolsRoutes);
 
 // Resources 
+app.use("/api/tools", toolsRoutes);
 app.use("/api/consumables/", consumablesRoutes)
-app.use("/api/user", userRoutes);
 app.use("/api/vehicles", vehiclesRoutes);
+
+app.use("/api/user", userRoutes);
 
 // Category
 app.use("/api/categories", categoriesRoutes);
@@ -41,4 +42,4 @@ app.use("/api/consumables-logs", consumablesLogsRoutes);
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 
 const PORT = process.env.PORT;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, '0.0.0.0', () => console.log(`Server running on port ${PORT}`));
