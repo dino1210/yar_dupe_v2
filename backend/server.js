@@ -28,7 +28,7 @@ app.use("/api", userRoutes);
 
 // Resources 
 app.use("/api/tools", toolsRoutes);
-app.use("/api/consumables/", consumablesRoutes)
+app.use("/api/consumables", consumablesRoutes)
 app.use("/api/vehicles", vehiclesRoutes);
 
 app.use("/api/user", userRoutes);

@@ -95,9 +95,10 @@ export default function ToolsAndEquipmentsTable() {
   if (loading) return <p>Loading...</p>;
 
   const handleAddSuccess = () => {
-    fetchTools(); // Re-fetch tools after successful addition
+    fetchTools(); 
     setIsModalOpen(false);
   };
+  
 
   // Filter tools based on search, category, and status
   const filteredTools = tools.filter((tool) => {
@@ -246,12 +247,12 @@ export default function ToolsAndEquipmentsTable() {
                   <TableRow key={tool.id}>
                     <TableCell className="px-5 py-4 sm:px-6 text-center">
                       <img
-                        src={`http://localhost:5000/assets/images/tools/${tool.picture}`}
+                        src={`${import.meta.env.VITE_API_BASE_URL}/assets/images/tools/${tool.picture}`}
                         alt={`${tool.name}'s Profile`}
                         className="w-16 h-16 rounded-lg object-cover cursor-pointer border border-gray-300  "
                         onClick={() =>
                           setSelectedImage(
-                            `http://localhost:5000/assets/images/tools/${tool.picture}`
+                            `${import.meta.env.VITE_API_BASE_URL}/assets/images/tools/${tool.picture}`
                           )
                         }
                       />
@@ -296,12 +297,12 @@ export default function ToolsAndEquipmentsTable() {
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                       <img
-                        src={`http://localhost:5000/assets/qr/tools/${tool.qr}`}
+                        src={`${import.meta.env.VITE_API_BASE_URL}/assets/qr/tools/${tool.qr}`}
                         alt={`${tool.name}'s Profile`}
                         className="w-auto h-15 mx-auto rounded-lg object-cover cursor-pointer"
                         onClick={() =>
                           setSelectedImage(
-                            `http://localhost:5000/assets/qr/tools/${tool.qr}`
+                            `${import.meta.env.VITE_API_BASE_URL}/assets/qr/tools/${tool.qr}`
                           )
                         }
                       />

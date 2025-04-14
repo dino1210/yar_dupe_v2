@@ -1,12 +1,62 @@
-const db = require("../config/db")
+const Tool = require("../models/vehiclesModel");
 
+// Controller for ADD
+const addVehicle = async (req, res) => {
+    try {
+        const result = await Vehicles.addVehicle(req.body);
+        res.status(201).json({ message: "Vehicle added successfully", data: result });
+    } catch (err) {
+        res.status(500).json({ message: "Error adding vehicle", error: err.message });
+    }
+};
+
+// Controller for DELETE
+const deleteVehicle = async (req, res) => {
+    const vehicleId = req.params.id;
+    try {
+        const result = await Vehicle.deleteVehicle(vehicleId);
+        res.status(200).json({ message: "Vehicle deleted successfully" });
+    } catch (err) {
+        res.status(500).json({ message: "Error deleting vehicle", error: err.message });
+    }
+};
+
+// Controller for UPDATE
+const updateVehicle = async (req, res) => {
+    const vehicleId = req.params.id;
+    const vehicleData = req.body;
+    vehicleData.id = vehicleId;
+
+    try {
+        const result = await Vehicle.updateVehicle(vehicleData);
+        res.status(200).json({ message: "Vehicle updated successfully", data: result });
+    } catch (err) {
+        res.status(500).json({ message: "Error updating vehicle", error: err.message });
+    }
+};
+
+// Controller for GET ALL TOOLS
 const getAllVehicles = async (req, res) => {
     try {
-        const [rows] = await db.query("SELECT * FROM vehicles");
-        res.status(200).json(rows);
-    } catch (error) {
-        res.status(500).json({ message: "Error fetching vehicles", error })
+        const vehicles = await Vehicle.getAllVehicles();
+        res.status(200).json({ vehicles });
+    } catch (err) {
+        res.status(500).json({ message: "Error fetching vehicles", error: err.message });
     }
-}
+};
 
-module.exports = { getAllVehicles };
+// Controller for GET TOOL BY ID
+const getVehicleById = async (req, res) => {
+    const vehicleId = req.params.id;
+    try {
+        const vehicle = await Vehicle.getVehicleById(vehicleId);
+        if (!vehicle) {
+            return res.status(404).json({ message: "Vehicle not found" });
+        }
+        res.status(200).json({ vehicle });
+    } catch (err) {
+        res.status(500).json({ message: "Error fetching vehicle", error: err.message });
+    }
+};
+
+module.exports = { addVehicle, deleteVehicle, updateVehicle, getAllVehicles, getVehicleById };

@@ -237,12 +237,11 @@ const ToolForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
           }
           dateFormat="yyyy-MM-dd"
           placeholderText="Select a date"
-          className="border rounded-md p-2 bg-white text-xs text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 w-full"
+          className="border rounded-md p-2 bg-white text-xs text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 w-full "
           calendarClassName="dark:bg-gray-700 dark:text-black"
           showMonthDropdown
           showYearDropdown
           dropdownMode="select"
-          maxDate={new Date()}
         />
       </div>
 
@@ -300,14 +299,14 @@ const ToolForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
       <div className="col-span-3 text-right mt-4 ">
         <button
           type="submit"
-          className="px-4 py-2 bg-blue-600 text-white text-xs rounded-md hover:bg-blue-700 transition"
+          className="px-5 py-2 mr-2 bg-blue-800 text-white text-xs rounded-md hover:bg-blue-700 transition"
         >
           Add
         </button>
         <button
           type="button"
           onClick={onClose}
-          className="px-4 py-2 bg-gray-300 text-gray-700 text-xs dark:bg-red-600 dark:text-white rounded-md hover:bg-gray-400 dark:hover:bg-gray-500 transition"
+          className="px-4 py-2 text-gray-700 text-xs bg-red-800 dark:text-white rounded-md hover:bg-red-700 transition"
         >
           Cancel
         </button>

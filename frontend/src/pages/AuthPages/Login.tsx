@@ -23,7 +23,7 @@ const Login = () => {
     console.log("Attempting login with:", { email, password }); // Debugging line
   
     try {
-      const response = await fetch("http://localhost:5000/auth/login", {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
