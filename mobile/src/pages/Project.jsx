@@ -22,8 +22,13 @@ const Project = () => {
     const fetchItems = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get("http://localhost:5000/api/inventory");
-        setItems(response.data);
+        const response = await axios.get(`${import.meta.env.VITE_BASE_API_URL}/api/tools`);
+        console.log("Response data:", response.data);
+        // Try both ways for safety
+        const data = Array.isArray(response.data)
+          ? response.data
+          : response.data.items || [];
+        setItems(data);
       } catch (error) {
         console.error("Error fetching inventory:", error);
       } finally {
@@ -47,7 +52,7 @@ const Project = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/projects",
+        `${import.meta.env.VITE_BASE_API_URL}/api/projects`,
         projectData
       );
       if (response.status === 200) {

@@ -121,9 +121,9 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({
         <input
           type="text"
           name="name"
+          required
           value={formData.name || ""}
           onChange={handleInputChange}
-          required
           className="border rounded-md p-2 text-xs bg-white text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
         />
       </div>
@@ -213,6 +213,7 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({
           onChange={handleInputChange}
           className="border rounded-md p-2 bg-white text-xs text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 w-full"
         >
+          <option value="">Select unit</option>
           <option value="ml">ml</option>
           <option value="pcs">pcs</option>
           <option value="tubes">tubes</option>

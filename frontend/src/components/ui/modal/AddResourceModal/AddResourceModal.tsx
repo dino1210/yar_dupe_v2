@@ -1,6 +1,7 @@
 import React from "react";
 import ToolsForm from "./forms/ToolsForm";
 import ConsumableForm from "./forms/ConsumablesForm";
+import VehicleForm from "./forms/VehiclesForm";
 
 type AddResourceModalProps = {
   isOpen: boolean;
@@ -41,6 +42,7 @@ const AddResourceModal: React.FC<AddResourceModalProps> = ({
 
         {resourceType ===  "Tool" && <ToolsForm onClose={onClose} onAddSuccess={onAddSuccess} />}
         {resourceType ===  "Consumable" && <ConsumableForm onClose={onClose} onAddSuccess={onAddSuccess} />}
+        {resourceType ===  "Vehicle" && <VehicleForm onClose={onClose} onAddSuccess={onAddSuccess} />}
       </div>
     </div>
   );

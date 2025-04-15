@@ -3,39 +3,48 @@ import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Upload } from "lucide-react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-type ConsumableFormProps = {
+type VehicleFormProps = {
   onClose: () => void;
   onAddSuccess: () => void;
 };
 
-interface ConsumableFormData {
+type Category = {
+  id: number;
+  name: string;
+};
+
+interface VehicleFormData {
     picture: string;
-    tag: string;
     name: string;
+    brand: string;
+    plate_no: string;
     category: string;
-    quantity: number;
-    minStock: number;
-    unit: string;
+    fuel_type: string;
     location: string;
-    date: string;
-    status: string;
-    qr: string;
+    acquisition_date: string;
+    warranty: string;
+    remarks: string;
+    maintenance_due: string;
+    assigned_driver: string;
   }
 
-const ToolForm: React.FC<ConsumableFormProps> = ({ onClose, onAddSuccess }) => {
-  const [formData, setFormData] = useState<ConsumableFormData>({
+const VehicleForm: React.FC<VehicleFormProps> = ({ onClose, onAddSuccess }) => {
+  const [formData, setFormData] = useState<VehicleFormData>({
     picture: " ",
-    tag: " ",
     name: " ",
+    brand: " ",
+    plate_no: " ",
     category: " ",
-    quantity: 0,
-    minStock: 0,
-    unit: " ",
+    fuel_type: " ",
     location: " ",
-    date: " ",
-    status: " ",
-    qr: " "
+    acquisition_date: " ",
+    warranty: " ",
+    remarks: " ",
+    maintenance_due: " ",
+    assigned_driver: " ",
   });
 
   const [categories, setCategories] = useState<Category[]>([]);
@@ -46,7 +55,7 @@ const ToolForm: React.FC<ConsumableFormProps> = ({ onClose, onAddSuccess }) => {
 
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/api/tools`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/vehicles`,
         {
           method: "POST",
           headers: {
@@ -57,15 +66,15 @@ const ToolForm: React.FC<ConsumableFormProps> = ({ onClose, onAddSuccess }) => {
       );
 
       if (response.ok) {
-        alert("Tool added successfully!");
+        toast.success("Vehicle added successfully!");
         onAddSuccess();
         onClose();
       } else {
-        alert("Failed to add tool");
+        toast.error("Vehicle to add tool");
       }
     } catch (error) {
-      console.error("Error adding tool", error);
-      alert("Error adding tool");
+      console.error("Error adding vehicle", error);
+      toast.error("Error adding vehicle");
     }
   };
 
@@ -137,6 +146,21 @@ const ToolForm: React.FC<ConsumableFormProps> = ({ onClose, onAddSuccess }) => {
         />
       </div>
 
+            {/* Plate No. */}
+            <div className="flex flex-col">
+        <label className="mb-1 font-medium text-xs text-gray-700 dark:text-gray-300">
+          Plate No.
+        </label>
+        <input
+          type="text"
+          name="plate_no"
+          value={formData.plate_no || ""}
+          onChange={handleInputChange}
+          required
+          className="border rounded-md p-2 text-xs bg-white text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
+        />
+      </div>
+
       {/* Category */}
       <div className="flex flex-col">
         <label className="mb-1 font-medium text-xs text-gray-700 dark:text-gray-300">
@@ -166,49 +190,35 @@ const ToolForm: React.FC<ConsumableFormProps> = ({ onClose, onAddSuccess }) => {
         )}
       </div>
 
-      {/* Tag/Code */}
-      <div className="flex flex-col">
+            {/* Location */}
+            <div className="flex flex-col">
         <label className="mb-1 font-medium text-xs text-gray-700 dark:text-gray-300">
-          Tag/Code
+          Location
         </label>
         <input
           type="text"
-          name="tag"
-          value={formData.tag || ""}
-          required
+          name="location"
+          value={formData.location || ""}
           onChange={handleInputChange}
+          required
           className="border rounded-md p-2 text-xs bg-white text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
         />
       </div>
 
-      {/* Description */}
-      <div className="flex flex-col">
-        <label className="mb-1 font-medium text-xs text-gray-700 dark:text-gray-300">
-          Description
-        </label>
-        <input
-          type="text"
-          name="description"
-          value={formData.description || ""}
-          required
-          onChange={handleInputChange}
-          className="border rounded-md p-2 text-xs bg-white text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
-        />
-      </div>
 
-      {/* Date of Purchase */}
+      {/* Acquisition Date */}
       <div className="flex flex-col">
         <label className="mb-1 font-medium text-xs text-gray-700 dark:text-gray-300">
           Date of Purchase
         </label>
         <DatePicker
           selected={
-            formData.purchase_date ? new Date(formData.purchase_date) : null
+            formData.acquisition_date ? new Date(formData.acquisition_date) : null
           }
           onChange={(date: Date | null) =>
             setFormData((prevData) => ({
               ...prevData,
-              purchase_date: date ? date.toISOString().split("T")[0] : "",
+              acquisition_date: date ? date.toISOString().split("T")[0] : "",
             }))
           }
           dateFormat="yyyy-MM-dd"
@@ -247,20 +257,6 @@ const ToolForm: React.FC<ConsumableFormProps> = ({ onClose, onAddSuccess }) => {
         />
       </div>
 
-      {/* Status */}
-      <div className="flex flex-col">
-        <label className="mb-1 font-medium text-xs text-gray-700 dark:text-gray-300">
-          Status
-        </label>
-        <select
-          name="status"
-          value={formData.status || ""}
-          onChange={handleInputChange}
-          className="border rounded-md p-2 bg-white text-xs text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 w-full"
-        >
-          <option value="Available">Available</option>
-        </select>
-      </div>
 
       {/* Remarks */}
       <div className="flex flex-col">
@@ -277,7 +273,7 @@ const ToolForm: React.FC<ConsumableFormProps> = ({ onClose, onAddSuccess }) => {
         />
       </div>
 
-      {/* Tag/Code Image (File Upload) */}
+      {/* Image (File Upload) */}
       <div className="flex flex-col">
         <label className="mb-1 font-medium text-xs text-gray-700 dark:text-gray-300">
           Image
@@ -315,4 +311,4 @@ const ToolForm: React.FC<ConsumableFormProps> = ({ onClose, onAddSuccess }) => {
   );
 };
 
-export default ToolForm;
+export default VehicleForm;

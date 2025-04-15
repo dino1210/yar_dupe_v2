@@ -285,7 +285,7 @@ const ToolForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
         />
       </div>
 
-      {/* Tag/Code Image (File Upload) */}
+      {/* Image */}
       <div className="flex flex-col">
         <label className="mb-1 font-medium text-xs text-gray-700 dark:text-gray-300">
           Image

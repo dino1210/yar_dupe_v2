@@ -31,6 +31,7 @@ interface Vehicles {
   fuel_type: string;
   location: string;
   acquisition_date: string;
+  warranty: string;
   status: string;
   remarks: string;
   maintenance_due: string;
@@ -206,7 +207,7 @@ export default function VehiclesTable() {
           isOpen={isModalOpen}
           onClose={handleCloseModal}
           onAddSuccess={handleAddSuccess}
-          resourceType="Tool"
+          resourceType="Vehicle"
         />
       </div>
       <div className="max-w-full overflow-x-auto">
@@ -225,6 +226,7 @@ export default function VehiclesTable() {
                   "Fuel Type",
                   "Location",
                   "Acquisition Date",
+                  "Warranty",
                   "Status",
                   "Remarks",
                   "Maintenance Due",
@@ -283,7 +285,10 @@ export default function VehiclesTable() {
                     {vehicle.location}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                    {vehicle.acquisition_date}
+                  {new Date(vehicle.acquisition_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                  </TableCell>
+                  <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
+                  {new Date(vehicle.warranty).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                     <Badge
