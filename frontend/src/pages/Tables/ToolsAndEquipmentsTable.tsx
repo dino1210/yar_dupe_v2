@@ -83,7 +83,7 @@ export default function ToolsAndEquipmentsTable() {
     fetchTools();
 
     axios
-      .get("http://localhost:5000/api/categories")
+      .get(`${import.meta.env.VITE_API_BASE_URL}/api/categories`)
       .then((response) => {
         setCategories(response.data);
       })
@@ -95,10 +95,9 @@ export default function ToolsAndEquipmentsTable() {
   if (loading) return <p>Loading...</p>;
 
   const handleAddSuccess = () => {
-    fetchTools(); 
+    fetchTools();
     setIsModalOpen(false);
   };
-  
 
   // Filter tools based on search, category, and status
   const filteredTools = tools.filter((tool) => {
@@ -193,20 +192,20 @@ export default function ToolsAndEquipmentsTable() {
         >
           <Funnel className="w-auto h-5" />
         </button>
-        <button 
-            onClick={handleOpenModal}
-            type="button"
-            className="flex items-center gap-2 px-2 text-xs rounded-md bg-white dark:bg-blue-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
-          >
-             New
-            <Plus className="w-4 h-4" />
-            </button>
-          <AddResourceModal
-            isOpen={isModalOpen}
-            onClose={handleCloseModal}
-            onAddSuccess={handleAddSuccess}
-            resourceType="Tool"
-          />
+        <button
+          onClick={handleOpenModal}
+          type="button"
+          className="flex items-center gap-2 px-2 text-xs rounded-md bg-white dark:bg-blue-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
+        >
+          New
+          <Plus className="w-4 h-4" />
+        </button>
+        <AddResourceModal
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          onAddSuccess={handleAddSuccess}
+          resourceType="Tool"
+        />
       </div>
       <div className="max-w-full overflow-x-auto">
         {/* Table */}
@@ -247,12 +246,16 @@ export default function ToolsAndEquipmentsTable() {
                   <TableRow key={tool.id}>
                     <TableCell className="px-5 py-4 sm:px-6 text-center">
                       <img
-                        src={`${import.meta.env.VITE_API_BASE_URL}/assets/images/tools/${tool.picture}`}
+                        src={`${
+                          import.meta.env.VITE_API_BASE_URL
+                        }/assets/images/tools/${tool.picture}`}
                         alt={`${tool.name}'s Profile`}
                         className="w-16 h-16 rounded-lg object-cover cursor-pointer border border-gray-300  "
                         onClick={() =>
                           setSelectedImage(
-                            `${import.meta.env.VITE_API_BASE_URL}/assets/images/tools/${tool.picture}`
+                            `${
+                              import.meta.env.VITE_API_BASE_URL
+                            }/assets/images/tools/${tool.picture}`
                           )
                         }
                       />
@@ -276,11 +279,11 @@ export default function ToolsAndEquipmentsTable() {
                     <TableCell className="px-1 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                       {tool.description}
                     </TableCell>
-                    <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-start dark:text-gray-400">
-                      {tool.purchase_date}
+                    <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
+                    {new Date(tool.purchase_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
                     </TableCell>
-                    <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-start dark:text-gray-400">
-                      {tool.warranty}
+                    <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
+                    {new Date(tool.warranty).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                       <Badge
@@ -297,12 +300,16 @@ export default function ToolsAndEquipmentsTable() {
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                       <img
-                        src={`${import.meta.env.VITE_API_BASE_URL}/assets/qr/tools/${tool.qr}`}
+                        src={`${
+                          import.meta.env.VITE_API_BASE_URL
+                        }/assets/qr/tools/${tool.qr}`}
                         alt={`${tool.name}'s Profile`}
                         className="w-auto h-15 mx-auto rounded-lg object-cover cursor-pointer"
                         onClick={() =>
                           setSelectedImage(
-                            `${import.meta.env.VITE_API_BASE_URL}/assets/qr/tools/${tool.qr}`
+                            `${
+                              import.meta.env.VITE_API_BASE_URL
+                            }/assets/qr/tools/${tool.qr}`
                           )
                         }
                       />

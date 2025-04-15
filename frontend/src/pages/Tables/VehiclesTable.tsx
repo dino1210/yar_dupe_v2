@@ -255,7 +255,7 @@ export default function VehiclesTable() {
                       className="w-16 h-16 rounded-lg object-cover cursor-pointer border border-gray-300  "
                       onClick={() =>
                         setSelectedImage(
-                          `${import.meta.env.VITE_API_BASE_URL}/assets/images/vehicles/${item.picture}`
+                          `${import.meta.env.VITE_API_BASE_URL}/assets/images/vehicles/${vehicle.picture}`
                         )
                       }
                     />
@@ -274,62 +274,62 @@ export default function VehiclesTable() {
                     {vehicle.plate_no}
                   </TableCell>
                   <TableCell className="ppx-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                    {item.category}
+                    {vehicle.category}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                    {item.fuel_type}
+                    {vehicle.fuel_type}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                    {item.location}
+                    {vehicle.location}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                    {item.acquisition_date}
+                    {vehicle.acquisition_date}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                     <Badge
                       size="sm"
                       color={
-                        item.status === "Available" ? "success" : "warning"
+                        vehicle.status === "Available" ? "success" : "warning"
                       }
                     >
-                      {item.status}
+                      {vehicle.status}
                     </Badge>
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                    {item.remarks}
+                    {vehicle.remarks}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                    {item.maintenance_due}
+                    {vehicle.maintenance_due}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                    {item.assigned_driver}
+                    {vehicle.assigned_driver}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                     <img
-                      src={`http://localhost:5000/assets/qr/vehicles/${item.qr}`}
-                      alt={`${item.name}'s Profile`}
+                      src={`${import.meta.env.VITE_API_BASE_URL}/assets/qr/vehicles/${vehicle.qr}`}
+                      alt={`${vehicle.name}'s Profile`}
                       className="w-auto h-15 mx-auto rounded-lg object-cover cursor-pointer"
-                      onClick={() => setSelectedImage(`http://localhost:5000/assets/qr/vehicles/${item.qr}`)}
+                      onClick={() => setSelectedImage(`${import.meta.env.VITE_API_BASE_URL}/assets/qr/vehicles/${vehicle.qr}`)}
                     />
                   </TableCell>
                   <TableCell className="px-8 py-3 text-xs text-gray-500 dark:text-gray-400 text-center">
                     <div className="flex items-center justify-center space-x-2 w-full h-full">
                     <button
-                        onClick={() => handleEdit(item.id)}
+                        onClick={() => handleEdit(vehicle.id)}
                         className="px-3 py-1 text-xs font-medium text-white bg-blue-800 rounded-lg hover:bg-blue-900"
                         title="Edit"
                       >
                         <Pencil className="w-3 h-7"/>
                       </button>
                       <button
-                        onClick={() => handleDelete(item.id)}
+                        onClick={() => handleDelete(vehicle.id)}
                         className="px-3 py-1 text-xs font-medium text-white bg-red-800 rounded-lg hover:bg-red-900"
                         title="Delete"
                       >
                         <Trash2 className="w-3 h-7"/>
                       </button>
                       <button
-                        onClick={() => handleDelete(item.id)}
+                        onClick={() => handleDelete(vehicle.id)}
                         className="px-3 py-1 text-xs font-medium text-white bg-orange-800 rounded-lg hover:bg-orange-900"
                         title="Disable"
                       >

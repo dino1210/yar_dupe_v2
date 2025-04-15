@@ -1,13 +1,10 @@
 // ToolForm.tsx
 import React, { useState, useEffect } from "react";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import DatePicker from "react-datepicker";
+import { toast } from "react-toastify"
 import "react-datepicker/dist/react-datepicker.css";
 import { Upload } from "lucide-react";
 
-
-type ToolFormProps = {
+type ConsumableFormProps = {
   onClose: () => void;
   onAddSuccess: () => void;
 };
@@ -17,33 +14,34 @@ type Category = {
   name: string;
 };
 
-interface ToolFormData {
+interface ConsumableFormData {
   picture: string;
-  name: string;
-  brand: string;
-  category: string;
   tag: string;
-  description: string;
-  purchase_date: string;
-  warranty: string;
-  status: string;
-  remarks: string;
+  name: string;
+  category: string;
+  quantity: number;
+  minStock: number;
+  unit: string;
+  location: string;
+  date: string;
   qr: string;
 }
 
-const ToolForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
-  const [formData, setFormData] = useState<ToolFormData>({
-    picture: "",
-    name: "",
-    brand: "",
-    category: "",
-    tag: "",
-    description: "",
-    purchase_date: "",
-    warranty: "",
-    status: "",
-    remarks: "",
-    qr: "",
+const ConsumableForm: React.FC<ConsumableFormProps> = ({
+  onClose,
+  onAddSuccess,
+}) => {
+  const [formData, setFormData] = useState<ConsumableFormData>({
+    picture: " ",
+    tag: " ",
+    name: " ",
+    category: " ",
+    quantity: 0,
+    minStock: 0,
+    unit: " ",
+    location: " ",
+    date: " ",
+    qr: " ",
   });
 
   const [categories, setCategories] = useState<Category[]>([]);
@@ -54,7 +52,7 @@ const ToolForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
 
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/api/tools`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/consumables`,
         {
           method: "POST",
           headers: {
@@ -63,19 +61,19 @@ const ToolForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
           body: JSON.stringify(formData),
         }
       );
-
-      if (response.ok) {
-        toast.success("Tool added successfully!");
-        onAddSuccess();
-        onClose();
-      } else {
-        toast.error("Failed to add tool");
-      }
-    } catch (error) {
-      console.error("Error adding tool", error);
-      toast.error("Error adding tool");
-    }
-  };
+    
+          if (response.ok) {
+            toast.success("Consumable added successfully!");
+            onAddSuccess();
+            onClose();
+          } else {
+            toast.error("Failed to add consumable");
+          }
+        } catch (error) {
+          console.error("Error adding consumable", error);
+          toast.error("Error adding consumable");
+        }
+      };
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -118,7 +116,7 @@ const ToolForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
       {/* Name */}
       <div className="flex flex-col">
         <label className="mb-1 font-medium text-xs text-gray-700 dark:text-gray-300">
-          Name
+          Item Name
         </label>
         <input
           type="text"
@@ -130,17 +128,17 @@ const ToolForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
         />
       </div>
 
-      {/* Brand */}
+      {/* Tag/Code */}
       <div className="flex flex-col">
         <label className="mb-1 font-medium text-xs text-gray-700 dark:text-gray-300">
-          Brand
+          Tag/Code
         </label>
         <input
           type="text"
-          name="brand"
-          value={formData.brand || ""}
-          onChange={handleInputChange}
+          name="tag"
+          value={formData.tag || ""}
           required
+          onChange={handleInputChange}
           className="border rounded-md p-2 text-xs bg-white text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
         />
       </div>
@@ -174,118 +172,75 @@ const ToolForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
         )}
       </div>
 
-      {/* Tag/Code */}
+      {/* Quantity */}
       <div className="flex flex-col">
         <label className="mb-1 font-medium text-xs text-gray-700 dark:text-gray-300">
-          Tag/Code
+          Quantity
         </label>
         <input
-          type="text"
-          name="tag"
-          value={formData.tag || ""}
+          type="number"
+          name="quantity"
+          value={formData.quantity || ""}
           required
           onChange={handleInputChange}
           className="border rounded-md p-2 text-xs bg-white text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
         />
       </div>
 
-      {/* Description */}
+      {/* Minimum Stock */}
       <div className="flex flex-col">
         <label className="mb-1 font-medium text-xs text-gray-700 dark:text-gray-300">
-          Description
+          Min. Stock
         </label>
         <input
-          type="text"
-          name="description"
-          value={formData.description || ""}
+          type="number"
+          name="minStock"
+          value={formData.minStock || ""}
           required
           onChange={handleInputChange}
           className="border rounded-md p-2 text-xs bg-white text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
         />
       </div>
 
-      {/* Date of Purchase */}
+      {/* Unit */}
       <div className="flex flex-col">
         <label className="mb-1 font-medium text-xs text-gray-700 dark:text-gray-300">
-          Date of Purchase
-        </label>
-        <DatePicker
-          selected={
-            formData.purchase_date ? new Date(formData.purchase_date) : null
-          }
-          onChange={(date: Date | null) =>
-            setFormData((prevData) => ({
-              ...prevData,
-              purchase_date: date ? date.toISOString().split("T")[0] : "",
-            }))
-          }
-          dateFormat="yyyy-MM-dd"
-          placeholderText="Select a date" 
-          required
-          className="border rounded-md p-2 bg-white text-xs text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 w-full"
-          calendarClassName="dark:bg-gray-700 dark:text-black"
-          showMonthDropdown
-          showYearDropdown
-          dropdownMode="select" // 'scroll' is also possible
-          maxDate={new Date()} // Optional: disable future dates
-        />
-      </div>
-
-      {/* Warranty */}
-      <div className="flex flex-col">
-        <label className="mb-1 font-medium text-xs text-gray-700 dark:text-gray-300">
-          Warranty
-        </label>
-        <DatePicker
-          selected={formData.warranty ? new Date(formData.warranty) : null}
-          onChange={(date: Date | null) =>
-            setFormData((prevData) => ({
-              ...prevData,
-              warranty: date ? date.toISOString().split("T")[0] : "",
-            }))
-          }
-          dateFormat="yyyy-MM-dd"
-          placeholderText="Select a date"
-          required
-          className="border rounded-md p-2 bg-white text-xs text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 w-full "
-          calendarClassName="dark:bg-gray-700 dark:text-black"
-          showMonthDropdown
-          showYearDropdown
-          dropdownMode="select"
-        />
-      </div>
-
-      {/* Status */}
-      <div className="flex flex-col">
-        <label className="mb-1 font-medium text-xs text-gray-700 dark:text-gray-300">
-          Status
+          Unit
         </label>
         <select
-          name="status"
-          value={formData.status || ""}
+          name="unit"
+          value={formData.unit || ""}
           onChange={handleInputChange}
           className="border rounded-md p-2 bg-white text-xs text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 w-full"
         >
-          <option value="Available">Available</option>
+          <option value="ml">ml</option>
+          <option value="pcs">pcs</option>
+          <option value="tubes">tubes</option>
+          <option value="rolls">rolls</option>
+          <option value="box">box</option>
+          <option value="pairs">pairs</option>
+          <option value="bottles">bottles</option>
+          <option value="packs">packs</option>
+          <option value="sets">sets</option>
         </select>
       </div>
 
-      {/* Remarks */}
+      {/* Location */}
       <div className="flex flex-col">
         <label className="mb-1 font-medium text-xs text-gray-700 dark:text-gray-300">
-          Remarks
+          Location
         </label>
         <input
           type="text"
-          name="remarks"
-          value={formData.remarks || ""}
+          name="location"
+          value={formData.location || ""}
           required
           onChange={handleInputChange}
           className="border rounded-md p-2 text-xs bg-white text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
         />
       </div>
 
-      {/* Tag/Code Image (File Upload) */}
+      {/* Image*/}
       <div className="flex flex-col">
         <label className="mb-1 font-medium text-xs text-gray-700 dark:text-gray-300">
           Image
@@ -295,7 +250,7 @@ const ToolForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
           Upload Image
           <input
             type="file"
-            name="tagImage"
+            name="image"
             accept="image/*"
             onChange={handleInputChange}
             className="hidden"
@@ -323,4 +278,4 @@ const ToolForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
   );
 };
 
-export default ToolForm;
+export default ConsumableForm;

@@ -20,6 +20,7 @@ import {
 import axios from "axios";
 import AddResourceModal from "../../components/ui/modal/AddResourceModal/AddResourceModal";
 
+// Define the expected structure
 interface Consumable {
   id: number;
   picture: string;
@@ -42,7 +43,7 @@ interface Category {
 }
 
 export default function ConsumablesTable() {
-  const [consumable, setConsumable] = useState<Consumable[]>([]);
+  const [consumables, setConsumables] = useState<Consumable[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("");
@@ -69,7 +70,7 @@ export default function ConsumablesTable() {
     axios
       .get(`${import.meta.env.VITE_API_BASE_URL}/api/consumables`)
       .then((response) => {
-        setConsumable(response.data.consumable);
+        setConsumables(response.data.consumables);
         setLoading(false);
       })
       .catch((error) => {
@@ -94,22 +95,20 @@ export default function ConsumablesTable() {
   if (loading) return <p>Loading...</p>;
 
   const handleAddSuccess = () => {
-    fetchConsumables(); 
+    fetchConsumables();
     setIsModalOpen(false);
   };
-  
 
   // Filter tools based on search, category, and status
-  const filteredConsumables = (consumable || []).filter((consumable) => {
+  const filteredConsumables = consumables.filter((consumable) => {
     const matchesSearch =
-      consumable.name.toLowerCase().includes(search.toLowerCase()) ||
-      consumable.tag.toLowerCase().includes(search.toLowerCase());
-  
+      consumable.name.toLowerCase().includes(search.toLowerCase()) 
+
     const matchesCategory = categoryFilter
       ? consumable.category === categoryFilter
       : true;
     const matchesStatus = statusFilter ? consumable.status === statusFilter : true;
-  
+
     return matchesSearch && matchesCategory && matchesStatus;
   });
 
@@ -157,7 +156,7 @@ export default function ConsumablesTable() {
           {categories.map((category) => (
             <option key={category.id} value={category.category_name}>
               {category.category_name}
-            </option> 
+            </option>
           ))}
         </select>
         <select
@@ -192,155 +191,156 @@ export default function ConsumablesTable() {
         >
           <Funnel className="w-auto h-5" />
         </button>
-        <button 
-            onClick={handleOpenModal}
-            type="button"
-            className="flex items-center gap-2 px-2 text-xs rounded-md bg-white dark:bg-blue-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
-          >
-             New
-            <Plus className="w-4 h-4" />
-            </button>
-          <AddResourceModal
-            isOpen={isModalOpen}
-            onClose={handleCloseModal}
-            onAddSuccess={handleAddSuccess}
-            resourceType="Consumables"
-          />
+        <button
+          onClick={handleOpenModal}
+          type="button"
+          className="flex items-center gap-2 px-2 text-xs rounded-md bg-white dark:bg-blue-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
+        >
+          New
+          <Plus className="w-4 h-4" />
+        </button>
+        <AddResourceModal
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          onAddSuccess={handleAddSuccess}
+          resourceType="Consumable"
+        />
       </div>
       <div className="max-w-full overflow-x-auto">
         {/* Table */}
         <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-800">
-        <Table>
-          <TableHeader className="border-b text-sm border-gray-100 dark:border-gray-700">
-            <TableRow>
-              {[
-                "Image",
-                "Item Name",
-                "Tag/Code",
-                "Category",
-                "Quantity",
-                "Min. Stock",
-                "Unit",
-                "Location",
-                "Date Modified",
-                "Status",
-                "QR Code",
-                "Actions",
-              ].map((header, index) => (
-                <TableCell
-                  key={index}
-                  isHeader
-                  className="px-10 py-3 font-medium text-gray-500 text-center text-theme-sm dark:text-gray-50 whitespace-nowrap"
-                >
-                  {header}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHeader>
+          <Table className="">
+            {/* Table Header */}
+            <TableHeader className="border-b border-t text-sm border-gray-100 dark:border-white/[0.05]">
+              <TableRow>
+                {[
+                  "Image",
+                  "Item Name",
+                  "Tag/Code",
+                  "Category",
+                  "Quantity",
+                  "Min. Stock",
+                  "Unit",
+                  "Location",
+                  "Date Modified",
+                  "Status",
+                  "QR Code",
+                  "Actions",
+                ].map((header, index) => (
+                  <TableCell
+                    key={index}
+                    isHeader
+                    className="px-10 py-3 font-medium text-gray-500 text-center text-theme-sm dark:text-gray-50 whitespace-nowrap"
+                  >
+                    {header}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHeader>
 
-          {/* Table Body */}
-          <TableBody className="divide-y divide-gray-100 dark:divide-gray-700">
-            {currentConsumables.length > 0 ? (
-              currentConsumables.map((item) => (
-                <TableRow key={item.id}>
-                  <TableCell className="px-5 py-4 sm:px-6 text-center">
-                    <img
-                      src={`${import.meta.env.VITE_API_BASE_URL}/assets/images/consumables/${item.picture}`}
-                      alt={`${item.name}'s Profile`}
-                      className="w-16 h-16 rounded-lg object-cover cursor-pointer border border-gray-300  "
-                      onClick={() =>
-                        setSelectedImage(
-                          `${import.meta.env.VITE_API_BASE_URL}/assets/images/consumables/${item.picture}`
-                        )
-                      }
-                    />
-                  </TableCell>
-                  <TableCell className="px-5 py-4 sm:px-6 text-center">
-                    <span className="block font-medium text-gray-800 text-theme-xs dark:text-white/70">
-                      {item.name}
-                    </span>
-                  </TableCell>
-                  <TableCell className="px-5 py-4 sm:px-6 text-center">
-                    <span className="block font-medium text-gray-800 text-theme-xs dark:text-gray-400">
-                      {item.tag}
-                    </span>
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                    {item.category}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                    {item.quantity}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                    {item.minStock}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                    {item.unit}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                    {item.location}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-start dark:text-gray-400">
-                    {item.date}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                    <Badge
-                      size="sm"
-                      color={
-                        item.status === "Available" ? "success" : "warning"
-                      }
-                    >
-                      {item.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                    <img
-                      src={`${import.meta.env.VITE_API_BASE_URL}/assets/qr/consumables/${item.qr}`}
-                      alt={`${item.name}'s Profile`}
-                      className="w-auto h-15 mx-auto rounded-lg object-cover cursor-pointer"
-                      onClick={() =>
-                        setSelectedImage(
-                          `${import.meta.env.VITE_API_BASE_URL}/assets/qr/consumables/${item.qr}`
-                        )
-                      }
-                    />
-                  </TableCell>
-                  <TableCell className="px-8 py-3 text-xs text-gray-500 dark:text-gray-400 text-center">
-                    <div className="flex items-center justify-center space-x-2 w-full h-full">
-                      <button
-                        onClick={() => handleEdit(item.id)}
-                        className="px-3 py-1 text-xs font-medium text-white bg-blue-800 rounded-lg hover:bg-blue-900"
-                        title="Edit"
+            {/* Table Body */}
+            <TableBody className="divide-y divide-gray-100 dark:divide-gray-700">
+              {currentConsumables.length > 0 ? (
+                currentConsumables.map((consumable) => (
+                  <TableRow key={consumable.id}>
+                    <TableCell className="px-5 py-4 sm:px-6 text-center">
+                      <img
+                        src={`${import.meta.env.VITE_API_BASE_URL}/assets/images/consumables/${consumable.picture}`}
+                        alt={`${consumable.name}'s Profile`}
+                        className="w-16 h-16 rounded-lg object-cover cursor-pointer border border-gray-300  "
+                        onClick={() =>
+                          setSelectedImage(
+                            `${import.meta.env.VITE_API_BASE_URL}/assets/images/consumables/${consumable.picture}`
+                          )
+                        }
+                      />
+                    </TableCell>
+                    <TableCell className="px-5 py-4 sm:px-6 text-center">
+                      <span className="block font-medium text-gray-800 text-theme-xs dark:text-white/70">
+                        {consumable.name}
+                      </span>
+                    </TableCell>
+                    <TableCell className="px-5 py-4 sm:px-6 text-center">
+                      <span className="block font-medium text-gray-800 text-theme-xs dark:text-gray-400">
+                        {consumable.tag}
+                      </span>
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
+                      {consumable.category}
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
+                      {consumable.quantity}
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
+                      {consumable.minStock}
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
+                      {consumable.unit}
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
+                      {consumable.location}
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
+                    {new Date(consumable.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
+                      <Badge
+                        size="sm"
+                        color={
+                          consumable.status === "Available" ? "success" : "warning"
+                        }
                       >
-                        <Pencil className="w-3 h-7" />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(item.id)}
-                        className="px-3 py-1 text-xs font-medium text-white bg-red-800 rounded-lg hover:bg-red-900"
-                        title="Delete"
-                      >
-                        <Trash2 className="w-3 h-7" />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(item.id)}
-                        className="px-3 py-1 text-xs font-medium text-white bg-orange-800 rounded-lg hover:bg-orange-900"
-                        title="Disable"
-                      >
-                        <CircleOff className="w-3 h-7" />
-                      </button>
-                    </div>
+                        {consumable.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
+                      <img
+                        src={`${import.meta.env.VITE_API_BASE_URL}/assets/qr/consumables/${consumable.qr}`}
+                        alt={`${consumable.name}'s Profile`}
+                        className="w-auto h-15 mx-auto rounded-lg object-cover cursor-pointer"
+                        onClick={() =>
+                          setSelectedImage(
+                            `${import.meta.env.VITE_API_BASE_URL}/assets/qr/consumables/${consumable.qr}`
+                          )
+                        }
+                      />
+                    </TableCell>
+                    <TableCell className="px-8 py-3 text-xs text-gray-500 dark:text-gray-400 text-center">
+                      <div className="flex items-center justify-center space-x-2 w-full h-full">
+                        <button
+                          onClick={() => handleEdit(consumable.id)}
+                          className="px-3 py-1 text-xs font-medium text-white bg-blue-800 rounded-lg hover:bg-blue-900"
+                          title="Edit"
+                        >
+                          <Pencil className="w-3 h-7" />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(consumable.id)}
+                          className="px-3 py-1 text-xs font-medium text-white bg-red-800 rounded-lg hover:bg-red-900"
+                          title="Delete"
+                        >
+                          <Trash2 className="w-3 h-7" />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(consumable.id)}
+                          className="px-3 py-1 text-xs font-medium text-white bg-orange-800 rounded-lg hover:bg-orange-900"
+                          title="Disable"
+                        >
+                          <CircleOff className="w-3 h-7" />
+                        </button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell className="px-5 py-4 text-center text-gray-500 dark:text-gray-400">
+                    No consumables found
                   </TableCell>
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell className="px-5 py-4 text-center text-gray-500 dark:text-gray-400">
-                  No consumables found
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+              )}
+            </TableBody>
+          </Table>
         </div>
       </div>
 

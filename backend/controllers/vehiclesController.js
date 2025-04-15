@@ -1,4 +1,4 @@
-const Tool = require("../models/vehiclesModel");
+const Vehicle = require("../models/vehiclesModel");
 
 // Controller for ADD
 const addVehicle = async (req, res) => {
@@ -35,7 +35,7 @@ const updateVehicle = async (req, res) => {
     }
 };
 
-// Controller for GET ALL TOOLS
+// Controller for GET ALL VEHICLES
 const getAllVehicles = async (req, res) => {
     try {
         const vehicles = await Vehicle.getAllVehicles();
@@ -45,7 +45,7 @@ const getAllVehicles = async (req, res) => {
     }
 };
 
-// Controller for GET TOOL BY ID
+// Controller for GET VEHICLE BY ID
 const getVehicleById = async (req, res) => {
     const vehicleId = req.params.id;
     try {

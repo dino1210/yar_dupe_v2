@@ -1,7 +1,7 @@
 const db = require("../config/db");
 
 // ADD
-const addVehicle = async (VehicleData) => {
+const addVehicle = async (vehicleData) => {
     const { picture, name, brand, plate_no, category, fuel_type, location, acquisition_date, status, remarks, maintenance_due, assigned_driver, qr } = vehicleData;
     const query = `INSERT INTO vehicles (picture, name, brand, plate_no, category, fuel_type, location, acquisition_date, status, remarks, maintenance_due, assigned_driver, qr) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
@@ -27,7 +27,7 @@ const deleteVehicle = async (vehicleID) => {
 
 // UPDATE
 const updateVehicle = async (vehicleData) => {
-    const { picture, name, brand, plate_no, category, fuel_type, location, acquisition_date, status, remarks, maintenance_due, assigned_driver, qr } = toolData;
+    const { picture, name, brand, plate_no, category, fuel_type, location, acquisition_date, status, remarks, maintenance_due, assigned_driver, qr } = vehicleData;
     const query = `UPDATE vehicles SET picture = ?, name = ?, brand = ?, plate_no = ?, category = ?, fuel_type = ?, location = ?, acquisition_date = ?, status = ?, remarks = ?, maintenance_due = ?, assigned_driver = ?, qr = ?`;
 
     try {
@@ -40,7 +40,7 @@ const updateVehicle = async (vehicleData) => {
 
 // GET ALL TOOLS
 const getAllVehicles = async () => {
-    const query = `SELECT * FROM vehicle`;
+    const query = `SELECT * FROM vehicles`;
 
     try {
         const [results] = await db.query(query);
@@ -51,7 +51,7 @@ const getAllVehicles = async () => {
 };
 
 // GET SINGLE TOOL BY ID
-const getVehicleById = async (toolId) => {
+const getVehicleById = async (vehicleId) => {  
     const query = `SELECT * FROM vehicles WHERE id = ?`;
 
     try {

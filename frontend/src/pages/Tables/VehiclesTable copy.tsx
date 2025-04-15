@@ -38,7 +38,7 @@ export default function ConsumablesTable() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   useEffect(() => {
-    axios.get("http://localhost:5000/api/vehicles")
+    axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/vehicles`)
     .then((response) => {
       setVehicles(response.data);
       setLoading(false);
@@ -153,12 +153,12 @@ export default function ConsumablesTable() {
                 <TableRow key={item.id}>
                   <TableCell className="px-5 py-4 sm:px-6 text-center">
                     <img
-                      src={`http://localhost:5000/assets/images/vehicles/${item.picture}`}
+                      src={`${import.meta.env.VITE_API_BASE_URL}/assets/images/vehicles/${item.picture}`}
                       alt={`${item.name}'s Profile`}
                       className="w-16 h-16 rounded-lg object-cover cursor-pointer border border-gray-300  "
                       onClick={() =>
                         setSelectedImage(
-                          `http://localhost:5000/assets/images/vehicles/${item.picture}`
+                          `${import.meta.env.VITE_API_BASE_URL}/assets/images/vehicles/${item.picture}`
                         )
                       }
                     />
@@ -209,10 +209,10 @@ export default function ConsumablesTable() {
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                     <img
-                      src={`http://localhost:5000/assets/qr/vehicles/${item.qr}`}
+                      src={`${import.meta.env.VITE_API_BASE_URL}/assets/qr/vehicles/${item.qr}`}
                       alt={`${item.name}'s Profile`}
                       className="w-auto h-15 mx-auto rounded-lg object-cover cursor-pointer"
-                      onClick={() => setSelectedImage(`http://localhost:5000/assets/qr/vehicles/${item.qr}`)}
+                      onClick={() => setSelectedImage(`${import.meta.env.VITE_API_BASE_URL}/assets/qr/vehicles/${item.qr}`)}
                     />
                   </TableCell>
                   <TableCell className="px-8 py-3 text-xs text-gray-500 dark:text-gray-400 text-center">
