@@ -80,7 +80,7 @@ const ToolForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch("/api/categories");
+        const response = await fetch(`${import.meta.env.VITE_BASE_API_URL}/api/categories`);
         const data = await response.json();
         setCategories(data);
       } catch (error) {

@@ -28,7 +28,8 @@ const deleteConsumable = async (consumableID) => {
 // UPDATE
 const updateConsumable = async (consumableData) => {
     const { picture, tag, name, category, quantity, minStock, unit, location, date, status, id } = consumableData;
-    const query = `UPDATE consumables SET picture = ?, tag = ?, name = ?, category = ?, quantity = ?, minStock = ?, unit = ?, location = ?, date = ?, status = ?, WHERE id = ?`;
+    const query = `UPDATE consumables SET picture = ?, tag = ?, name = ?, category = ?, quantity = ?, minStock = ?, unit = ?, location = ?, date = ?, status = ? WHERE id = ?`;
+
 
     try {
         const [result] = await db.query(query, [picture, tag, name, category, quantity, minStock, unit, location, date, status, id]);

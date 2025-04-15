@@ -14,7 +14,7 @@ const addConsumable = async (req, res) => {
 const deleteConsumable = async (req, res) => {
     const consumableId = req.params.id;
     try {
-        const result = await Consumable.deleteTool(consumableId);
+        const result = await Consumable.deleteConsumable(consumableId);
         res.status(200).json({ message: "Consumable deleted successfully" });
     } catch (err) {
         res.status(500).json({ message: "Error deleting consumable", error: err.message });

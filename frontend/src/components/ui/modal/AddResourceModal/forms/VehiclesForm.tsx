@@ -1,12 +1,12 @@
 // ToolForm.tsx
 import React, { useState, useEffect } from "react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Upload } from "lucide-react";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
-type VehicleFormProps = {
+type ToolFormProps = {
   onClose: () => void;
   onAddSuccess: () => void;
 };
@@ -17,34 +17,34 @@ type Category = {
 };
 
 interface VehicleFormData {
-    picture: string;
-    name: string;
-    brand: string;
-    plate_no: string;
-    category: string;
-    fuel_type: string;
-    location: string;
-    acquisition_date: string;
-    warranty: string;
-    remarks: string;
-    maintenance_due: string;
-    assigned_driver: string;
-  }
+  picture: string;
+  name: string;
+  brand: string;
+  plate_no: string;
+  category: string;
+  fuel_type: string;
+  location: string;
+  acquisition_date: string;
+  warranty: string;
+  maintenance_due: string;
+  remarks: string;
+  assigned_driver: string;
+}
 
-const VehicleForm: React.FC<VehicleFormProps> = ({ onClose, onAddSuccess }) => {
+const VehicleForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
   const [formData, setFormData] = useState<VehicleFormData>({
-    picture: " ",
-    name: " ",
-    brand: " ",
-    plate_no: " ",
-    category: " ",
-    fuel_type: " ",
-    location: " ",
-    acquisition_date: " ",
-    warranty: " ",
-    remarks: " ",
-    maintenance_due: " ",
-    assigned_driver: " ",
+    picture: "",
+    name: "",
+    brand: "",
+    plate_no: "",
+    category: "",
+    fuel_type: "",
+    location: "",
+    acquisition_date: "",
+    warranty: "",
+    maintenance_due: "",
+    remarks: "",
+    assigned_driver: "",
   });
 
   const [categories, setCategories] = useState<Category[]>([]);
@@ -70,7 +70,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ onClose, onAddSuccess }) => {
         onAddSuccess();
         onClose();
       } else {
-        toast.error("Vehicle to add tool");
+        toast.error("Failed to add Vehicle");
       }
     } catch (error) {
       console.error("Error adding vehicle", error);
@@ -81,7 +81,9 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ onClose, onAddSuccess }) => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch("/api/categories");
+        const response = await fetch(
+          `${import.meta.env.VITE_BASE_API_URL}/api/categories`
+        );
         const data = await response.json();
         setCategories(data);
       } catch (error) {
@@ -146,10 +148,10 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ onClose, onAddSuccess }) => {
         />
       </div>
 
-            {/* Plate No. */}
-            <div className="flex flex-col">
+      {/* Plate No. */}
+      <div className="flex flex-col">
         <label className="mb-1 font-medium text-xs text-gray-700 dark:text-gray-300">
-          Plate No.
+          Brand
         </label>
         <input
           type="text"
@@ -190,46 +192,55 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ onClose, onAddSuccess }) => {
         )}
       </div>
 
-            {/* Location */}
-            <div className="flex flex-col">
+      {/* Fuel Type */}
+      <div className="flex flex-col">
+        <label className="mb-1 font-medium text-xs text-gray-700 dark:text-gray-300">
+          Fuel Type
+        </label>
+        <input
+          type="text"
+          name="fuel_type"
+          value={formData.fuel_type || ""}
+          required
+          onChange={handleInputChange}
+          className="border rounded-md p-2 text-xs bg-white text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
+        />
+      </div>
+
+      {/* Location */}
+      <div className="flex flex-col">
         <label className="mb-1 font-medium text-xs text-gray-700 dark:text-gray-300">
           Location
         </label>
         <input
           type="text"
-          name="location"
+          name="description"
           value={formData.location || ""}
           onChange={handleInputChange}
-          required
           className="border rounded-md p-2 text-xs bg-white text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
         />
       </div>
 
-
       {/* Acquisition Date */}
       <div className="flex flex-col">
         <label className="mb-1 font-medium text-xs text-gray-700 dark:text-gray-300">
-          Date of Purchase
+          Acquisition Date
         </label>
         <DatePicker
-          selected={
-            formData.acquisition_date ? new Date(formData.acquisition_date) : null
-          }
+          selected={formData.acquisition_date ? new Date(formData.acquisition_date) : null}
           onChange={(date: Date | null) =>
             setFormData((prevData) => ({
               ...prevData,
-              acquisition_date: date ? date.toISOString().split("T")[0] : "",
+              warranty: date ? date.toISOString().split("T")[0] : "",
             }))
           }
           dateFormat="yyyy-MM-dd"
-          placeholderText="Select a date" 
-          required
-          className="border rounded-md p-2 bg-white text-xs text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 w-full"
+          placeholderText="Select a date"
+          className="border rounded-md p-2 bg-white text-xs text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 w-full "
           calendarClassName="dark:bg-gray-700 dark:text-black"
           showMonthDropdown
           showYearDropdown
-          dropdownMode="select" // 'scroll' is also possible
-          maxDate={new Date()} // Optional: disable future dates
+          dropdownMode="select"
         />
       </div>
 
@@ -257,23 +268,62 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ onClose, onAddSuccess }) => {
         />
       </div>
 
+      {/* Maintenance Due */}
+      <div className="flex flex-col">
+        <label className="mb-1 font-medium text-xs text-gray-700 dark:text-gray-300">
+          Maintenance Due
+        </label>
+        <DatePicker
+          selected={
+            formData.maintenance_due ? new Date(formData.maintenance_due) : null
+          }
+          onChange={(date: Date | null) =>
+            setFormData((prevData) => ({
+              ...prevData,
+              warranty: date ? date.toISOString().split("T")[0] : "",
+            }))
+          }
+          dateFormat="yyyy-MM-dd"
+          placeholderText="Select a date"
+          className="border rounded-md p-2 bg-white text-xs text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 w-full "
+          calendarClassName="dark:bg-gray-700 dark:text-black"
+          showMonthDropdown
+          showYearDropdown
+          dropdownMode="select"
+        />
+      </div>
 
       {/* Remarks */}
       <div className="flex flex-col">
         <label className="mb-1 font-medium text-xs text-gray-700 dark:text-gray-300">
-          Remarks
+          Status
+        </label>
+        <select
+          name="remarks"
+          value={formData.remarks || ""}
+          onChange={handleInputChange}
+          className="border rounded-md p-2 bg-white text-xs text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 w-full"
+        >
+          <option value="Available">Available</option>
+        </select>
+      </div>
+
+      {/* Assigned Driver */}
+      <div className="flex flex-col">
+        <label className="mb-1 font-medium text-xs text-gray-700 dark:text-gray-300">
+          Assigned Driver
         </label>
         <input
           type="text"
-          name="remarks"
-          value={formData.remarks || ""}
+          name="assigned_driver"
+          value={formData.assigned_driver || ""}
           required
           onChange={handleInputChange}
           className="border rounded-md p-2 text-xs bg-white text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
         />
       </div>
 
-      {/* Image (File Upload) */}
+      {/* Image */}
       <div className="flex flex-col">
         <label className="mb-1 font-medium text-xs text-gray-700 dark:text-gray-300">
           Image
@@ -283,7 +333,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ onClose, onAddSuccess }) => {
           Upload Image
           <input
             type="file"
-            name="tagImage"
+            name="Image"
             accept="image/*"
             onChange={handleInputChange}
             className="hidden"
