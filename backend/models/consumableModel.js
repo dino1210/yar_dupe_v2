@@ -2,17 +2,17 @@ const db = require("../config/db");
 
 // ADD
 const addConsumable = async (consumableData) => {
-    const { picture, tag, name, category, quantity, minStock, unit, location, date, status } = consumableData;
-    const query = `INSERT INTO consumables (picture, tag, name, category, quantity, minStock, unit, location, date, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    const { picture, tag, name, category, quantity, minStock, unit, location, date, status, qr } = consumableData;
+    const query = `INSERT INTO consumables (picture, tag, name, category, quantity, minStock, unit, location, date, status, qr) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
     try {
-        const [result] = await db.query(query, [picture, tag, name, category, quantity, minStock, unit, location, date, status]);
+        const [result] = await db.query(query, [picture, tag, name, category, quantity, minStock, unit, location, date, status, qr]);
         return result;
     } catch (err) {
         throw new Error('Error adding consumable: ' + err.message);
     }
 };
-
+ 
 // DELETE
 const deleteConsumable = async (consumableID) => {
     const query = `DELETE FROM consumables WHERE id = ?`;
@@ -27,12 +27,12 @@ const deleteConsumable = async (consumableID) => {
 
 // UPDATE
 const updateConsumable = async (consumableData) => {
-    const { picture, tag, name, category, quantity, minStock, unit, location, date, status, id } = consumableData;
-    const query = `UPDATE consumables SET picture = ?, tag = ?, name = ?, category = ?, quantity = ?, minStock = ?, unit = ?, location = ?, date = ?, status = ? WHERE id = ?`;
+    const { picture, tag, name, category, quantity, minStock, unit, location, date, status, qr, id } = consumableData;
+    const query = `UPDATE consumables SET picture = ?, tag = ?, name = ?, category = ?, quantity = ?, minStock = ?, unit = ?, location = ?, date = ?, status = ?, qr = ? WHERE id = ?`;
 
 
     try {
-        const [result] = await db.query(query, [picture, tag, name, category, quantity, minStock, unit, location, date, status, id]);
+        const [result] = await db.query(query, [picture, tag, name, category, quantity, minStock, unit, location, date, status, qr, id]);
         return result;
     } catch (err) {
         throw new Error('Error updating consumable: ' + err.message);

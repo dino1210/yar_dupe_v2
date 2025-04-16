@@ -1,13 +1,36 @@
 const db = require("../config/db");
+const QRCode = require("qrcode");
 
 // ADD
 const addTool = async (toolData) => {
-    const { picture, name, brand, category, tag, description, purchase_date, warranty, status, remarks, qr } = toolData;
-    const query = `INSERT INTO tools (picture, name, brand, category, tag, description, purchase_date, warranty, status, remarks, qr) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    const {
+        picture, name, brand, category, tag,
+        description, purchase_date, warranty,
+        status, remarks
+    } = toolData;
+
+    const insertQuery = `
+        INSERT INTO tools (picture, name, brand, category, tag, description, purchase_date, warranty, status, remarks)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
 
     try {
-        const [result] = await db.query(query, [picture, name, brand, category, tag, description, purchase_date, warranty, status, remarks, qr]);
-        return result;
+        // Insert tool first (without QR)
+        const [result] = await db.query(insertQuery, [
+            picture, name, brand, category, tag,
+            description, purchase_date, warranty,
+            status, remarks
+        ]);
+
+        const toolId = result.insertId;
+        const qrContent = `tool-${toolId}`; // This will be scanned
+        const qrImage = await QRCode.toDataURL(qrContent); // base64 image
+
+        // Update tool with QR code
+        const updateQuery = `UPDATE tools SET qr = ? WHERE id = ?`;
+        await db.query(updateQuery, [qrImage, toolId]);
+
+        return { id: toolId, qr: qrImage };
     } catch (err) {
         throw new Error('Error adding tool: ' + err.message);
     }
@@ -27,11 +50,25 @@ const deleteTool = async (toolID) => {
 
 // UPDATE
 const updateTool = async (toolData) => {
-    const { picture, name, brand, category, tag, description, purchase_date, warranty, status, remarks, qr, id } = toolData;
-    const query = `UPDATE tools SET picture = ?, name = ?, brand = ?, category = ?, tag = ?, description = ?, purchase_date = ?, warranty = ?, status = ?, remarks = ?, qr = ? WHERE id = ?`;
+    const {
+        picture, name, brand, category, tag,
+        description, purchase_date, warranty,
+        status, remarks, id
+    } = toolData;
+
+    const query = `
+        UPDATE tools SET picture = ?, name = ?, brand = ?, category = ?, tag = ?,
+        description = ?, purchase_date = ?, warranty = ?, status = ?, remarks = ?
+        WHERE id = ?
+    `;
 
     try {
-        const [result] = await db.query(query, [picture, name, brand, category, tag, description, purchase_date, warranty, status, remarks, qr, id]);
+        const [result] = await db.query(query, [
+            picture, name, brand, category, tag,
+            description, purchase_date, warranty,
+            status, remarks, id
+        ]);
+
         return result;
     } catch (err) {
         throw new Error('Error updating tool: ' + err.message);
@@ -62,4 +99,10 @@ const getToolById = async (toolId) => {
     }
 };
 
-module.exports = { addTool, deleteTool, updateTool, getAllTools, getToolById };
+module.exports = {
+    addTool,
+    deleteTool,
+    updateTool,
+    getAllTools,
+    getToolById
+};

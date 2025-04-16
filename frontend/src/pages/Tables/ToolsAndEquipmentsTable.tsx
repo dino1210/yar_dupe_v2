@@ -300,17 +300,11 @@ export default function ToolsAndEquipmentsTable() {
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                       <img
-                        src={`${
-                          import.meta.env.VITE_API_BASE_URL
-                        }/assets/qr/tools/${tool.qr}`}
-                        alt={`${tool.name}'s Profile`}
+                        src={tool.qr}
+                        alt={`${tool.name}'s QR Code`}
                         className="w-auto h-15 mx-auto rounded-lg object-cover cursor-pointer"
                         onClick={() =>
-                          setSelectedImage(
-                            `${
-                              import.meta.env.VITE_API_BASE_URL
-                            }/assets/qr/tools/${tool.qr}`
-                          )
+                          setSelectedImage(tool.qr)
                         }
                       />
                     </TableCell>

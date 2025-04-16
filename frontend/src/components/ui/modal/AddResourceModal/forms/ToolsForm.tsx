@@ -28,7 +28,6 @@ interface ToolFormData {
   warranty: string;
   status: string;
   remarks: string;
-  qr: string;
 }
 
 const ToolForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
@@ -43,7 +42,6 @@ const ToolForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
     warranty: "",
     status: "",
     remarks: "",
-    qr: "",
   });
 
   const [categories, setCategories] = useState<Category[]>([]);
