@@ -52,7 +52,7 @@ const getToolById = async (req, res) => {
         const tool = await Tool.getToolById(toolId);
         if (!tool) {
             return res.status(404).json({ message: "Tool not found" });
-        }
+        }       
         res.status(200).json({ tool });
     } catch (err) {
         res.status(500).json({ message: "Error fetching tool", error: err.message });

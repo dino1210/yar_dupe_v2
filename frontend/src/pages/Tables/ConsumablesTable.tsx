@@ -101,13 +101,16 @@ export default function ConsumablesTable() {
 
   // Filter tools based on search, category, and status
   const filteredConsumables = consumables.filter((consumable) => {
-    const matchesSearch =
-      consumable.name.toLowerCase().includes(search.toLowerCase()) 
+    const matchesSearch = consumable.name
+      .toLowerCase()
+      .includes(search.toLowerCase());
 
     const matchesCategory = categoryFilter
       ? consumable.category === categoryFilter
       : true;
-    const matchesStatus = statusFilter ? consumable.status === statusFilter : true;
+    const matchesStatus = statusFilter
+      ? consumable.status === statusFilter
+      : true;
 
     return matchesSearch && matchesCategory && matchesStatus;
   });
@@ -138,15 +141,13 @@ export default function ConsumablesTable() {
           onChange={(e) => setSearch(e.target.value)}
           className="border p-2 text-xs rounded-md w-full sm:w-1/3 bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
         />
-        <select
-          value={categoryFilter}
-          onChange={(e) => setCategoryFilter(e.target.value)}
-          className="border p-2 text-xs rounded-md w-full sm:w-1/4 bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
-        >
-          <option value="">Brand</option>
-          <option value="Tools">Tools</option>
-          <option value="Equipments">Equipments</option>
-        </select>
+        <input
+          type="text"
+          placeholder="Brand"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="border p-2 text-xs rounded-md w-full sm:w-1/3 bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
+        />
         <select
           value={categoryFilter}
           onChange={(e) => setCategoryFilter(e.target.value)}
@@ -219,11 +220,11 @@ export default function ConsumablesTable() {
                   "Tag/Code",
                   "Category",
                   "Quantity",
-                  "Min. Stock",
                   "Unit",
+                  "Min. Stock",
                   "Location",
-                  "Date Modified",
                   "Status",
+                  "Date Modified",
                   "QR Code",
                   "Actions",
                 ].map((header, index) => (
@@ -245,12 +246,16 @@ export default function ConsumablesTable() {
                   <TableRow key={consumable.id}>
                     <TableCell className="px-5 py-4 sm:px-6 text-center">
                       <img
-                        src={`${import.meta.env.VITE_API_BASE_URL}/assets/images/consumables/${consumable.picture}`}
+                        src={`${
+                          import.meta.env.VITE_API_BASE_URL
+                        }/assets/images/consumables/${consumable.picture}`}
                         alt={`${consumable.name}'s Profile`}
                         className="w-16 h-16 rounded-lg object-cover cursor-pointer border border-gray-300  "
                         onClick={() =>
                           setSelectedImage(
-                            `${import.meta.env.VITE_API_BASE_URL}/assets/images/consumables/${consumable.picture}`
+                            `${
+                              import.meta.env.VITE_API_BASE_URL
+                            }/assets/images/consumables/${consumable.picture}`
                           )
                         }
                       />
@@ -269,38 +274,48 @@ export default function ConsumablesTable() {
                       {consumable.category}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                      {consumable.quantity}
-                    </TableCell>
-                    <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                      {consumable.minStock}
+                      <span className="block font-bold  text-gray-800 text-theme-sm dark:text-white/70">
+                        {consumable.quantity}
+                      </span>
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                       {consumable.unit}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                      {consumable.location}
+                      {consumable.minStock}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                    {new Date(consumable.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                      {consumable.location}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                       <Badge
                         size="sm"
                         color={
-                          consumable.status === "Available" ? "success" : "warning"
+                          consumable.status === "In Stock" ? "success" : "error"
                         }
                       >
                         {consumable.status}
                       </Badge>
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
+                      {new Date(consumable.date).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                       <img
-                        src={`${import.meta.env.VITE_API_BASE_URL}/assets/qr/consumables/${consumable.qr}`}
+                        src={`${
+                          import.meta.env.VITE_API_BASE_URL
+                        }/assets/qr/consumables/${consumable.qr}`}
                         alt={`${consumable.name}'s Profile`}
                         className="w-auto h-15 mx-auto rounded-lg object-cover cursor-pointer"
                         onClick={() =>
                           setSelectedImage(
-                            `${import.meta.env.VITE_API_BASE_URL}/assets/qr/consumables/${consumable.qr}`
+                            `${
+                              import.meta.env.VITE_API_BASE_URL
+                            }/assets/qr/consumables/${consumable.qr}`
                           )
                         }
                       />

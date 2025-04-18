@@ -27,9 +27,8 @@ createRoot(document.getElementById("root")!).render(
             pauseOnFocusLoss
             draggable
             pauseOnHover
-            toastClassName="bg-gray-800 text-white"
-            bodyClassName=" text-white"
-            theme={undefined} // remove theme
+            toastClassName="dark:bg-gray-800 dark:text-white"
+            theme={"light"} // remove theme
           />
         </AuthProvider>
       </AppWrapper>

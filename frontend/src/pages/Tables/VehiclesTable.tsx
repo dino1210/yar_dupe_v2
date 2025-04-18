@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import axios from "axios";
 import AddResourceModal from "../../components/ui/modal/AddResourceModal/AddResourceModal";
+import { File } from "lucide-react"; 
 
 // Define the expected structure
 interface Vehicles {
@@ -36,6 +37,7 @@ interface Vehicles {
   remarks: string;
   maintenance_due: string;
   assigned_driver: string;
+  attachment: string;
   qr: string;
 }
 
@@ -231,6 +233,7 @@ export default function VehiclesTable() {
                   "Remarks",
                   "Maintenance Due",
                   "Asigned Driver",
+                  "Attachment",
                   "QR",
                   "Actions",
                 ].map((header, index) => (
@@ -294,7 +297,7 @@ export default function VehiclesTable() {
                     <Badge
                       size="sm"
                       color={
-                        vehicle.status === "Available" ? "success" : "warning"
+                        vehicle.status === "Available" ? "success" : "info"
                       }
                     >
                       {vehicle.status}
@@ -309,6 +312,14 @@ export default function VehiclesTable() {
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                     {vehicle.assigned_driver}
                   </TableCell>
+                  <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
+                      <button className="flex flex-row gap-1 border  border-gray-600 bg-white hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 m-auto rounded-lg px-7 py-2">
+                        <File 
+                        className="w-auto h-4 m-auto"/>
+                       <p className="m-auto">File</p>
+                      </button>
+                      {vehicle.attachment}
+                    </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                     <img
                       src={`${import.meta.env.VITE_API_BASE_URL}/assets/qr/vehicles/${vehicle.qr}`}

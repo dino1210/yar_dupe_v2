@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 08, 2025 at 01:15 PM
+-- Generation Time: Apr 18, 2025 at 10:46 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -58,7 +58,7 @@ CREATE TABLE `consumables` (
   `unit` varchar(50) NOT NULL,
   `location` varchar(255) NOT NULL,
   `date` date NOT NULL,
-  `status` varchar(50) NOT NULL,
+  `status` varchar(50) NOT NULL DEFAULT 'In Stock',
   `qr` varchar(255) NOT NULL,
   `category` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -68,14 +68,14 @@ CREATE TABLE `consumables` (
 --
 
 INSERT INTO `consumables` (`id`, `picture`, `tag`, `name`, `quantity`, `minStock`, `unit`, `location`, `date`, `status`, `qr`, `category`) VALUES
-(1, 'wd-40.jpg', 'WD40-100', 'WD-40 Lubricant', 50, 10, 'ml', 'Storage Room A', '2024-03-01', 'Available', 'AG123_qrcode.png', 'Lubricant'),
-(2, 'electrical-tape.jpg', 'ET-3M', 'Electrical Tape', 100, 20, 'pcs', 'Storage Room B', '2024-03-02', 'Available', 'AG123_qrcode.png', 'Tape'),
-(3, 'cable-ties.jpg', 'CT-50', 'Cable Ties', 500, 100, 'pcs', 'Tool Cabinet', '2024-03-03', 'Available', 'AG123_qrcode.png', 'Tie'),
-(4, 'super-glue.jpg', 'SG-LOCTITE', 'Super Glue', 75, 15, 'tubes', 'Shelf C2', '2024-03-04', 'Available', 'AG123_qrcode.png', 'Glue'),
-(5, 'scotch-tape.jpg', 'MT-Scotch', 'Masking Tape', 60, 10, 'rolls', 'Shelf C3', '2024-03-05', 'Available', 'AG123_qrcode.png', 'Tape'),
-(6, 'public/images/consumables/6.jpg', 'DG-100', 'Disposable Gloves', 1000, 200, 'pairs', 'Safety Gear Locker', '2024-03-06', 'Available', 'AG123_qrcode.png', 'Gloves'),
-(7, 'public/images/consumables/7.jpg', 'SG-Uvex', 'Safety Glasses', 30, 5, 'pcs', 'Safety Gear Locker', '2024-03-07', 'Issued Out', 'public/qr/consumables/7.png', 'Glasses'),
-(8, 'public/images/consumables/8.jpg', 'FM-3M', 'Disposable Face Mask', 500, 50, 'pcs', 'First Aid Box', '2024-03-08', 'Available', 'public/qr/consumables/8.png', 'Mask'),
+(1, 'wd-40.jpg', 'WD40-100', 'WD-40 Lubricant', 50, 10, 'ml', 'Storage Room A', '2024-03-01', 'Low Stock', 'AG123_qrcode.png', 'Lubricant'),
+(2, 'electrical-tape.jpg', 'ET-3M', 'Electrical Tape', 100, 20, 'pcs', 'Storage Room B', '2024-03-02', 'Low Stock', 'AG123_qrcode.png', 'Tape'),
+(3, 'cable-ties.jpg', 'CT-50', 'Cable Ties', 500, 100, 'pcs', 'Tool Cabinet', '2024-03-03', 'In Stock', 'AG123_qrcode.png', 'Tie'),
+(4, 'super-glue.jpg', 'SG-LOCTITE', 'Super Glue', 75, 15, 'tubes', 'Shelf C2', '2024-03-04', 'In Stock', 'AG123_qrcode.png', 'Glue'),
+(5, 'scotch-tape.jpg', 'MT-Scotch', 'Masking Tape', 60, 10, 'rolls', 'Shelf C3', '2024-03-05', 'In Stock', 'AG123_qrcode.png', 'Tape'),
+(6, 'public/images/consumables/6.jpg', 'DG-100', 'Disposable Gloves', 1000, 200, 'pairs', 'Safety Gear Locker', '2024-03-06', 'In Stock', 'AG123_qrcode.png', 'Gloves'),
+(7, 'public/images/consumables/7.jpg', 'SG-Uvex', 'Safety Glasses', 30, 5, 'pcs', 'Safety Gear Locker', '2024-03-07', 'Low Stock', 'public/qr/consumables/7.png', 'Glasses'),
+(8, 'public/images/consumables/8.jpg', 'FM-3M', 'Disposable Face Mask', 500, 50, 'pcs', 'First Aid Box', '2024-03-08', 'In Stock', 'public/qr/consumables/8.png', 'Mask'),
 (9, 'public/images/consumables/9.jpg', 'MC-100', 'Microfiber Cloth', 200, 40, 'pcs', 'Cleaning Supplies Shelf', '2024-03-09', 'Available', 'public/qr/consumables/9.png', 'Cloth'),
 (10, 'public/images/consumables/10.jpg', 'HS-Purell', 'Hand Sanitizer', 80, 20, 'bottles', 'First Aid Box', '2024-03-10', 'Available', 'public/qr/consumables/10.png', NULL),
 (11, 'public/images/consumables/11.jpg', 'DT-Gorilla', 'Duct Tape', 50, 10, 'rolls', 'Shelf C4', '2024-03-11', 'Available', 'public/qr/consumables/11.png', NULL),
@@ -87,7 +87,11 @@ INSERT INTO `consumables` (`id`, `picture`, `tag`, `name`, `quantity`, `minStock
 (17, 'public/images/consumables/17.jpg', 'SP-3M', 'Sandpaper Pack', 50, 10, 'packs', 'Abrasive Materials Shelf', '2024-03-17', 'Available', 'public/qr/consumables/17.png', NULL),
 (18, 'public/images/consumables/18.jpg', 'NCC-100', 'Nylon Cable Clips', 300, 50, 'packs', 'Fasteners Drawer', '2024-03-18', 'Available', 'public/qr/consumables/18.png', NULL),
 (19, 'public/images/consumables/19.jpg', 'TST-Teflon', 'Thread Seal Tape', 90, 15, 'rolls', 'Plumbing Supplies Shelf', '2024-03-19', 'Available', 'public/qr/consumables/19.png', NULL),
-(20, 'public/images/consumables/20.jpg', 'WC-Wago', 'Wire Connectors', 120, 30, 'packs', 'Electrical Tools Shelf', '2024-03-20', 'Available', 'public/qr/consumables/20.png', NULL);
+(20, 'public/images/consumables/20.jpg', 'WC-Wago', 'Wire Connectors', 120, 30, 'packs', 'Electrical Tools Shelf', '2024-03-20', 'Available', 'public/qr/consumables/20.png', NULL),
+(21, ' ', 'Test', 'Test', 123, 2345, 'tubes', 'Test', '0000-00-00', ' ', ' ', 'Test'),
+(22, ' ', 'Test', ' Test', 12, 12, 'sets', ' 12', '0000-00-00', ' ', ' ', 'tEST'),
+(23, ' ', '234', ' ', 3456, 3456, 'rolls', 'dfjnm', '0000-00-00', ' ', ' ', '2345'),
+(24, ' ', 'DFGBH', 'tFGH', 456, 45, 'tubes', ' 1', '0000-00-00', 'In Stock', ' ', 'CVGBH');
 
 -- --------------------------------------------------------
 
@@ -105,9 +109,9 @@ CREATE TABLE `tools` (
   `description` text DEFAULT NULL,
   `purchase_date` date DEFAULT NULL,
   `warranty` date DEFAULT NULL,
-  `status` varchar(50) DEFAULT NULL,
+  `status` varchar(100) DEFAULT 'Available',
   `remarks` text DEFAULT NULL,
-  `qr` varchar(255) DEFAULT NULL
+  `qr` mediumtext DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -117,7 +121,7 @@ CREATE TABLE `tools` (
 INSERT INTO `tools` (`id`, `picture`, `name`, `brand`, `category`, `tag`, `description`, `purchase_date`, `warranty`, `status`, `remarks`, `qr`) VALUES
 (1, 'makita-angle-grinder.jpg', 'Makita Angle Grinder', 'Makita', 'Angle Grinder', 'AG123', 'Power: 750W, RPM: 12,000, Disc Diameter: 125mm, Weight: 2.5kg.', '2024-05-12', '2026-05-12', 'Available', 'Requires regular maintenance, occasional overheating.', 'AG123_qrcode.png'),
 (2, 'bosch-drill-machine.jpg', 'Bosch Drill Machine', 'Bosch', 'Drill Machine', 'DM456', 'Power: 500W, Speed: 3000 RPM, Chuck Size: 13mm.', '2023-08-22', '2025-08-22', 'Available', 'Lightweight and easy to use.', 'AG123_qrcode.png'),
-(3, 'dewalt-impact-driver.jpg', 'DeWalt Impact Driver', 'DeWalt', 'Impact Driver', 'ID789', 'Torque: 180 Nm, Speed: 2,800 RPM.', '2023-07-10', '2025-07-10', 'Issued-Out', 'Battery life depleting fast.', 'AG123_qrcode.png'),
+(3, 'dewalt-impact-driver.jpg', 'DeWalt Impact Driver', 'DeWalt', 'Impact Driver', 'ID789', 'Torque: 180 Nm, Speed: 2,800 RPM.', '2023-07-10', '2025-07-10', 'Issued Out', 'Battery life depleting fast.', 'AG123_qrcode.png'),
 (4, 'hilti-rotary-hammer.jpg', 'Hilti Rotary Hammer', 'Hilti', 'Rotary Hammer', 'RH654', 'Impact Energy: 2.5J, Speed: 1200 RPM.', '2023-10-05', '2026-10-05', 'Available', 'Ideal for heavy-duty tasks.', 'AG123_qrcode.png'),
 (5, 'hitachi-circular-saw.jpg', 'Hitachi Circular Saw', 'Hitachi', 'Circular Saw', 'CS321', 'Blade Size: 185mm, Power: 1400W.', '2024-02-20', '2026-02-20', 'Issued Out', 'Sharp and efficient.', 'AG123_qrcode.png'),
 (6, 'ryobi-jigsaw.jpg', 'Ryobi Jigsaw', 'Ryobi', 'Jigsaw', 'JS987', 'Stroke Length: 26mm, Speed: 3,000 SPM.', '2023-06-15', '2025-06-15', 'Available', 'Works great for curved cuts.', 'AG123_qrcode.png'),
@@ -134,7 +138,8 @@ INSERT INTO `tools` (`id`, `picture`, `name`, `brand`, `category`, `tag`, `descr
 (17, '/public/images/tools/fluke_digital_multimeter.jpg', 'Fluke Digital Multimeter', 'Fluke', 'Multimeter', 'DM443', 'Voltage Range: 600V, Auto-ranging.', '2023-08-29', '2025-08-29', 'Issued Out', 'Battery low indicator showing.', '/public/qrcodes/tools/dm443.png'),
 (18, '/public/images/tools/greenlee_cable_cutter.jpg', 'Greenlee Cable Cutter', 'Greenlee', 'Cable Cutter', 'CC738', 'Cuts up to 1-inch cables.', '2023-06-21', '2025-06-21', 'Available', 'Blades are still sharp.', '/public/qrcodes/tools/cc738.png'),
 (19, '/public/images/tools/lincoln_welding_helmet.jpg', 'Lincoln Electric Welding Helmet', 'Lincoln Electric', 'Safety Gear', 'WH954', 'Auto-darkening lens, UV protection.', '2024-03-15', '2026-03-15', 'Available', 'Lens needs cleaning.', '/public/qrcodes/tools/wh954.png'),
-(20, '/public/images/tools/3m_safety_glasses.jpg', '3M Safety Glasses', '3M', 'Safety Gear', 'SG215', 'Scratch-resistant, Anti-fog.', '2024-04-10', '2026-04-10', 'Available', 'Lightweight and comfortable.', '/public/qrcodes/tools/sg215.png');
+(20, '/public/images/tools/3m_safety_glasses.jpg', '3M Safety Glasses', '3M', 'Safety Gear', 'SG215', 'Scratch-resistant, Anti-fog.', '2024-04-10', '2026-04-10', 'Available', 'Lightweight and comfortable.', '/public/qrcodes/tools/sg215.png'),
+(78, '', 'Test', 'Test', 'Test', 'TEST', 'TET', '2025-03-31', '2025-03-31', 'Available', 'DSZ', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHQAAAB0CAYAAABUmhYnAAAAAklEQVR4AewaftIAAAKtSURBVO3BQY6kAAwEwSyL/385d44+ISGgt8fjiPiDNUaxRinWKMUapVijFGuUYo1SrFGKNUqxRinWKMUapVijFGuUYo1SrFEObkrCJ6mcSUKn0iXhjEqXhE9SuaNYoxRrlGKNcvAwlScl4Y4kPEnlSUl4UrFGKdYoxRrl4GVJuELliiT8T0m4QuVNxRqlWKMUa5SDYVT+smKNUqxRijXKwTBJ6FTOJKFT+c2KNUqxRinWKAcvU/kklS4JZ1TuUPkmxRqlWKMUa5SDhyXhm6l0SehUziThmxVrlGKNUqxR4g9+sSR0Kn9ZsUYp1ijFGuXgpiR0Kl0SnqTSqXRJuELlTBKepPKmYo1SrFGKNcrBw5LQqTwpCVeodEnoknCHSpeETuVMEjqVO4o1SrFGKdYoBzepdEm4IgmdSpeETuUOlS4JnUqXhCcloVN5UrFGKdYoxRol/uAXSUKn0iXhk1S6JJxReVOxRinWKMUa5eCmJHwzlTNJ6FTOJKFLQqdyJgmdypOKNUqxRinWKAc3qfxPSehUuiR0KneodEnoktCpnElCp3JHsUYp1ijFGuXgpiR8kkqnckalS0Kn0iWhU+mS0Kl0SbhC5UnFGqVYoxRrlPiDG5LQqTwpCZ1Kl4ROpUtCp/KkJDxJ5Y5ijVKsUYo1ysHLknCFyh1J6FS6JHQqXRI6lTMqVyShU3lSsUYp1ijFGuVgGJUrknAmCZ1Kl4QzKp3Km4o1SrFGKdYoB3+MSpeETqVLQpeETuVMEjqVNxVrlGKNUqxRDl6m8iaVLgmdSpeEM0k4o/LNijVKsUYp1igHD0vCJyXhCpUuCZ3KFUnoVDqVLgmdypOKNUqxRinWKPEHa4xijVKsUYo1SrFGKdYoxRqlWKMUa5RijVKsUYo1SrFGKdYoxRqlWKP8AxUXCvF0TKnfAAAAAElFTkSuQmCC');
 
 -- --------------------------------------------------------
 
@@ -183,34 +188,35 @@ CREATE TABLE `vehicles` (
   `remarks` varchar(255) DEFAULT NULL,
   `maintenance_due` date DEFAULT NULL,
   `assigned_driver` varchar(100) DEFAULT NULL,
-  `qr` varchar(255) DEFAULT NULL
+  `qr` varchar(255) DEFAULT NULL,
+  `warranty` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `vehicles`
 --
 
-INSERT INTO `vehicles` (`id`, `picture`, `name`, `brand`, `plate_no`, `category`, `fuel_type`, `location`, `acquisition_date`, `status`, `remarks`, `maintenance_due`, `assigned_driver`, `qr`) VALUES
-(1, 'jetvac1.jpg', 'Jet Vac 1', 'Isuzu', 'ABC-1234', 'Jetting Truck', 'Diesel', 'Depot A', '2022-05-15', 'Active', 'Ready for deployment', '2025-06-10', 'John Doe', 'QR001'),
-(2, 'jetvac2.jpg', 'Jet Vac 2', 'Fuso', 'XYZ-5678', 'Jetting Truck', 'Diesel', 'Depot B', '2023-01-20', 'Under Maintenance', 'Hydraulic leak detected', '2025-04-22', 'Jane Smith', 'QR002'),
-(3, 'servicevan1.jpg', 'Service Van 1', 'Toyota', 'DEF-4567', 'Service Van', 'Gasoline', 'Depot C', '2021-11-05', 'Active', 'Driver assigned', '2025-05-12', 'Mike Ross', 'QR003'),
-(4, 'servicevan2.jpg', 'Service Van 2', 'Nissan', 'GHI-8910', 'Service Van', 'Diesel', 'Depot A', '2020-09-18', 'Active', 'New tires installed', '2025-07-30', 'Rachel Zane', 'QR004'),
-(5, 'pickup1.jpg', 'Pick-up Truck 1', 'Mitsubishi', 'JKL-1122', 'Pick-up Truck', 'Diesel', 'Depot B', '2019-03-12', 'Active', 'Good condition', '2025-08-15', 'Harvey Specter', 'QR005'),
-(6, 'pickup2.jpg', 'Pick-up Truck 2', 'Ford', 'MNO-3344', 'Pick-up Truck', 'Diesel', 'Depot C', '2018-07-22', 'Inactive', 'To be scrapped', '2025-05-25', 'Louis Litt', 'QR006'),
-(7, 'vacuum1.jpg', 'Vacuum Truck 1', 'Volvo', 'PQR-5566', 'Vacuum Truck', 'Diesel', 'Depot A', '2022-02-14', 'Active', 'Full tank', '2025-06-05', 'Donna Paulsen', 'QR007'),
-(8, 'vacuum2.jpg', 'Vacuum Truck 2', 'MAN', 'STU-7788', 'Vacuum Truck', 'Diesel', 'Depot B', '2021-08-09', 'Under Maintenance', 'Brake check needed', '2025-07-10', 'Harold Gunderson', 'QR008'),
-(9, 'truck1.jpg', 'Truck 1', 'Hyundai', 'VWX-9900', 'Cargo Truck', 'Diesel', 'Depot C', '2020-12-01', 'Active', 'Operational', '2025-09-01', 'Jessica Pearson', 'QR009'),
-(10, 'truck2.jpg', 'Truck 2', 'Hino', 'YZA-1235', 'Cargo Truck', 'Diesel', 'Depot A', '2019-04-30', 'Inactive', 'Retired vehicle', '2025-06-20', 'Katrina Bennett', 'QR010'),
-(11, 'servicecar1.jpg', 'Service Car 1', 'Honda', 'BCD-3456', 'Service Car', 'Gasoline', 'Depot B', '2021-03-17', 'Active', 'Windshield replaced', '2025-04-18', 'Jeff Malone', 'QR011'),
-(12, 'servicecar2.jpg', 'Service Car 2', 'Suzuki', 'EFG-7890', 'Service Car', 'Gasoline', 'Depot C', '2023-07-03', 'Active', 'Low fuel', '2025-08-22', 'Sheila Sazs', 'QR012'),
-(13, 'trailer1.jpg', 'Trailer 1', 'Scania', 'HIJ-2345', 'Trailer', 'Diesel', 'Depot A', '2022-10-12', 'Active', 'Operational', '2025-10-12', 'Stephen Huntley', 'QR013'),
-(14, 'trailer2.jpg', 'Trailer 2', 'DAF', 'KLM-6789', 'Trailer', 'Diesel', 'Depot B', '2020-06-18', 'Inactive', 'Awaiting parts', '2025-07-15', 'Dana Scott', 'QR014'),
-(15, 'jetvac3.jpg', 'Jet Vac 3', 'Isuzu', 'NOP-9012', 'Jetting Truck', 'Diesel', 'Depot C', '2023-02-28', 'Active', 'Fully serviced', '2025-09-25', 'Harvey Specter', 'QR015'),
-(16, 'pickup3.jpg', 'Pick-up Truck 3', 'Chevrolet', 'QRS-3456', 'Pick-up Truck', 'Diesel', 'Depot A', '2022-09-09', 'Active', 'Ready for field work', '2025-05-08', 'Mike Ross', 'QR016'),
-(17, 'vacuum3.jpg', 'Vacuum Truck 3', 'MAN', 'TUV-7891', 'Vacuum Truck', 'Diesel', 'Depot B', '2021-05-19', 'Under Maintenance', 'Engine noise', '2025-06-11', 'Donna Paulsen', 'QR017'),
-(18, 'truck3.jpg', 'Truck 3', 'Hino', 'WXY-2347', 'Cargo Truck', 'Diesel', 'Depot C', '2019-08-24', 'Active', 'New oil change', '2025-07-07', 'Jessica Pearson', 'QR018'),
-(19, 'servicecar3.jpg', 'Service Car 3', 'Hyundai', 'ZAB-5678', 'Service Car', 'Gasoline', 'Depot A', '2023-03-14', 'Active', 'Cleaned and ready', '2025-06-28', 'Jeff Malone', 'QR019'),
-(20, 'jetvac4.jpg', 'Jet Vac 4', 'Isuzu', 'CDE-8912', 'Jetting Truck', 'Diesel', 'Depot B', '2024-01-05', 'Active', 'Newly acquired', '2025-11-02', 'Rachel Zane', 'QR020');
+INSERT INTO `vehicles` (`id`, `picture`, `name`, `brand`, `plate_no`, `category`, `fuel_type`, `location`, `acquisition_date`, `status`, `remarks`, `maintenance_due`, `assigned_driver`, `qr`, `warranty`) VALUES
+(1, 'jetvac1.jpg', 'Jet Vac 1', 'Isuzu', 'ABC-1234', 'Jetting Truck', 'Diesel', 'Depot A', '2022-05-15', 'Available', 'Ready for deployment', '2025-06-10', 'John Doe', 'QR001', NULL),
+(2, 'jetvac2.jpg', 'Jet Vac 2', 'Fuso', 'XYZ-5678', 'Jetting Truck', 'Diesel', 'Depot B', '2023-01-20', 'Available', 'Hydraulic leak detected', '2025-04-22', 'Jane Smith', 'QR002', NULL),
+(3, 'servicevan1.jpg', 'Service Van 1', 'Toyota', 'DEF-4567', 'Service Van', 'Gasoline', 'Depot C', '2021-11-05', 'Maintenace', 'Driver assigned', '2025-05-12', 'Mike Ross', 'QR003', NULL),
+(4, 'servicevan2.jpg', 'Service Van 2', 'Nissan', 'GHI-8910', 'Service Van', 'Diesel', 'Depot A', '2020-09-18', 'In Use', 'New tires installed', '2025-07-30', 'Rachel Zane', 'QR004', NULL),
+(5, 'pickup1.jpg', 'Pick-up Truck 1', 'Mitsubishi', 'JKL-1122', 'Pick-up Truck', 'Diesel', 'Depot B', '2019-03-12', 'Maintenance', 'Good condition', '2025-08-15', 'Harvey Specter', 'QR005', NULL),
+(6, 'pickup2.jpg', 'Pick-up Truck 2', 'Ford', 'MNO-3344', 'Pick-up Truck', 'Diesel', 'Depot C', '2018-07-22', 'Inactive', 'To be scrapped', '2025-05-25', 'Louis Litt', 'QR006', NULL),
+(7, 'vacuum1.jpg', 'Vacuum Truck 1', 'Volvo', 'PQR-5566', 'Vacuum Truck', 'Diesel', 'Depot A', '2022-02-14', 'Active', 'Full tank', '2025-06-05', 'Donna Paulsen', 'QR007', NULL),
+(8, 'vacuum2.jpg', 'Vacuum Truck 2', 'MAN', 'STU-7788', 'Vacuum Truck', 'Diesel', 'Depot B', '2021-08-09', 'Under Maintenance', 'Brake check needed', '2025-07-10', 'Harold Gunderson', 'QR008', NULL),
+(9, 'truck1.jpg', 'Truck 1', 'Hyundai', 'VWX-9900', 'Cargo Truck', 'Diesel', 'Depot C', '2020-12-01', 'Active', 'Operational', '2025-09-01', 'Jessica Pearson', 'QR009', NULL),
+(10, 'truck2.jpg', 'Truck 2', 'Hino', 'YZA-1235', 'Cargo Truck', 'Diesel', 'Depot A', '2019-04-30', 'Inactive', 'Retired vehicle', '2025-06-20', 'Katrina Bennett', 'QR010', NULL),
+(11, 'servicecar1.jpg', 'Service Car 1', 'Honda', 'BCD-3456', 'Service Car', 'Gasoline', 'Depot B', '2021-03-17', 'Active', 'Windshield replaced', '2025-04-18', 'Jeff Malone', 'QR011', NULL),
+(12, 'servicecar2.jpg', 'Service Car 2', 'Suzuki', 'EFG-7890', 'Service Car', 'Gasoline', 'Depot C', '2023-07-03', 'Active', 'Low fuel', '2025-08-22', 'Sheila Sazs', 'QR012', NULL),
+(13, 'trailer1.jpg', 'Trailer 1', 'Scania', 'HIJ-2345', 'Trailer', 'Diesel', 'Depot A', '2022-10-12', 'Active', 'Operational', '2025-10-12', 'Stephen Huntley', 'QR013', NULL),
+(14, 'trailer2.jpg', 'Trailer 2', 'DAF', 'KLM-6789', 'Trailer', 'Diesel', 'Depot B', '2020-06-18', 'Inactive', 'Awaiting parts', '2025-07-15', 'Dana Scott', 'QR014', NULL),
+(15, 'jetvac3.jpg', 'Jet Vac 3', 'Isuzu', 'NOP-9012', 'Jetting Truck', 'Diesel', 'Depot C', '2023-02-28', 'Active', 'Fully serviced', '2025-09-25', 'Harvey Specter', 'QR015', NULL),
+(16, 'pickup3.jpg', 'Pick-up Truck 3', 'Chevrolet', 'QRS-3456', 'Pick-up Truck', 'Diesel', 'Depot A', '2022-09-09', 'Active', 'Ready for field work', '2025-05-08', 'Mike Ross', 'QR016', NULL),
+(17, 'vacuum3.jpg', 'Vacuum Truck 3', 'MAN', 'TUV-7891', 'Vacuum Truck', 'Diesel', 'Depot B', '2021-05-19', 'Under Maintenance', 'Engine noise', '2025-06-11', 'Donna Paulsen', 'QR017', NULL),
+(18, 'truck3.jpg', 'Truck 3', 'Hino', 'WXY-2347', 'Cargo Truck', 'Diesel', 'Depot C', '2019-08-24', 'Active', 'New oil change', '2025-07-07', 'Jessica Pearson', 'QR018', NULL),
+(19, 'servicecar3.jpg', 'Service Car 3', 'Hyundai', 'ZAB-5678', 'Service Car', 'Gasoline', 'Depot A', '2023-03-14', 'Active', 'Cleaned and ready', '2025-06-28', 'Jeff Malone', 'QR019', NULL),
+(20, 'jetvac4.jpg', 'Jet Vac 4', 'Isuzu', 'CDE-8912', 'Jetting Truck', 'Diesel', 'Depot B', '2024-01-05', 'Active', 'Newly acquired', '2025-11-02', 'Rachel Zane', 'QR020', NULL);
 
 --
 -- Indexes for dumped tables
@@ -260,13 +266,13 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `consumables`
 --
 ALTER TABLE `consumables`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `tools`
 --
 ALTER TABLE `tools`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=79;
 
 --
 -- AUTO_INCREMENT for table `vehicles`

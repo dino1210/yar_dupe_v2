@@ -6,7 +6,7 @@ import {
   TableHeader,
   TableRow,
 } from "../../components/ui/table";
-import { Pencil, Trash2, CircleOff } from "lucide-react";
+import { Pencil, Trash2, CircleOff, Plus } from "lucide-react";
 
 // Define Consumable structure
 interface Consumable {
@@ -72,7 +72,7 @@ export default function ConsumablesLogsTable() {
         <div className="border-b border-gray-100 dark:border-gray-700 px-5 py-3 flex flex-col sm:flex-row gap-2">
           <input
             type="text"
-            placeholder="Search by name or tag"
+            placeholder="Search by category name"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="border p-2 text-xs rounded-md w-full sm:w-1/3 bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
@@ -83,25 +83,17 @@ export default function ConsumablesLogsTable() {
             className="border text-xs p-2 rounded-md w-full sm:w-1/4 bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
           >
             <option value="">Category Type</option>
-            <option value="Available">Tools And Equipments</option>
-            <option value="Low Stock">Consumables</option>
-            <option value="Low Stock">Vehicles</option>
-          </select>
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="border text-xs p-2 rounded-md w-full sm:w-1/4 bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
-          >
-            <option value="">Unit</option>
-            <option value="Available">Available</option>
-            <option value="Low Stock">Low Stock</option>
+            <option value="Tools And Equipments">Tools And Equipments</option>
+            <option value="Consumables">Consumables</option>
+            <option value="Vehicles">Vehicles</option>
           </select>
           <button
-            type="button"
-            className="px-3 py-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          >
-            Add a Category
-          </button>
+          type="button"
+          className="flex items-center gap-2 px-2 text-xs rounded-md bg-white dark:bg-blue-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
+        >
+          New
+          <Plus className="w-4 h-4" />
+        </button>
         </div>
 
         {/* Table */}

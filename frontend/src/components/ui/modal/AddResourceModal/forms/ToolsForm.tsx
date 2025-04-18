@@ -26,7 +26,6 @@ interface ToolFormData {
   description: string;
   purchase_date: string;
   warranty: string;
-  status: string;
   remarks: string;
 }
 
@@ -40,7 +39,6 @@ const ToolForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
     description: "",
     purchase_date: "",
     warranty: "",
-    status: "",
     remarks: "",
   });
 
@@ -196,7 +194,6 @@ const ToolForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
           type="text"
           name="description"
           value={formData.description || ""}
-          required
           onChange={handleInputChange}
           className="border rounded-md p-2 text-xs bg-white text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
         />
@@ -244,28 +241,12 @@ const ToolForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
           }
           dateFormat="yyyy-MM-dd"
           placeholderText="Select a date"
-          required
           className="border rounded-md p-2 bg-white text-xs text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 w-full "
           calendarClassName="dark:bg-gray-700 dark:text-black"
           showMonthDropdown
           showYearDropdown
           dropdownMode="select"
         />
-      </div>
-
-      {/* Status */}
-      <div className="flex flex-col">
-        <label className="mb-1 font-medium text-xs text-gray-700 dark:text-gray-300">
-          Status
-        </label>
-        <select
-          name="status"
-          value={formData.status || ""}
-          onChange={handleInputChange}
-          className="border rounded-md p-2 bg-white text-xs text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 w-full"
-        >
-          <option value="Available">Available</option>
-        </select>
       </div>
 
       {/* Remarks */}
@@ -277,7 +258,6 @@ const ToolForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
           type="text"
           name="remarks"
           value={formData.remarks || ""}
-          required
           onChange={handleInputChange}
           className="border rounded-md p-2 text-xs bg-white text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
         />

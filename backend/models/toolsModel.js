@@ -3,11 +3,7 @@ const QRCode = require("qrcode");
 
 // ADD
 const addTool = async (toolData) => {
-    const {
-        picture, name, brand, category, tag,
-        description, purchase_date, warranty,
-        status, remarks
-    } = toolData;
+    const { picture, name, brand, category, tag, description, purchase_date, warranty, status = "Available", remarks } = toolData;
 
     const insertQuery = `
         INSERT INTO tools (picture, name, brand, category, tag, description, purchase_date, warranty, status, remarks)
@@ -15,7 +11,6 @@ const addTool = async (toolData) => {
     `;
 
     try {
-        // Insert tool first (without QR)
         const [result] = await db.query(insertQuery, [
             picture, name, brand, category, tag,
             description, purchase_date, warranty,

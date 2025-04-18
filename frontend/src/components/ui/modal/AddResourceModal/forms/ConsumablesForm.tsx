@@ -24,7 +24,6 @@ interface ConsumableFormData {
   unit: string;
   location: string;
   date: string;
-  status: string;
   qr: string;
 }
 
@@ -42,7 +41,6 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({
     unit: " ",
     location: " ",
     date: " ",
-    status: " ",
     qr: " ",
   });
 

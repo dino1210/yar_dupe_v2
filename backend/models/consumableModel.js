@@ -2,7 +2,7 @@ const db = require("../config/db");
 
 // ADD
 const addConsumable = async (consumableData) => {
-    const { picture, tag, name, category, quantity, minStock, unit, location, date, status, qr } = consumableData;
+    const { picture, tag, name, category, quantity, minStock, unit, location, date, status = "In Stock", qr } = consumableData;
     const query = `INSERT INTO consumables (picture, tag, name, category, quantity, minStock, unit, location, date, status, qr) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
     try {

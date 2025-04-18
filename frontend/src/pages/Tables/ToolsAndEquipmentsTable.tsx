@@ -18,6 +18,7 @@ import {
   Funnel,
 } from "lucide-react";
 import axios from "axios";
+import { File } from "lucide-react";
 import AddResourceModal from "../../components/ui/modal/AddResourceModal/AddResourceModal";
 
 // Define the expected structure
@@ -33,6 +34,7 @@ interface Tool {
   warranty: string;
   status: string;
   remarks: string;
+  attachments: string;
   qr: string;
 }
 
@@ -216,15 +218,16 @@ export default function ToolsAndEquipmentsTable() {
               <TableRow>
                 {[
                   "Images",
+                  "Tag/Code",
                   "Tools/Equipments",
                   "Brand",
                   "Category",
-                  "Tag/Code",
+                  "Status",
                   "Description",
                   "Date of Purchase",
                   "Warranty",
-                  "Status",
                   "Remarks",
+                  "Attachment",
                   "QR",
                   "Actions",
                 ].map((header, index) => (
@@ -249,8 +252,8 @@ export default function ToolsAndEquipmentsTable() {
                         src={`${
                           import.meta.env.VITE_API_BASE_URL
                         }/assets/images/tools/${tool.picture}`}
-                        alt={`${tool.name}'s Profile`}
-                        className="w-16 h-16 rounded-lg object-cover cursor-pointer border border-gray-300  "
+                        alt={`${tool.name}' Image`}
+                        className="w-16 h-16 rounded-lg object-cover cursor-pointer border border-gray-300"
                         onClick={() =>
                           setSelectedImage(
                             `${
@@ -262,6 +265,11 @@ export default function ToolsAndEquipmentsTable() {
                     </TableCell>
                     <TableCell className="px-5 py-4 sm:px-6 text-center">
                       <span className="block font-medium text-gray-800 text-theme-xs dark:text-white/70">
+                        {tool.tag}
+                      </span>
+                    </TableCell>
+                    <TableCell className="px-5 py-4 sm:px-6 text-center">
+                      <span className="block font-medium text-gray-800 text-theme-xs dark:text-gray-400">
                         {tool.name}
                       </span>
                     </TableCell>
@@ -271,10 +279,15 @@ export default function ToolsAndEquipmentsTable() {
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                       {tool.category}
                     </TableCell>
-                    <TableCell className="px-5 py-4 sm:px-6 text-center">
-                      <span className="block font-medium text-gray-800 text-theme-xs dark:text-gray-400">
-                        {tool.tag}
-                      </span>
+                    <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
+                      <Badge
+                        size="sm"
+                        color={
+                          tool.status === "Available" ? "success" : "warning"
+                        } 
+                      >
+                        {tool.status}
+                      </Badge>
                     </TableCell>
                     <TableCell className="px-1 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                       {tool.description}
@@ -286,22 +299,20 @@ export default function ToolsAndEquipmentsTable() {
                     {new Date(tool.warranty).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                      <Badge
-                        size="sm"
-                        color={
-                          tool.status === "Available" ? "success" : "error"
-                        }
-                      >
-                        {tool.status}
-                      </Badge>
+                      {tool.remarks}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                      {tool.remarks}
+                      <button className="flex flex-row gap-1 border border-gray-600 bg-white hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 m-auto rounded-lg px-7 py-2">
+                        <File 
+                        className="w-auto h-4 m-auto"/>
+                       <p className="m-auto">File</p>
+                      </button>
+                      {tool.attachments}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                       <img
                         src={tool.qr}
-                        alt={`${tool.name}'s QR Code`}
+                        alt={`QR Code`}
                         className="w-auto h-15 mx-auto rounded-lg object-cover cursor-pointer"
                         onClick={() =>
                           setSelectedImage(tool.qr)
@@ -356,8 +367,8 @@ export default function ToolsAndEquipmentsTable() {
             className="border p-2 text-xs rounded-md bg-white dark:bg-gray-900 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 dark:hover:bg-gray-800"
           >
             <option value={10}>10 Items</option>
-            <option value={20}>20 Items</option>
             <option value={50}>50 Items</option>
+            <option value={10000}>All Items</option>
           </select>
         </div>
 
@@ -401,7 +412,7 @@ export default function ToolsAndEquipmentsTable() {
             <div className="relative">
               <img
                 src={selectedImage}
-                alt="Full Size"
+                alt={"Full Size"}
                 className="w-[250px] h-[250px] object-cover rounded-lg"
               />
               {/* Close Button */}
