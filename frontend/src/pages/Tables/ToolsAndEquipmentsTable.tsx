@@ -16,6 +16,7 @@ import {
   ArrowUpAZ,
   Plus,
   Funnel,
+  Search,
 } from "lucide-react";
 import axios from "axios";
 import { File } from "lucide-react";
@@ -134,9 +135,12 @@ export default function ToolsAndEquipmentsTable() {
     <div className="overflow-y-hidden rounded-xl border w-full border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
       {/* Filter Controls */}
       <div className="sticky top-0 overflow-x-auto z-10 px-5 py-3 flex flex-col sm:flex-row gap-2 bg-white dark:bg-gray-800 shadow-sm">
+        <Search 
+        className="absolute text-gray-300 m-2 w-auto h-5" 
+        />
         <input
           type="text"
-          placeholder="Search by name or tag"
+          placeholder="           Search by name or tag"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="border p-2 text-xs rounded-md w-full sm:w-1/3 bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
