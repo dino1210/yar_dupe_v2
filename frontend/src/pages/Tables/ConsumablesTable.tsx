@@ -141,13 +141,15 @@ export default function ConsumablesTable() {
           onChange={(e) => setSearch(e.target.value)}
           className="border p-2 text-xs rounded-md w-full sm:w-1/3 bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
         />
-        <input
-          type="text"
-          placeholder="Brand"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="border p-2 text-xs rounded-md w-full sm:w-1/3 bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
-        />
+        <select
+          value={categoryFilter}
+          onChange={(e) => setCategoryFilter(e.target.value)}
+          className="border p-2 text-xs rounded-md w-full sm:w-1/4 bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
+        >
+          <option value="">Brand</option>
+          <option value="Tools">Tools</option>
+          <option value="Equipments">Equipments</option>
+        </select>
         <select
           value={categoryFilter}
           onChange={(e) => setCategoryFilter(e.target.value)}
@@ -273,7 +275,7 @@ export default function ConsumablesTable() {
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                       {consumable.category}
                     </TableCell>
-                    <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
+                                        <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                       <span className="block font-bold  text-gray-800 text-theme-sm dark:text-white/70">
                         {consumable.quantity}
                       </span>

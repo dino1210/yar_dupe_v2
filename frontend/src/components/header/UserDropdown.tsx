@@ -1,46 +1,66 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dropdown } from "../ui/dropdown/Dropdown";
-import { Link } from "react-router";
+import { User } from "lucide-react";
 
 export default function UserDropdown() {
   const [isOpen, setIsOpen] = useState(false);
+  const [user, setUser] = useState({
+    name: "",
+    role: "",
+    email: "",
+  });
 
-  function toggleDropdown() {
-    setIsOpen(!isOpen);
-  }
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
 
-  function closeDropdown() {
-    setIsOpen(false);
-  }
+    if (storedUser && storedUser !== "undefined") {
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (error) {
+        console.error("Failed to parse stored user:", error);
+        localStorage.removeItem("user"); // Optional: clean up the mess
+      }
+    } else {
+      console.warn("No valid user found in localStorage.");
+    }
+  }, []);
+
+  const toggleDropdown = () => setIsOpen(!isOpen);
+  const closeDropdown = () => setIsOpen(false);
+
+  const handleSignOut = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user"); // remove user info
+    window.location.href = "/"; // redirect to login page
+  };
+
   return (
     <div className="relative">
       <button
         onClick={toggleDropdown}
         className="flex items-center text-gray-700 dropdown-toggle dark:text-gray-400"
       >
-        <span className="mr-3 overflow-hidden rounded-full h-11 w-11">
-          <img src="/images/user/ownerr.jpg" alt="User" />
+        <span className="mr-1 flex flex-row gap-1 border p-[9.5px] text-gray-500 transition-colors bg-white border-gray-200 hover:text-dark-900 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white rounded-xl font-medium text-theme-sm">
+          {user.name || "User"} <User className="w-auto h-3 m-auto" />{" "}
+          <svg
+            className={`stroke-gray-500 dark:stroke-gray-400 transition-transform duration-200 ${
+              isOpen ? "rotate-180" : ""
+            }`}
+            width="18"
+            height="20"
+            viewBox="0 0 18 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M4.3125 8.65625L9 13.3437L13.6875 8.65625"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
         </span>
-
-        <span className="block mr-1 font-medium text-theme-sm">Angelo</span>
-        <svg
-          className={`stroke-gray-500 dark:stroke-gray-400 transition-transform duration-200 ${
-            isOpen ? "rotate-180" : ""
-          }`}
-          width="18"
-          height="20"
-          viewBox="0 0 18 20"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M4.3125 8.65625L9 13.3437L13.6875 8.65625"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
       </button>
 
       <Dropdown
@@ -49,21 +69,22 @@ export default function UserDropdown() {
         className="absolute right-0 mt-[17px] flex w-[260px] flex-col rounded-2xl border border-gray-200 bg-white p-3 shadow-theme-lg dark:border-gray-800 dark:bg-gray-dark"
       >
         <div>
-          <div className="flex flex-row gap-24">
-          <span className="block font-medium text-gray-700 text-theme-sm dark:text-gray-400">
-            Angelo Padilla
-          </span>
-          <span className="block font-normal text-gray-900 text-theme-sm dark:text-gray-300">
-            Admin
-          </span>
+          <div className="flex flex-row justify-between">
+            <span className="font-medium text-gray-700 dark:text-gray-400">
+              {user.name}
+            </span>
+            <span className="font-normal text-gray-900 dark:text-gray-300">
+              {user.role}
+            </span>
           </div>
           <span className="mt-0.5 block text-theme-xs text-gray-500 dark:text-gray-400">
-            angelo.padilla@gmail.com
+            {user.email}
           </span>
         </div>
-        <Link
-          to="/"
-          className="flex items-center gap-3 px-3 py-2 mt-3 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
+
+        <button
+          onClick={handleSignOut}
+          className="flex items-center gap-3 px-3 py-2 mt-3 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-white/5"
         >
           <svg
             className="fill-gray-500 group-hover:fill-gray-700 dark:group-hover:fill-gray-300"
@@ -71,7 +92,6 @@ export default function UserDropdown() {
             height="24"
             viewBox="0 0 24 24"
             fill="none"
-            xmlns="http://www.w3.org/2000/svg"
           >
             <path
               fillRule="evenodd"
@@ -81,7 +101,7 @@ export default function UserDropdown() {
             />
           </svg>
           Sign out
-        </Link>
+        </button>
       </Dropdown>
     </div>
   );

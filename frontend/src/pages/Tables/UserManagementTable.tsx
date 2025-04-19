@@ -105,7 +105,7 @@ export default function UserManagementTable() {
           {/* Table Header */}
           <TableHeader className="border-b text-sm border-gray-100 dark:border-gray-700">
             <TableRow>
-              {["Profile", "Name", "Email", "Role", "Status", "Date Created", "Actions"].map((header, index) => (
+              {["Name", "Email", "Role", "Status", "Date Created", "Actions"].map((header, index) => (
                 <TableCell
                   key={index}
                   isHeader
@@ -122,14 +122,6 @@ export default function UserManagementTable() {
             {currentUsers.length > 0 ? (
               currentUsers.map((user) => (
                 <TableRow key={user.id}>
-                  <TableCell className="px-5 py-4 sm:px-6 text-start">
-                    {/* Profile Picture */}
-                    <img
-                      src={user.profile_picture}
-                      alt={`${user.name}'s Profile`}
-                      className="w-8 h-8 rounded-full object-cover"
-                    />
-                  </TableCell>
                   <TableCell className="px-5 py-4 sm:px-6 text-start">
                     <span className="block font-medium text-xs text-gray-800 dark:text-white">
                       {user.name}

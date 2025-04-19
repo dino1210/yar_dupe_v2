@@ -1,7 +1,7 @@
-import AvailableTools from "../../components/ecommerce/AvailableTools";
-import MonthlySalesChart from "../../components/ecommerce/MonthlySalesChart";
+import AvailableTools from "../../components/dashboardcontents/AvailableTools";
+import MonthlySalesChart from "../../components/dashboardcontents/MonthlySalesChart";
 
-import RecentOrders from "../../components/ecommerce/RecentOrders";
+import RecentOrders from "../../components/dashboardcontents/RecentOrders";
 import PageMeta from "../../components/common/PageMeta";
 import BarChart from "../Charts/BarChart";
 

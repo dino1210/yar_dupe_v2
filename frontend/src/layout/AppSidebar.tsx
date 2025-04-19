@@ -9,6 +9,7 @@ import {
 } from "../icons";
 import { useSidebar } from "../context/SidebarContext";
 import { Boxes, CalendarCog, Package2, Settings, User, FileClock } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
 
 type NavItem = {
   name: string;
@@ -16,7 +17,6 @@ type NavItem = {
   path?: string;
   subItems?: { name: string; path: string; pro?: boolean; new?: boolean }[];
 };
-
 
 const navItems: NavItem[] = [
   {
@@ -79,9 +79,11 @@ const othersItems: NavItem[] = [
 ];
 
 const AppSidebar: React.FC = () => {
+  const { user } = useAuth();
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
   const location = useLocation();
 
+  const role = user?.role?.toLowerCase();
   const [openSubmenu, setOpenSubmenu] = useState<{
     type: "main" | "others";
     index: number;
@@ -132,7 +134,7 @@ const AppSidebar: React.FC = () => {
       }
     }
   }, [openSubmenu]);
-
+  if (!user) return null;
   const handleSubmenuToggle = (index: number, menuType: "main" | "others") => {
     setOpenSubmenu((prevOpenSubmenu) => {
       if (
@@ -144,6 +146,33 @@ const AppSidebar: React.FC = () => {
       }
       return { type: menuType, index };
     });
+  };
+
+  const roleVisibleItems: Record<string, string[]> = {
+    admin: navItems.map(item => item.name), // All items
+    manager: [
+      "Dashboard",
+      "Resources",
+      "Resources Logs",
+      "Reports",
+      "Projects",
+      "Settings",
+    ],
+    staff: [
+      "Dashboard",
+      "Resources",
+      "Resources Logs",
+      "Categories",
+      "Settings",
+    ],
+  };
+  
+  const getVisibleNavItems = () => {
+    if (!role) return [];
+  
+    const allowedItems = roleVisibleItems[role] || [];
+  
+    return navItems.filter(item => allowedItems.includes(item.name));
   };
 
   const renderMenuItems = (items: NavItem[], menuType: "main" | "others") => (
@@ -263,10 +292,14 @@ const AppSidebar: React.FC = () => {
                 ))}
               </ul>
             </div>
+
+            
           )}
         </li>
+        
       ))}
     </ul>
+    
   );
 
   return (
@@ -289,7 +322,7 @@ const AppSidebar: React.FC = () => {
           !isExpanded && !isHovered ? "lg:justify-center" : "justify-start"
         }`}
       >
-        <Link to="/">
+        <Link to="/capstone">
           {isExpanded || isHovered || isMobileOpen ? (
             <>
               <img
@@ -334,7 +367,7 @@ const AppSidebar: React.FC = () => {
                   <HorizontaLDots className="size-6" />
                 )}
               </h2>
-              {renderMenuItems(navItems, "main")}
+              {renderMenuItems(getVisibleNavItems(), "main")}
             </div>
             <div className="">
               <h2

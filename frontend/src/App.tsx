@@ -4,6 +4,7 @@ import SignUp from "./pages/AuthPages/SignUp";
 import NotFound from "./pages/OtherPage/NotFound";
 import Videos from "./pages/UiElements/Videos";
 import Images from "./pages/UiElements/Images";
+import Capstone from "./components/ui/videos/Capstone";
 import Alerts from "./pages/UiElements/Alerts";
 import Badges from "./pages/UiElements/Badges";
 import Avatars from "./pages/UiElements/Avatars";
@@ -18,74 +19,158 @@ import Home from "./pages/Dashboard/Home";
 import Login from "./pages/AuthPages/Login";
 import Check from "./pages/Check";
 import Categories from "./pages/Categories";
-import Reports from "./pages/Reports" ;
-import Projects from "./pages/Projects" ;
-import UserManagement from "./pages/UserManagement" ;
-import Settings from "./pages/Settings" ;
-import ToolsAndEquipments from "./pages/ToolsAndEquipments"
-import Consumables from "./pages/Consumables"
-import Vehicles from "./pages/Vehicles"
+import Reports from "./pages/Reports";
+import Projects from "./pages/Projects";
+import UserManagement from "./pages/UserManagement";
+import Settings from "./pages/Settings";
+import ToolsAndEquipments from "./pages/ToolsAndEquipments";
+import Consumables from "./pages/Consumables";
+import Vehicles from "./pages/Vehicles";
 import ToolsAndEquipmentsLogs from "./pages/LogsPages/ToolsAndequipmentsLogs";
 import ConsumablesLogs from "./pages/LogsPages/ConsumablesLogs";
 import VehiclesLogs from "./pages/LogsPages/VehiclesLogs";
-
+import ProtectedRoute from "./components/auth/ProtectedRoutes";
+import RoleBasedRoute from "./components/auth/RolebasedRoutes";
 
 export default function App() {
   return (
     <>
-    <div className="">
-      <Router>
-        <ScrollToTop />
-        <Routes>
-          {/* Dashboard Layout */}
-          <Route path="/" element={<Login />} />
-          <Route element={<AppLayout />}>
-            <Route index path="/home" element={<Home />} />
+      <div className="">
+        <Router>
+          <ScrollToTop />
+          <Routes>
+            {/* Dashboard Layout */}
+            <Route path="/" element={<Login />} />
+            <Route element={<AppLayout />}>
+              <Route
+                index
+                path="/home"
+                element={
+                  <ProtectedRoute>
+                    <Home />
+                  </ProtectedRoute>
+                }
+              />
 
-            {/* Others Page */}
-            <Route path="/check" element={<Check />} />
-            <Route path="/categories" element={<Categories />} />
-            <Route path="/reports" element={<Reports />} />
-            <Route path="/projects" element={<Projects />} />
-            <Route path="/usermanagement" element={<UserManagement />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/tools" element={<ToolsAndEquipments />} />
-            <Route path="/consumables" element={<Consumables />} />
-            <Route path="/vehicles" element={<Vehicles />} />
-            <Route path="/consumables-logs" element={<ConsumablesLogs/>} />
-            <Route path="/tools-logs" element={<ToolsAndEquipmentsLogs/>} />
-            <Route path="/vehicles-logs" element={<VehiclesLogs/>}  />
-            
+              {/* Others Page */}
+              <Route path="/check" element={<Check />} />
+              <Route
+                path="/categories"
+                element={
+                  <ProtectedRoute>
+                    <Categories />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/reports"
+                element={
+                  <RoleBasedRoute allowedRoles={["Admin", "Manager"]}>
+                    <Reports />
+                  </RoleBasedRoute>
+                }
+              />
+              <Route
+                path="/projects"
+                element={
+                  <RoleBasedRoute allowedRoles={["Admin", "Manager"]}>
+                    <Projects />
+                  </RoleBasedRoute>
+                }
+              />
+              <Route
+                path="/usermanagement"
+                element={
+                  <RoleBasedRoute allowedRoles={["Admin"]}>
+                    <UserManagement />
+                  </RoleBasedRoute>
+                }
+              />
+              <Route
+                path="/settings"
+                element={
+                  <ProtectedRoute>
+                    <Settings />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/tools"
+                element={
+                  <ProtectedRoute>
+                    <ToolsAndEquipments />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/consumables"
+                element={
+                  <ProtectedRoute>
+                    <Consumables />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/vehicles"
+                element={
+                  <ProtectedRoute>
+                    <Vehicles />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/consumables-logs"
+                element={
+                  <ProtectedRoute>
+                    <ConsumablesLogs />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/tools-logs"
+                element={
+                  <ProtectedRoute>
+                    <ToolsAndEquipmentsLogs />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/vehicles-logs"
+                element={
+                  <ProtectedRoute>
+                    <VehiclesLogs />
+                  </ProtectedRoute>
+                }
+              />
 
+              {/* Forms */}
+              <Route path="/form-elements" element={<FormElements />} />
 
+              {/* Tables */}
+              <Route path="/basic-tables" element={<BasicTables />} />
 
-            {/* Forms */}
-            <Route path="/form-elements" element={<FormElements />} />
+              {/* Ui Elements */}
+              <Route path="/alerts" element={<Alerts />} />
+              <Route path="/avatars" element={<Avatars />} />
+              <Route path="/badge" element={<Badges />} />
+              <Route path="/buttons" element={<Buttons />} />
+              <Route path="/images" element={<Images />} />
+              <Route path="/videos" element={<Videos />} />
 
-            {/* Tables */}
-            <Route path="/basic-tables" element={<BasicTables />} />
+              {/* Charts */}
+              <Route path="/line-chart" element={<LineChart />} />
+              <Route path="/bar-chart" element={<BarChart />} />
+            </Route>
 
-            {/* Ui Elements */}
-            <Route path="/alerts" element={<Alerts />} />
-            <Route path="/avatars" element={<Avatars />} />
-            <Route path="/badge" element={<Badges />} />
-            <Route path="/buttons" element={<Buttons />} />
-            <Route path="/images" element={<Images />} />
-            <Route path="/videos" element={<Videos />} />
+            {/* Auth Layout */}
+            <Route path="/signin" element={<SignIn />} />
+            <Route path="/signup" element={<SignUp />} />
 
-            {/* Charts */}
-            <Route path="/line-chart" element={<LineChart />} />
-            <Route path="/bar-chart" element={<BarChart />} />
-          </Route>
-
-          {/* Auth Layout */}
-          <Route path="/signin" element={<SignIn />} />
-          <Route path="/signup" element={<SignUp />} />
-
-          {/* Fallback Route */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Router>
+            {/* Fallback Route */}
+            <Route path="*" element={<NotFound />} />
+            <Route path="/capstone" element={<Capstone />} />
+          </Routes>
+        </Router>
       </div>
     </>
   );
