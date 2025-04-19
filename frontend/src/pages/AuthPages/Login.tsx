@@ -43,7 +43,7 @@ const Login = () => {
   return (
     <div
       className="relative flex min-h-screen bg-cover bg-center justify-center items-center px-4"
-      style={{ backgroundImage: "url('/src/images/login-bg.jpg')" }}
+      style={{ backgroundImage: "url('/images/logo/login-bg.jpg')" }}
     >
       <div className="absolute inset-0 bg-black opacity-80"></div>
       <div className="relative hidden sm:flex flex-col items-center text-center text-white p-6">
