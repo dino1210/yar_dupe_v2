@@ -322,7 +322,7 @@ const AppSidebar: React.FC = () => {
           !isExpanded && !isHovered ? "lg:justify-center" : "justify-start"
         }`}
       >
-        <Link to="/capstone">
+        <Link to="/capstone" className="cursor-default">
           {isExpanded || isHovered || isMobileOpen ? (
             <>
               <img

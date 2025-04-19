@@ -41,7 +41,7 @@ export default function UserDropdown() {
         className="flex items-center text-gray-700 dropdown-toggle dark:text-gray-400"
       >
         <span className="mr-1 flex flex-row gap-1 border p-[9.5px] text-gray-500 transition-colors bg-white border-gray-200 hover:text-dark-900 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white rounded-xl font-medium text-theme-sm">
-          {user.name || "User"} <User className="w-auto h-3 m-auto" />{" "}
+        <User className="w-auto h-3.5 mr-1 m-auto" /> {user.name || "User"} 
           <svg
             className={`stroke-gray-500 dark:stroke-gray-400 transition-transform duration-200 ${
               isOpen ? "rotate-180" : ""
@@ -73,7 +73,7 @@ export default function UserDropdown() {
             <span className="font-medium text-gray-700 dark:text-gray-400">
               {user.name}
             </span>
-            <span className="font-normal text-gray-900 dark:text-gray-300">
+            <span className="border border-gray-500 rounded-lg p-1 font-semibold text-xs text-gray-900 dark:text-gray-300">
               {user.role}
             </span>
           </div>
