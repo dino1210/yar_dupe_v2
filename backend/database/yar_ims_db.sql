@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 20, 2025 at 03:41 PM
+-- Generation Time: Apr 18, 2025 at 10:46 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -92,40 +92,6 @@ INSERT INTO `consumables` (`id`, `picture`, `tag`, `name`, `quantity`, `minStock
 (22, ' ', 'Test', ' Test', 12, 12, 'sets', ' 12', '0000-00-00', ' ', ' ', 'tEST'),
 (23, ' ', '234', ' ', 3456, 3456, 'rolls', 'dfjnm', '0000-00-00', ' ', ' ', '2345'),
 (24, ' ', 'DFGBH', 'tFGH', 456, 45, 'tubes', ' 1', '0000-00-00', 'In Stock', ' ', 'CVGBH');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `projects`
---
-
-CREATE TABLE `projects` (
-  `id` int(11) NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `manager` varchar(255) NOT NULL,
-  `personInCharge` varchar(255) DEFAULT NULL,
-  `creator` varchar(255) NOT NULL,
-  `startDate` date NOT NULL,
-  `endDate` date NOT NULL,
-  `status` varchar(50) DEFAULT NULL,
-  `tools` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `projects`
---
-
-INSERT INTO `projects` (`id`, `title`, `manager`, `personInCharge`, `creator`, `startDate`, `endDate`, `status`, `tools`) VALUES
-(1, 'Epson Philippines', 'Engineer Paul Ramirez', 'Engr. De Mesa', 'Yard Admin', '2023-01-01', '2023-03-01', 'Completed', '[\"Cleaning Gear\", \"Safety Harness\", \"Roofing Tools\"]'),
-(2, 'Teletech Lipa', 'Engineer Castro', 'Mark dela Cruz', 'Yard Admin', '2023-02-10', '2023-04-15', 'Completed', '[\"Tile Cutter\", \"Drill\", \"Measuring Tape\"]'),
-(3, 'Shakeys', 'Engineer Reyes', 'M. Salvador', 'Yard Admin', '2023-05-01', '2023-06-01', 'Completed', '[\"Pipe Cutter\", \"Sealant\", \"Gloves\"]'),
-(4, 'Mang Inasal', 'Engineer Torres', 'R. David', 'Yard Admin', '2023-03-20', '2023-05-30', 'Completed', '[\"Hammer\", \"Screwdriver\", \"Lighting Tools\"]'),
-(5, 'Sohbi Kohgie', 'Engr. Lou Mercado', 'K. Sison', 'Yard Admin', '2023-06-15', '2023-08-01', 'Completed', '[\"Disinfectant\", \"Fog Machine\", \"Sprayers\"]'),
-(6, 'Precision', 'Engineer Gutierrez', 'Jay C. Ramirez', 'Yard Admin', '2023-07-01', '2023-08-20', 'Completed', '[\"Tile Cutter\", \"Brush\", \"Measuring Tool\"]'),
-(7, 'Water Treatment Plant', 'Sarah White', 'RonaldJr Labrado', 'Engineering Department', '2023-04-22', '2024-12-10', 'Ongoing', '[\"Excavator\", \"Cement Mixer\", \"Concrete Pump\"]'),
-(8, 'Dam Repair Project', 'Michael Black', 'Edan Raymundo', 'Waterworks Team', '2023-09-05', '2024-08-31', 'Completed', '[\"Bulldozer\", \"Welding Machine\", \"Scaffolding\"]'),
-(9, 'Bridge Construction Project', 'Rachel Green', 'Angelo Gwapo', 'Site Engineer', '2023-11-06', '2025-01-15', 'Upcoming', '[\"Crane\", \"Jackhammer\", \"Welding Machine\"]'),
-(10, 'Subway Tunnel Construction', 'Tom Harris', 'Jestro de Castro', 'Project Team C', '2023-05-10', '2024-10-15', 'Cancelled', '[\"Tunnel Boring Machine\", \"Excavator\", \"Drill Rig\"]');
 
 -- --------------------------------------------------------
 
@@ -269,12 +235,6 @@ ALTER TABLE `consumables`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `projects`
---
-ALTER TABLE `projects`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `tools`
 --
 ALTER TABLE `tools`
@@ -307,12 +267,6 @@ ALTER TABLE `categories`
 --
 ALTER TABLE `consumables`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
-
---
--- AUTO_INCREMENT for table `projects`
---
-ALTER TABLE `projects`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `tools`

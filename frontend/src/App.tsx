@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router";
 import SignIn from "./pages/AuthPages/SignIn";
 import SignUp from "./pages/AuthPages/SignUp";
 import NotFound from "./pages/OtherPage/NotFound";
@@ -34,126 +34,144 @@ import RoleBasedRoute from "./components/auth/RolebasedRoutes";
 
 export default function App() {
   return (
-    <Router>
-      <ScrollToTop />
-      <Routes>
-        {/* Redirect base route to login */}
-        <Route path="/" element={<Navigate to="/login" />} />
+    <>
+      <div className="">
+        <Router>
+          <ScrollToTop />
+          <Routes>
+            {/* Dashboard Layout */}
+            <Route path="/" element={<Login />} />
+            <Route element={<AppLayout />}>
+              <Route
+                index
+                path="/home"
+                element={
+                  <ProtectedRoute>
+                    <Home />
+                  </ProtectedRoute>
+                }
+              />
 
-        {/* Auth Routes */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/signup" element={<SignUp />} />
+              {/* Others Page */}
+              <Route path="/check" element={<Check />} />
+              <Route
+                path="/categories"
+                element={
+                  <ProtectedRoute>
+                    <Categories />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/reports"
+                element={
+                  <RoleBasedRoute allowedRoles={["Admin", "Manager"]}>
+                    <Reports />
+                  </RoleBasedRoute>
+                }
+              />
+              <Route
+                path="/projects"
+                element={
+                  <RoleBasedRoute allowedRoles={["Admin", "Manager"]}>
+                    <Projects />
+                  </RoleBasedRoute>
+                }
+              />
+              <Route
+                path="/usermanagement"
+                element={
+                  <RoleBasedRoute allowedRoles={["Admin"]}>
+                    <UserManagement />
+                  </RoleBasedRoute>
+                }
+              />
+              <Route
+                path="/settings"
+                element={
+                  <ProtectedRoute>
+                    <Settings />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/tools"
+                element={
+                  <ProtectedRoute>
+                    <ToolsAndEquipments />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/consumables"
+                element={
+                  <ProtectedRoute>
+                    <Consumables />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/vehicles"
+                element={
+                  <ProtectedRoute>
+                    <Vehicles />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/consumables-logs"
+                element={
+                  <ProtectedRoute>
+                    <ConsumablesLogs />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/tools-logs"
+                element={
+                  <ProtectedRoute>
+                    <ToolsAndEquipmentsLogs />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/vehicles-logs"
+                element={
+                  <ProtectedRoute>
+                    <VehiclesLogs />
+                  </ProtectedRoute>
+                }
+              />
 
-        {/* App Pages under layout */}
-        <Route element={<AppLayout />}>
-          <Route
-            path="/home"
-            element={
-              <ProtectedRoute>
-                <Home />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="/check" element={<Check />} />
-          <Route
-            path="/categories"
-            element={
-              <ProtectedRoute>
-                <Categories />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/reports"
-            element={
-              <RoleBasedRoute allowedRoles={["Admin", "Manager"]}>
-                <Reports />
-              </RoleBasedRoute>
-            }
-          />
-          <Route path="/projects" element={<Projects />} />
+              {/* Forms */}
+              <Route path="/form-elements" element={<FormElements />} />
 
-          <Route
-            path="/usermanagement"
-            element={
-              <RoleBasedRoute allowedRoles={["Admin"]}>
-                <UserManagement />
-              </RoleBasedRoute>
-            }
-          />
-          <Route
-            path="/settings"
-            element={
-              <ProtectedRoute>
-                <Settings />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/tools"
-            element={
-              <ProtectedRoute>
-                <ToolsAndEquipments />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/consumables"
-            element={
-              <ProtectedRoute>
-                <Consumables />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/vehicles"
-            element={
-              <ProtectedRoute>
-                <Vehicles />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/consumables-logs"
-            element={
-              <ProtectedRoute>
-                <ConsumablesLogs />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/tools-logs"
-            element={
-              <ProtectedRoute>
-                <ToolsAndEquipmentsLogs />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/vehicles-logs"
-            element={
-              <ProtectedRoute>
-                <VehiclesLogs />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="/form-elements" element={<FormElements />} />
-          <Route path="/basic-tables" element={<BasicTables />} />
-          <Route path="/alerts" element={<Alerts />} />
-          <Route path="/avatars" element={<Avatars />} />
-          <Route path="/badge" element={<Badges />} />
-          <Route path="/buttons" element={<Buttons />} />
-          <Route path="/images" element={<Images />} />
-          <Route path="/videos" element={<Videos />} />
-          <Route path="/line-chart" element={<LineChart />} />
-          <Route path="/bar-chart" element={<BarChart />} />
-        </Route>
+              {/* Tables */}
+              <Route path="/basic-tables" element={<BasicTables />} />
 
-        {/* Extra + Fallback */}
-        <Route path="/capstone" element={<Capstone />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </Router>
+              {/* Ui Elements */}
+              <Route path="/alerts" element={<Alerts />} />
+              <Route path="/avatars" element={<Avatars />} />
+              <Route path="/badge" element={<Badges />} />
+              <Route path="/buttons" element={<Buttons />} />
+              <Route path="/images" element={<Images />} />
+              <Route path="/videos" element={<Videos />} />
+
+              {/* Charts */}
+              <Route path="/line-chart" element={<LineChart />} />
+              <Route path="/bar-chart" element={<BarChart />} />
+            </Route>
+
+            {/* Auth Layout */}
+            <Route path="/signin" element={<SignIn />} />
+            <Route path="/signup" element={<SignUp />} />
+
+            {/* Fallback Route */}
+            <Route path="*" element={<NotFound />} />
+            <Route path="/capstone" element={<Capstone />} />
+          </Routes>
+        </Router>
+      </div>
+    </>
   );
 }
