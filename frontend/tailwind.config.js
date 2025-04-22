@@ -14,15 +14,6 @@ export default {
       ...defaultTheme.screens,
     },
     extend: {
-      keyframes: {
-        rain: {
-          '0%': { transform: 'translateY(-100%)', opacity: '0' },
-          '100%': { transform: 'translateY(100vh)', opacity: '1' },
-        },
-      },
-      animation: {
-        rain: 'rain linear infinite',
-      },
       fontSize: {
         "title-2xl": ["72px", "90px"],
         "title-xl": ["60px", "72px"],
