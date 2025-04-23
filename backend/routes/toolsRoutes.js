@@ -1,11 +1,21 @@
-    const express = require("express");
-    const router = express.Router();
-    const { addTool, deleteTool, updateTool, getAllTools, getToolById } = require("../controllers/toolsController"); 
+const express = require("express");
+const router = express.Router();
+const {
+    addTool,
+    deleteTool,
+    updateTool,
+    getAllTools,
+    getToolById
+} = require("../controllers/toolsController");
 
-    router.post("/", addTool);
-    router.delete("/:id", deleteTool);
-    router.put("/:id", updateTool);
-    router.get("/", getAllTools);
-    router.get("/:id", getToolById);
+const upload = require("../middleware/upload");
 
-    module.exports = router;
+// Accept image uploads in POST and PUT
+router.post("/", upload.single("picture"), addTool);
+router.put("/:id", upload.single("picture"), updateTool);
+
+router.delete("/:id", deleteTool);
+router.get("/", getAllTools);
+router.get("/:id", getToolById);
+
+module.exports = router;

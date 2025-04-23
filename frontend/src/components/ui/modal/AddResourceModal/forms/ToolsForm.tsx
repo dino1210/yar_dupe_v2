@@ -1,64 +1,57 @@
-// ToolForm.tsx
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Upload } from "lucide-react";
 
-
 type ToolFormProps = {
   onClose: () => void;
   onAddSuccess: () => void;
 };
 
-type Category = {
-  id: number;
-  name: string;
-};
-
-interface ToolFormData {
-  picture: string;
-  name: string;
-  brand: string;
-  category: string;
-  tag: string;
-  description: string;
-  purchase_date: string;
-  warranty: string;
-  remarks: string;
-}
 
 const ToolForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
-  const [formData, setFormData] = useState<ToolFormData>({
-    picture: "",
+  const [formData, setFormData] = useState({
+    picture: null as File | null,
     name: "",
     brand: "",
     category: "",
     tag: "",
     description: "",
-    purchase_date: "",
-    warranty: "",
+    purchase_date: null as Date | null,
+    warranty: null as Date | null,
     remarks: "",
   });
-
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const form = new FormData();
+    form.append("name", formData.name);
+    form.append("brand", formData.brand);
+    form.append("category", formData.category);
+    form.append("tag", formData.tag);
+    form.append("description", formData.description);
+    form.append("remarks", formData.remarks);
+
+    if (formData.purchase_date) {
+      form.append("purchase_date", formData.purchase_date.toISOString().split("T")[0]);
+    }
+
+    if (formData.warranty) {
+      form.append("warranty", formData.warranty.toISOString().split("T")[0]);
+    }
+
+    if (formData.picture) {
+      form.append("picture", formData.picture);
+    }
+
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/api/tools`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        }
-      );
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/tools`, {
+        method: "POST",
+        body: form,
+      });
 
       if (response.ok) {
         toast.success("Tool added successfully!");
@@ -73,23 +66,6 @@ const ToolForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
     }
   };
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await fetch(`${import.meta.env.VITE_BASE_API_URL}/api/categories`);
-        const data = await response.json();
-        setCategories(data);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      }
-    };
-
-    fetchCategories();
-  }, []);
-
-  const filteredCategories = categories.filter((category) =>
-    category.name.toLowerCase().includes(formData.category?.toLowerCase() || "")
-  );
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -101,13 +77,15 @@ const ToolForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
     }));
   };
 
-  const handleCategorySelect = (category: Category) => {
-    setFormData({
-      ...formData,
-      category: category.name,
-    });
-    setShowSuggestions(false);
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setFormData((prevData) => ({
+        ...prevData,
+        picture: e.target.files![0],
+      }));
+    }
   };
+
 
   return (
     <form onSubmit={handleSubmit} className="grid grid-cols-3 gap-4">
@@ -152,22 +130,8 @@ const ToolForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
           value={formData.category || ""}
           onChange={handleInputChange}
           required
-          onFocus={() => setShowSuggestions(true)}
           className="border rounded-md p-2 text-xs bg-white text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
         />
-        {showSuggestions && filteredCategories.length > 0 && (
-          <ul className="border mt-1 rounded-md bg-white dark:bg-gray-700 text-gray-700 dark:text-white text-xs max-h-40 overflow-y-auto">
-            {filteredCategories.map((category, index) => (
-              <li
-                key={index}
-                onClick={() => handleCategorySelect(category)}
-                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer"
-              >
-                {category.name}
-              </li>
-            ))}
-          </ul>
-        )}
       </div>
 
       {/* Tag/Code */}
@@ -205,24 +169,21 @@ const ToolForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
           Date of Purchase
         </label>
         <DatePicker
-          selected={
-            formData.purchase_date ? new Date(formData.purchase_date) : null
-          }
+          selected={formData.purchase_date}
           onChange={(date: Date | null) =>
-            setFormData((prevData) => ({
-              ...prevData,
-              purchase_date: date ? date.toISOString().split("T")[0] : "",
+            setFormData((prev) => ({
+              ...prev,
+              purchase_date: date,
             }))
           }
           dateFormat="yyyy-MM-dd"
-          placeholderText="Select a date" 
-          required
+          placeholderText="Select a date"
           className="border rounded-md p-2 bg-white text-xs text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 w-full"
           calendarClassName="dark:bg-gray-700 dark:text-black"
           showMonthDropdown
           showYearDropdown
-          dropdownMode="select" // 'scroll' is also possible
-          maxDate={new Date()} // Optional: disable future dates
+          dropdownMode="select"
+          maxDate={new Date()}
         />
       </div>
 
@@ -232,16 +193,16 @@ const ToolForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
           Warranty
         </label>
         <DatePicker
-          selected={formData.warranty ? new Date(formData.warranty) : null}
+          selected={formData.warranty}
           onChange={(date: Date | null) =>
-            setFormData((prevData) => ({
-              ...prevData,
-              warranty: date ? date.toISOString().split("T")[0] : "",
+            setFormData((prev) => ({
+              ...prev,
+              warranty: date,
             }))
           }
           dateFormat="yyyy-MM-dd"
           placeholderText="Select a date"
-          className="border rounded-md p-2 bg-white text-xs text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 w-full "
+          className="border rounded-md p-2 bg-white text-xs text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 w-full"
           calendarClassName="dark:bg-gray-700 dark:text-black"
           showMonthDropdown
           showYearDropdown
@@ -264,18 +225,18 @@ const ToolForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
       </div>
 
       {/* Image */}
-      <div className="flex flex-col">
+{/* Image Upload */}
+<div className="flex flex-col">
         <label className="mb-1 font-medium text-xs text-gray-700 dark:text-gray-300">
           Image
         </label>
-        <label className="cursor-pointer border rounded-md p-2 text-xs bg-white text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 text-center">
-          <Upload className="w-4 h-4 absolute" />
+        <label className="cursor-pointer border rounded-md p-2 text-xs bg-white text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 text-center relative">
+          <Upload className="w-4 h-4 absolute left-2 top-2" />
           Upload Image
           <input
             type="file"
-            name="tagImage"
             accept="image/*"
-            onChange={handleInputChange}
+            onChange={handleImageChange}
             className="hidden"
           />
         </label>

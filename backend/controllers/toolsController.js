@@ -3,7 +3,17 @@ const Tool = require("../models/toolsModel");
 // Controller for ADD
 const addTool = async (req, res) => {
     try {
-        const result = await Tool.addTool(req.body);
+        const file = req.file;
+        if (!file) {
+            return res.status(400).json({ message: "Image file is required" });
+        }
+
+        const toolData = {
+            ...req.body,
+            picture: file.filename
+        };
+
+        const result = await Tool.addTool(toolData);
         res.status(201).json({ message: "Tool added successfully", data: result });
     } catch (err) {
         res.status(500).json({ message: "Error adding tool", error: err.message });
@@ -24,8 +34,11 @@ const deleteTool = async (req, res) => {
 // Controller for UPDATE
 const updateTool = async (req, res) => {
     const toolId = req.params.id;
-    const toolData = req.body;
-    toolData.id = toolId;
+    const toolData = {
+        ...req.body,
+        id: toolId,
+        picture: req.file ? req.file.filename : req.body.picture, // keep old picture if no file uploaded
+    };
 
     try {
         const result = await Tool.updateTool(toolData);

@@ -17,9 +17,10 @@ import {
   Plus,
   Funnel,
   Search,
+  Paperclip,
+  Eye,
 } from "lucide-react";
 import axios from "axios";
-import { File } from "lucide-react";
 import AddResourceModal from "../../components/ui/modal/AddResourceModal/AddResourceModal";
 import DeleteModal from "../../components/ui/modal/DeleteModal";
 import EditToolModal from "../../components/ui/modal/EditModal/EditTool";
@@ -34,11 +35,12 @@ interface Tool {
   category: string;
   tag: string;
   description: string;
-  purchase_date: string;
-  warranty: string;
+  purchase_date: Date;
+  warranty: Date;
   status: string;
   remarks: string;
   attachments: string;
+  history: string;
   qr: string;
 }
 
@@ -72,7 +74,6 @@ export default function ToolsAndEquipmentsTable() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [editTool, setEditTool] = useState<Tool | null>(null);
 
-
   const handleOpenModal = () => {
     setIsModalOpen(true);
   };
@@ -91,13 +92,16 @@ export default function ToolsAndEquipmentsTable() {
     if (!selectedId) return;
 
     try {
-      await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/tools/${selectedId}`, {
-        method: "DELETE",
-      });
+      await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/api/tools/${selectedId}`,
+        {
+          method: "DELETE",
+        }
+      );
       // Trigger a refetch or update your state
       setIsDeleteModalOpen(false);
       setSelectedId(null);
-      toast.success("Deleted successfully")
+      toast.success("Deleted successfully");
       fetchTools();
     } catch (err) {
       console.error("Delete failed:", err);
@@ -108,7 +112,6 @@ export default function ToolsAndEquipmentsTable() {
     setEditTool(tool);
     setShowEditModal(true);
   };
-  
 
   const fetchTools = () => {
     setLoading(true);
@@ -169,9 +172,7 @@ export default function ToolsAndEquipmentsTable() {
     <div className="overflow-y-hidden rounded-xl border w-full border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
       {/* Filter Controls */}
       <div className="sticky top-0 overflow-x-auto z-10 px-5 py-3 flex flex-col sm:flex-row gap-2 bg-white dark:bg-gray-800 shadow-sm">
-        <Search 
-        className="absolute text-gray-300 m-2 w-auto h-5" 
-        />
+        <Search className="absolute text-gray-300 m-2 w-auto h-5" />
         <input
           type="text"
           placeholder="           Search by name or tag"
@@ -266,6 +267,7 @@ export default function ToolsAndEquipmentsTable() {
                   "Warranty",
                   "Remarks",
                   "Attachment",
+                  "History",
                   "QR",
                   "Actions",
                 ].map((header, index) => (
@@ -322,7 +324,7 @@ export default function ToolsAndEquipmentsTable() {
                         size="sm"
                         color={
                           tool.status === "Available" ? "success" : "warning"
-                        } 
+                        }
                       >
                         {tool.status}
                       </Badge>
@@ -331,43 +333,61 @@ export default function ToolsAndEquipmentsTable() {
                       {tool.description}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                    {new Date(tool.purchase_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                      {tool.warranty
+                        ? new Date(tool.purchase_date).toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          })
+                        : "-"}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                    {new Date(tool.warranty).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                      {tool.warranty
+                        ? new Date(tool.warranty).toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          })
+                        : "-"}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                       {tool.remarks}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                       <button className="flex flex-row gap-1 border border-gray-600 bg-white hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 m-auto rounded-lg px-7 py-2">
-                        <File 
-                        className="w-auto h-4 m-auto"/>
-                       <p className="m-auto">File</p>
+                        <Paperclip className="w-auto h-4 m-auto" />
+                        <p className="m-auto">File</p>
                       </button>
                       {tool.attachments}
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
+                      <button className="flex flex-row gap-1 border border-gray-600 bg-white hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 m-auto rounded-lg px-7 py-2">
+                        <Eye className="w-auto h-4 m-auto" />
+                        <p className="m-auto">View</p>
+                      </button>
+                      {tool.history}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                       <img
                         src={tool.qr}
                         alt={`QR Code`}
                         className="w-auto h-15 mx-auto rounded-lg object-cover cursor-pointer"
-                        onClick={() =>
-                          setSelectedImage(tool.qr)
-                        }
+                        onClick={() => setSelectedImage(tool.qr)}
                       />
                     </TableCell>
                     <TableCell className="px-8 py-3 text-xs text-gray-500 dark:text-gray-400 text-center">
                       <div className="flex items-center justify-center space-x-2 w-full h-full">
                         <button
-                        onClick={() => handleEdit(tool)}
+                          onClick={() => handleEdit(tool)}
                           className="px-3 py-1 text-xs font-medium text-white bg-blue-800 rounded-lg hover:bg-blue-900"
                           title="Edit"
                         >
                           <Pencil className="w-3 h-7" />
                         </button>
                         <button
-                          onClick={() => handleOpenDeleteModal(tool.id, tool.name)}
+                          onClick={() =>
+                            handleOpenDeleteModal(tool.id, tool.name)
+                          }
                           className="px-3 py-1 text-xs font-medium text-white bg-red-800 rounded-lg hover:bg-red-900"
                           title="Edit"
                         >
@@ -463,21 +483,20 @@ export default function ToolsAndEquipmentsTable() {
           </div>
         )}
 
-<DeleteModal
-        isOpen={isDeleteModalOpen}
-        onClose={() => setIsDeleteModalOpen(false)}
-        onConfirm={handleConfirmDelete}
-        itemName={selectedName}
-      />
+        <DeleteModal
+          isOpen={isDeleteModalOpen}
+          onClose={() => setIsDeleteModalOpen(false)}
+          onConfirm={handleConfirmDelete}
+          itemName={selectedName}
+        />
 
-{showEditModal && editTool && (
-  <EditToolModal
-    toolData={editTool}
-    onClose={() => setShowEditModal(false)}
-    onEditSuccess={fetchTools} // optional: refresh table after editing
-  />
-)}
-
+        {showEditModal && editTool && (
+          <EditToolModal
+            selectedTool={editTool}
+            onClose={() => setShowEditModal(false)}
+            onUpdateSuccess={fetchTools} // optional: refresh table after editing
+          />
+        )}
       </div>
     </div>
   );
