@@ -21,6 +21,9 @@ import {
 import axios from "axios";
 import { File } from "lucide-react";
 import AddResourceModal from "../../components/ui/modal/AddResourceModal/AddResourceModal";
+import DeleteModal from "../../components/ui/modal/DeleteModal";
+import EditToolModal from "../../components/ui/modal/EditModal/EditTool";
+import { toast } from "react-toastify";
 
 // Define the expected structure
 interface Tool {
@@ -60,6 +63,16 @@ export default function ToolsAndEquipmentsTable() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  //delete
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [selectedName, setSelectedName] = useState<string>("");
+
+  //edit
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editTool, setEditTool] = useState<Tool | null>(null);
+
+
   const handleOpenModal = () => {
     setIsModalOpen(true);
   };
@@ -67,6 +80,35 @@ export default function ToolsAndEquipmentsTable() {
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
+
+  const handleOpenDeleteModal = (id: number, name: string) => {
+    setSelectedId(id);
+    setSelectedName(name);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!selectedId) return;
+
+    try {
+      await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/tools/${selectedId}`, {
+        method: "DELETE",
+      });
+      // Trigger a refetch or update your state
+      setIsDeleteModalOpen(false);
+      setSelectedId(null);
+      toast.success("Deleted successfully")
+      fetchTools();
+    } catch (err) {
+      console.error("Delete failed:", err);
+    }
+  };
+
+  const handleEdit = (tool: Tool) => {
+    setEditTool(tool);
+    setShowEditModal(true);
+  };
+  
 
   const fetchTools = () => {
     setLoading(true);
@@ -122,14 +164,6 @@ export default function ToolsAndEquipmentsTable() {
     (currentPage - 1) * dataLimit,
     currentPage * dataLimit
   );
-
-  const handleEdit = (toolId: number) => {
-    console.log("Edit tool with ID:", toolId);
-  };
-
-  const handleDelete = (toolId: number) => {
-    console.log("Delete tool with ID:", toolId);
-  };
 
   return (
     <div className="overflow-y-hidden rounded-xl border w-full border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
@@ -326,21 +360,20 @@ export default function ToolsAndEquipmentsTable() {
                     <TableCell className="px-8 py-3 text-xs text-gray-500 dark:text-gray-400 text-center">
                       <div className="flex items-center justify-center space-x-2 w-full h-full">
                         <button
-                          onClick={() => handleEdit(tool.id)}
+                        onClick={() => handleEdit(tool)}
                           className="px-3 py-1 text-xs font-medium text-white bg-blue-800 rounded-lg hover:bg-blue-900"
-                          title="Delete"
+                          title="Edit"
                         >
                           <Pencil className="w-3 h-7" />
                         </button>
                         <button
-                          onClick={() => handleDelete(tool.id)}
+                          onClick={() => handleOpenDeleteModal(tool.id, tool.name)}
                           className="px-3 py-1 text-xs font-medium text-white bg-red-800 rounded-lg hover:bg-red-900"
                           title="Edit"
                         >
                           <Trash2 className="w-3 h-7" />
                         </button>
                         <button
-                          onClick={() => handleDelete(tool.id)}
                           className="px-3 py-1 text-xs font-medium text-white bg-orange-800 rounded-lg hover:bg-orange-900"
                           title="Disable"
                         >
@@ -429,6 +462,22 @@ export default function ToolsAndEquipmentsTable() {
             </div>
           </div>
         )}
+
+<DeleteModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleConfirmDelete}
+        itemName={selectedName}
+      />
+
+{showEditModal && editTool && (
+  <EditToolModal
+    toolData={editTool}
+    onClose={() => setShowEditModal(false)}
+    onEditSuccess={fetchTools} // optional: refresh table after editing
+  />
+)}
+
       </div>
     </div>
   );

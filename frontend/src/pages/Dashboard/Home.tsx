@@ -1,8 +1,8 @@
-import AvailableTools from "../../components/dashboardcontents/AvailableTools";
 import MonthlySalesChart from "../../components/dashboardcontents/MonthlySalesChart";
 import RecentOrders from "../../components/dashboardcontents/RecentOrders";
 import PageMeta from "../../components/common/PageMeta";
 import StatisticsChart from "../../components/dashboardcontents/StatisticsChart";
+import TotalResources from "../../components/dashboardcontents/TotalResoures";
 
 export default function Home() {
   return (
@@ -13,7 +13,7 @@ export default function Home() {
       />
       <div className="grid grid-cols-12 gap-4 md:gap-6">
         <div className="col-span-12 space-y-6 xl:col-span-7">
-          <AvailableTools />
+          <TotalResources />
           <StatisticsChart />
           <MonthlySalesChart />
         </div>

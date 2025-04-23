@@ -14,6 +14,8 @@ const categoriesRoutes = require("./routes/categoriesRoutes");
 
 const consumablesLogsRoutes = require("./routes/consumablesLogsRoutes")
 
+const metricsRoutes = require("./routes/metricsRoutes")
+
 const path = require("path");
 
 dotenv.config();
@@ -38,6 +40,9 @@ app.use("/api/categories", categoriesRoutes);
 
 // Logs
 app.use("/api/consumables-logs", consumablesLogsRoutes);
+
+// Metrics
+app.use("/api/metrics", metricsRoutes);
 
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 
