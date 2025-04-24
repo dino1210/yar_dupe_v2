@@ -30,8 +30,8 @@ export default function UserDropdown() {
 
   const handleSignOut = () => {
     localStorage.removeItem("token");
-    localStorage.removeItem("user"); // remove user info
-    window.location.href = "/"; // redirect to login page
+    localStorage.removeItem("user");
+    window.location.href = "/";
   };
 
   return (
@@ -82,6 +82,26 @@ export default function UserDropdown() {
           </span>
         </div>
 
+        <button
+          onClick={() => (window.location.href = "/select-mode")}
+          className="flex items-center gap-3 px-3 py-2 mt-3 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-white/5"
+        >
+          <svg
+            className="fill-gray-500 group-hover:fill-gray-700 dark:group-hover:fill-gray-300"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              fillRule="evenodd"
+              clipRule="evenodd"
+              d="M10.293 15.707a1 1 0 001.414 0l5-5a1 1 0 10-1.414-1.414L12 13.586 8.707 10.293a1 1 0 00-1.414 1.414l3 3z"
+              fill=""
+            />
+          </svg>
+          Mode
+        </button>
         <button
           onClick={handleSignOut}
           className="flex items-center gap-3 px-3 py-2 mt-3 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-white/5"

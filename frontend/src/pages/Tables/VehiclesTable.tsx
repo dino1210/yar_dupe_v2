@@ -19,7 +19,9 @@ import {
 } from "lucide-react";
 import axios from "axios";
 import AddResourceModal from "../../components/ui/modal/AddResourceModal/AddResourceModal";
-import { File } from "lucide-react"; 
+import DeleteModal from "../../components/ui/modal/DeleteModal";
+import { File } from "lucide-react";
+import { toast } from "react-toastify";
 
 // Define the expected structure
 interface Vehicles {
@@ -62,12 +64,43 @@ export default function VehiclesTable() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  //delete
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [selectedName, setSelectedName] = useState<string>("");
+
   const handleOpenModal = () => {
     setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+  };
+
+  const handleOpenDeleteModal = (id: number, name: string) => {
+    setSelectedId(id);
+    setSelectedName(name);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!selectedId) return;
+
+    try {
+      await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/api/vehicles/${selectedId}`,
+        {
+          method: "DELETE",
+        }
+      );
+      // Trigger a refetch or update your state
+      setIsDeleteModalOpen(false);
+      setSelectedId(null);
+      toast.success("Deleted successfully");
+      fetchVehicles();
+    } catch (err) {
+      console.error("Delete failed:", err);
+    }
   };
 
   const fetchVehicles = () => {
@@ -127,10 +160,6 @@ export default function VehiclesTable() {
 
   const handleEdit = (toolId: number) => {
     console.log("Edit tool with ID:", toolId);
-  };
-
-  const handleDelete = (toolId: number) => {
-    console.log("Delete tool with ID:", toolId);
   };
 
   return (
@@ -250,120 +279,130 @@ export default function VehiclesTable() {
 
             {/* Table Body */}
             <TableBody className="divide-y divide-gray-100 dark:divide-gray-700">
-            {currentVehicles.length > 0 ? (
-              currentVehicles.map((vehicle) => (
-                <TableRow key={vehicle.id}>
-                  <TableCell className="px-5 py-4 sm:px-6 text-center">
-                    <img
-                      src={`${import.meta.env.VITE_API_BASE_URL}/assets/images/vehicles/${vehicle.picture}`}
-                      alt={`${vehicle.name}'s Profile`}
-                      className="w-16 h-16 rounded-lg object-cover cursor-pointer border border-gray-300  "
-                      onClick={() =>
-                        setSelectedImage(
-                          `${import.meta.env.VITE_API_BASE_URL}/assets/images/vehicles/${vehicle.picture}`
-                        )
-                      }
-                    />
-                  </TableCell>
-                  <TableCell className="px-5 py-4 sm:px-6 text-center">
-                    <span className="block font-medium text-gray-800 text-theme-xs dark:text-white/70">
-                      {vehicle.name}
-                    </span>
-                  </TableCell>
-                  <TableCell className="px-5 py-4 sm:px-6 text-center">
-                    <span className="block font-medium text-gray-800 text-theme-xs dark:text-gray-400">
-                      {vehicle.brand}
-                    </span>
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                    {vehicle.plate_no}
-                  </TableCell>
-                  <TableCell className="ppx-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                    {vehicle.category}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                    {vehicle.fuel_type}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                    {vehicle.location}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                  {new Date(vehicle.acquisition_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                  {new Date(vehicle.warranty).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                    <Badge
-                      size="sm"
-                      color={
-                        vehicle.status === "Available" ? "success" : "info"
-                      }
-                    >
-                      {vehicle.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                    {vehicle.remarks}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                    {vehicle.maintenance_due}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                    {vehicle.assigned_driver}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
+              {currentVehicles.length > 0 ? (
+                currentVehicles.map((vehicle) => (
+                  <TableRow key={vehicle.id}>
+                    <TableCell className="px-5 py-4 sm:px-6 text-center">
+                      <img
+                        src={`${
+                          import.meta.env.VITE_API_BASE_URL
+                        }/assets/images/vehicles/${vehicle.picture}`}
+                        alt={`${vehicle.name}'s Profile`}
+                        className="w-16 h-16 rounded-lg object-cover cursor-pointer border border-gray-300  "
+                        onClick={() =>
+                          setSelectedImage(
+                            `${
+                              import.meta.env.VITE_API_BASE_URL
+                            }/assets/images/vehicles/${vehicle.picture}`
+                          )
+                        }
+                      />
+                    </TableCell>
+                    <TableCell className="px-5 py-4 sm:px-6 text-center">
+                      <span className="block font-medium text-gray-800 text-theme-xs dark:text-white/70">
+                        {vehicle.name}
+                      </span>
+                    </TableCell>
+                    <TableCell className="px-5 py-4 sm:px-6 text-center">
+                      <span className="block font-medium text-gray-800 text-theme-xs dark:text-gray-400">
+                        {vehicle.brand}
+                      </span>
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
+                      {vehicle.plate_no}
+                    </TableCell>
+                    <TableCell className="ppx-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
+                      {vehicle.category}
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
+                      {vehicle.fuel_type}
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
+                      {vehicle.location}
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
+                      {new Date(vehicle.acquisition_date).toLocaleDateString(
+                        "en-US",
+                        { year: "numeric", month: "long", day: "numeric" }
+                      )}
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
+                      {new Date(vehicle.warranty).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
+                      <Badge
+                        size="sm"
+                        color={
+                          vehicle.status === "Available" ? "success" : "info"
+                        }
+                      >
+                        {vehicle.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
+                      {vehicle.remarks}
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
+                      {vehicle.maintenance_due}
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
+                      {vehicle.assigned_driver}
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                       <button className="flex flex-row gap-1 border  border-gray-600 bg-white hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 m-auto rounded-lg px-7 py-2">
-                        <File 
-                        className="w-auto h-4 m-auto"/>
-                       <p className="m-auto">File</p>
+                        <File className="w-auto h-4 m-auto" />
+                        <p className="m-auto">File</p>
                       </button>
                       {vehicle.attachment}
                     </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                    <img
-                      src={`${import.meta.env.VITE_API_BASE_URL}/assets/qr/vehicles/${vehicle.qr}`}
-                      alt={`${vehicle.name}'s Profile`}
-                      className="w-auto h-15 mx-auto rounded-lg object-cover cursor-pointer"
-                      onClick={() => setSelectedImage(`${import.meta.env.VITE_API_BASE_URL}/assets/qr/vehicles/${vehicle.qr}`)}
-                    />
+                    <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
+                      <img
+                        src={vehicle.qr}
+                        alt={`QR Code`}
+                        className="w-auto h-15 mx-auto rounded-lg object-cover cursor-pointer"
+                        onClick={() => setSelectedImage(vehicle.qr)}
+                      />
+                    </TableCell>
+                    <TableCell className="px-8 py-3 text-xs text-gray-500 dark:text-gray-400 text-center">
+                      <div className="flex items-center justify-center space-x-2 w-full h-full">
+                        <button
+                          onClick={() => handleEdit(vehicle.id)}
+                          className="px-3 py-1 text-xs font-medium text-white bg-blue-800 rounded-lg hover:bg-blue-900"
+                          title="Edit"
+                        >
+                          <Pencil className="w-3 h-7" />
+                        </button>
+                        <button
+                          onClick={() =>
+                            handleOpenDeleteModal(vehicle.id, vehicle.name)
+                          }
+                          className="px-3 py-1 text-xs font-medium text-white bg-red-800 rounded-lg hover:bg-red-900"
+                          title="Edit"
+                        >
+                          <Trash2 className="w-3 h-7" />
+                        </button>
+                        <button
+                          className="px-3 py-1 text-xs font-medium text-white bg-orange-800 rounded-lg hover:bg-orange-900"
+                          title="Disable"
+                        >
+                          <CircleOff className="w-3 h-7" />
+                        </button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell className="px-5 py-4 text-center text-gray-500 dark:text-gray-400">
+                    No Vehicles Found
                   </TableCell>
-                  <TableCell className="px-8 py-3 text-xs text-gray-500 dark:text-gray-400 text-center">
-                    <div className="flex items-center justify-center space-x-2 w-full h-full">
-                    <button
-                        onClick={() => handleEdit(vehicle.id)}
-                        className="px-3 py-1 text-xs font-medium text-white bg-blue-800 rounded-lg hover:bg-blue-900"
-                        title="Edit"
-                      >
-                        <Pencil className="w-3 h-7"/>
-                      </button>
-                      <button
-                        onClick={() => handleDelete(vehicle.id)}
-                        className="px-3 py-1 text-xs font-medium text-white bg-red-800 rounded-lg hover:bg-red-900"
-                        title="Delete"
-                      >
-                        <Trash2 className="w-3 h-7"/>
-                      </button>
-                      <button
-                        onClick={() => handleDelete(vehicle.id)}
-                        className="px-3 py-1 text-xs font-medium text-white bg-orange-800 rounded-lg hover:bg-orange-900"
-                        title="Disable"
-                      >
-                        <CircleOff className="w-3 h-7"/>
-                      </button>
-                    </div>
-                  </TableCell>
-
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell className="px-5 py-4 text-center text-gray-500 dark:text-gray-400">
-                  No Vehicles Found
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
+              )}
+            </TableBody>
           </Table>
         </div>
       </div>
@@ -376,9 +415,9 @@ export default function VehiclesTable() {
             onChange={(e) => setDataLimit(Number(e.target.value))}
             className="border p-2 text-xs rounded-md bg-white dark:bg-gray-900 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 dark:hover:bg-gray-800"
           >
-            <option value={10}>10 Items</option>
-            <option value={20}>20 Items</option>
-            <option value={50}>50 Items</option>
+            <option value={20}>10 Items</option>
+            <option value={50}>20 Items</option>
+            <option value={9999}>All Items</option>
           </select>
         </div>
 
@@ -435,6 +474,13 @@ export default function VehiclesTable() {
             </div>
           </div>
         )}
+
+        <DeleteModal
+          isOpen={isDeleteModalOpen}
+          onClose={() => setIsDeleteModalOpen(false)}
+          onConfirm={handleConfirmDelete}
+          itemName={selectedName}
+        />
       </div>
     </div>
   );

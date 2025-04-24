@@ -31,7 +31,7 @@ const Login = () => {
       setUser(data.user);
 
       toast.success("Login successful");
-      navigate("/home");
+      navigate("/select-mode");
     } catch (err) {
       toast.error("Login unsuccessful", err);
       setLoginError(

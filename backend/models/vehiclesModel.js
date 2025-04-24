@@ -1,4 +1,5 @@
 const db = require("../config/db");
+const QRCode = require("qrcode");
 
 // ADD
 const addVehicle = async (vehicleData) => {
@@ -17,8 +18,8 @@ const addVehicle = async (vehicleData) => {
     maintenance_due,
     assigned_driver,
   } = vehicleData;
-  const query = `INSERT INTO vehicles (picture, name, brand, plate_no, category, fuel_type, location, acquisition_date, status, remarks, maintenance_due, warranty, assigned_driver) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
- 
+  const insertQuery = `INSERT INTO vehicles (picture, name, brand, plate_no, category, fuel_type, location, acquisition_date, status, remarks, maintenance_due, warranty, assigned_driver) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
   try {
     const [result] = await db.query(insertQuery, [
       picture,
@@ -37,14 +38,14 @@ const addVehicle = async (vehicleData) => {
     ]);
 
     const vehicleId = result.insertId;
-    const qrContent = `vehicle-${vehicleId}`; 
-    const qrImage = await QRCode.toDataURL(qrContent); 
+    const qrContent = `vehicle-${vehicleId}`;
+    const qrImage = await QRCode.toDataURL(qrContent);
 
     // Update tool with QR code
     const updateQuery = `UPDATE vehicles SET qr = ? WHERE id = ?`;
-    await db.query(updateQuery, [qrImage, toolId]);
+    await db.query(updateQuery, [qrImage, vehicleId]);
 
-    return { id: toolId, qr: qrImage };
+    return { id: vehicleId, qr: qrImage };
   } catch (err) {
     throw new Error("Error adding vehicle: " + err.message);
   }
@@ -65,6 +66,7 @@ const deleteVehicle = async (vehicleID) => {
 // UPDATE
 const updateVehicle = async (vehicleData) => {
   const {
+    id,
     picture,
     name,
     brand,
@@ -79,7 +81,12 @@ const updateVehicle = async (vehicleData) => {
     assigned_driver,
     qr,
   } = vehicleData;
-  const query = `UPDATE vehicles SET picture = ?, name = ?, brand = ?, plate_no = ?, category = ?, fuel_type = ?, location = ?, acquisition_date = ?, status = ?, remarks = ?, maintenance_due = ?, assigned_driver = ?, qr = ?`;
+  const query = `
+        UPDATE vehicles SET picture = ?, name = ?, brand = ?, plate_no = ?, category = ?, 
+        fuel_type = ?, location = ?, acquisition_date = ?, status = ?, remarks = ?, maintenance_due = ?, 
+        assigned_driver = ?, qr = ? 
+        WHERE id = ?
+    `;
 
   try {
     const [result] = await db.query(query, [
@@ -103,12 +110,12 @@ const updateVehicle = async (vehicleData) => {
     const qrImage = await QRCode.toDataURL(qrContent); // base64 image
 
     // Update tool with QR code
-    const updateQuery = `UPDATE tools SET qr = ? WHERE id = ?`;
+    const updateQuery = `UPDATE vehicles SET qr = ? WHERE id = ?`;
     await db.query(updateQuery, [qrImage, toolId]);
 
-    return { id: toolId, qr: qrImage };
+    return { id: vehicleId, qr: qrImage };
   } catch (err) {
-    throw new Error("Error adding tool: " + err.message);
+    throw new Error("Error adding vehicle: " + err.message);
   }
 };
 

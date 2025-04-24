@@ -296,7 +296,7 @@ const ToolForm: React.FC<VehicleFormProps> = ({ onClose, onAddSuccess }) => {
           className="border rounded-md p-2 text-xs bg-white text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
         />
       </div>
-      {/* Image */}
+
       {/* Image Upload */}
       <div className="flex flex-col">
         <label className="mb-1 font-medium text-xs text-gray-700 dark:text-gray-300">

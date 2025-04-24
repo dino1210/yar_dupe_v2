@@ -31,6 +31,10 @@ import ConsumablesLogs from "./pages/LogsPages/ConsumablesLogs";
 import VehiclesLogs from "./pages/LogsPages/VehiclesLogs";
 import ProtectedRoute from "./components/auth/ProtectedRoutes";
 import RoleBasedRoute from "./components/auth/RolebasedRoutes";
+import ModeSelector from "./pages/OtherPage/ModeSelector";
+import ScannerPage from "./pages/Mobile/ScannerPage";
+import AppLayoutMobile from "./layout/AppLayoutMobile";
+import HomeMobile from "./pages/Mobile/HomeMobile";
 
 export default function App() {
   return (
@@ -41,6 +45,27 @@ export default function App() {
           <Routes>
             {/* Dashboard Layout */}
             <Route path="/" element={<Login />} />
+
+            {/* Mobile */}
+            <Route element={<AppLayoutMobile />}>
+              <Route path="/select-mode" element={<ModeSelector />} />
+              <Route
+                path="/mobile-scanner"
+                element={
+                  <ProtectedRoute>
+                    <ScannerPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/mobile-home"
+                element={
+                  <ProtectedRoute>
+                    <HomeMobile />
+                  </ProtectedRoute>
+                }
+              />
+            </Route>
             <Route element={<AppLayout />}>
               <Route
                 index
@@ -173,7 +198,5 @@ export default function App() {
         </Router>
       </div>
     </>
-
-
-);
+  );
 }
