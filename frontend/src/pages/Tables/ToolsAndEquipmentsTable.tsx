@@ -23,7 +23,6 @@ import {
 import axios from "axios";
 import AddResourceModal from "../../components/ui/modal/AddResourceModal/AddResourceModal";
 import DeleteModal from "../../components/ui/modal/DeleteModal";
-import EditToolModal from "../../components/ui/modal/EditModal/EditTool";
 import { toast } from "react-toastify";
 
 // Define the expected structure
@@ -70,10 +69,6 @@ export default function ToolsAndEquipmentsTable() {
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [selectedName, setSelectedName] = useState<string>("");
 
-  //edit
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [editTool, setEditTool] = useState<Tool | null>(null);
-
   const handleOpenModal = () => {
     setIsModalOpen(true);
   };
@@ -106,11 +101,6 @@ export default function ToolsAndEquipmentsTable() {
     } catch (err) {
       console.error("Delete failed:", err);
     }
-  };
-
-  const handleEdit = (tool: Tool) => {
-    setEditTool(tool);
-    setShowEditModal(true);
   };
 
   const fetchTools = () => {
@@ -186,8 +176,10 @@ export default function ToolsAndEquipmentsTable() {
           className="border p-2 text-xs rounded-md w-full sm:w-1/4 bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
         >
           <option value="">Brand</option>
-          <option value="Tools">Tools</option>
-          <option value="Equipments">Equipments</option>
+          <option value="Makita">Makita</option>
+          <option value="Stanley">Stanley</option>
+          <option value="Ryobi">Ryobi</option>
+          <option value="Proto">Proto</option>
         </select>
         <select
           value={categoryFilter}
@@ -378,7 +370,7 @@ export default function ToolsAndEquipmentsTable() {
                     <TableCell className="px-8 py-3 text-xs text-gray-500 dark:text-gray-400 text-center">
                       <div className="flex items-center justify-center space-x-2 w-full h-full">
                         <button
-                          onClick={() => handleEdit(tool)}
+                         
                           className="px-3 py-1 text-xs font-medium text-white bg-blue-800 rounded-lg hover:bg-blue-900"
                           title="Edit"
                         >
@@ -490,13 +482,6 @@ export default function ToolsAndEquipmentsTable() {
           itemName={selectedName}
         />
 
-        {showEditModal && editTool && (
-          <EditToolModal
-            selectedTool={editTool}
-            onClose={() => setShowEditModal(false)}
-            onUpdateSuccess={fetchTools} // optional: refresh table after editing
-          />
-        )}
       </div>
     </div>
   );

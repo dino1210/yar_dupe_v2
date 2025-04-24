@@ -18,7 +18,9 @@ import {
   Funnel,
 } from "lucide-react";
 import axios from "axios";
+import { toast } from "react-toastify";
 import AddResourceModal from "../../components/ui/modal/AddResourceModal/AddResourceModal";
+import DeleteModal from "../../components/ui/modal/DeleteModal";
 
 // Define the expected structure
 interface Consumable {
@@ -33,7 +35,6 @@ interface Consumable {
   location: string;
   date: string;
   status: string;
-  qr: string;
 }
 
 interface Category {
@@ -57,12 +58,43 @@ export default function ConsumablesTable() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  //delete
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [selectedName, setSelectedName] = useState<string>("");
+
   const handleOpenModal = () => {
     setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+  };
+
+  const handleOpenDeleteModal = (id: number, name: string) => {
+    setSelectedId(id);
+    setSelectedName(name);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!selectedId) return;
+
+    try {
+      await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/api/consumables/${selectedId}`,
+        {
+          method: "DELETE",
+        }
+      );
+      // Trigger a refetch or update your state
+      setIsDeleteModalOpen(false);
+      setSelectedId(null);
+      toast.success("Deleted successfully");
+      fetchConsumables();
+    } catch (err) {
+      console.error("Delete failed:", err);
+    }
   };
 
   const fetchConsumables = () => {
@@ -227,7 +259,6 @@ export default function ConsumablesTable() {
                   "Location",
                   "Status",
                   "Date Modified",
-                  "QR Code",
                   "Actions",
                 ].map((header, index) => (
                   <TableCell
@@ -275,7 +306,7 @@ export default function ConsumablesTable() {
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                       {consumable.category}
                     </TableCell>
-                                        <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
+                    <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                       <span className="block font-bold  text-gray-800 text-theme-sm dark:text-white/70">
                         {consumable.quantity}
                       </span>
@@ -306,22 +337,6 @@ export default function ConsumablesTable() {
                         day: "numeric",
                       })}
                     </TableCell>
-                    <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                      <img
-                        src={`${
-                          import.meta.env.VITE_API_BASE_URL
-                        }/assets/qr/consumables/${consumable.qr}`}
-                        alt={`${consumable.name}'s Profile`}
-                        className="w-auto h-15 mx-auto rounded-lg object-cover cursor-pointer"
-                        onClick={() =>
-                          setSelectedImage(
-                            `${
-                              import.meta.env.VITE_API_BASE_URL
-                            }/assets/qr/consumables/${consumable.qr}`
-                          )
-                        }
-                      />
-                    </TableCell>
                     <TableCell className="px-8 py-3 text-xs text-gray-500 dark:text-gray-400 text-center">
                       <div className="flex items-center justify-center space-x-2 w-full h-full">
                         <button
@@ -332,7 +347,12 @@ export default function ConsumablesTable() {
                           <Pencil className="w-3 h-7" />
                         </button>
                         <button
-                          onClick={() => handleDelete(consumable.id)}
+                          onClick={() =>
+                            handleOpenDeleteModal(
+                              consumable.id,
+                              consumable.name
+                            )
+                          }
                           className="px-3 py-1 text-xs font-medium text-white bg-red-800 rounded-lg hover:bg-red-900"
                           title="Delete"
                         >
@@ -428,6 +448,13 @@ export default function ConsumablesTable() {
             </div>
           </div>
         )}
+
+        <DeleteModal
+          isOpen={isDeleteModalOpen}
+          onClose={() => setIsDeleteModalOpen(false)}
+          onConfirm={handleConfirmDelete}
+          itemName={selectedName}
+        />
       </div>
     </div>
   );

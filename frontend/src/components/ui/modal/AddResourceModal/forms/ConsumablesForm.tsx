@@ -23,7 +23,6 @@ interface ConsumableFormData {
   minStock: number;
   unit: string;
   location: string;
-  date: string;
   qr: string;
 }
 
@@ -40,7 +39,6 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({
     minStock: 0,
     unit: " ",
     location: " ",
-    date: " ",
     qr: " ",
   });
 

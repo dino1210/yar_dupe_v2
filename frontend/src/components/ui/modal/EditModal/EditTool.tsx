@@ -12,6 +12,16 @@ type EditToolModalProps = {
   selectedTool: any; // Ideally replace 'any' with your Tool type
 };
 
+const EditToolModal = ({ toolData, onClose, onEditSuccess }: EditToolModalProps) => {
+    if (!toolData) return null; // optional: early return for safety
+  
+    const [formData, setFormData] = useState({
+      name: toolData.name || '',
+      brand: toolData.brand || '',
+      purchase_date: toolData.purchase_date ? new Date(toolData.purchase_date) : null,
+      // other fields...
+    });
+
 type Category = {
   id: number;
   name: string;
@@ -253,5 +263,4 @@ const EditToolModal: React.FC<EditToolModalProps> = ({
     </form>
   );
 };
-
-export default EditToolModal;
+}

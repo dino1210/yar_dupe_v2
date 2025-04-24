@@ -207,7 +207,7 @@ export default function ToolsAndEquipmentsTable() {
             <TableHeader className="border-b border-t text-sm border-gray-100 dark:border-white/[0.05]">
               <TableRow>
                 {[
- 
+                  
                 ].map((header, index) => (
                   <TableCell
                     key={index}
