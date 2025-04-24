@@ -9,7 +9,7 @@ const addTool = async (toolData) => {
         INSERT INTO tools (picture, name, brand, category, tag, description, purchase_date, warranty, status, remarks)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
-
+  
     try {
         const [result] = await db.query(insertQuery, [
             picture, name, brand, category, tag,

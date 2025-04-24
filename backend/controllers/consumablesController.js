@@ -3,13 +3,23 @@ const Consumable = require("../models/consumableModel");
 // Controller for ADD
 const addConsumable = async (req, res) => {
     try {
-        const result = await Consumable.addConsumable(req.body);
-        res.status(201).json({ message: "Consumable added successfully", data: result });
+        const file = req.file;
+        if (!file) {
+            return res.status(400).json({ message: "Image file is required" });
+        }
+
+        const consumableData = {
+            ...req.body,
+            picture: file.filename
+        };
+ 
+        const result = await Consumable.addConsumable(consumableData);
+        res.status(201).json({ message: "Tool added successfully", data: result });
     } catch (err) {
-        res.status(500).json({ message: "Error adding consumable", error: err.message });
+        res.status(500).json({ message: "Error adding tool", error: err.message });
     }
 };
-
+ 
 // Controller for DELETE
 const deleteConsumable = async (req, res) => {
     const consumableId = req.params.id;

@@ -3,13 +3,23 @@ const Vehicle = require("../models/vehiclesModel");
 // Controller for ADD
 const addVehicle = async (req, res) => {
     try {
-        const result = await Vehicles.addVehicle(req.body);
+        const file = req.file;
+        if (!file) {
+            return res.status(400).json({ message: "Image file is required" });
+        }
+
+        const vehicleData = {
+            ...req.body,
+            picture: file.filename
+        };
+   
+        const result = await Vehicle.addVehicle(vehicleData);
         res.status(201).json({ message: "Vehicle added successfully", data: result });
     } catch (err) {
         res.status(500).json({ message: "Error adding vehicle", error: err.message });
     }
 };
-
+  
 // Controller for DELETE
 const deleteVehicle = async (req, res) => {
     const vehicleId = req.params.id;

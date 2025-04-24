@@ -8,7 +8,7 @@ const {
     getToolById
 } = require("../controllers/toolsController");
 
-const upload = require("../middleware/upload");
+const upload = require("../middleware/uploadTool");
 
 // Accept image uploads in POST and PUT
 router.post("/", upload.single("picture"), addTool);

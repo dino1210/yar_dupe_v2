@@ -10,7 +10,6 @@ type ToolFormProps = {
   onAddSuccess: () => void;
 };
 
-
 const ToolForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
   const [formData, setFormData] = useState({
     picture: null as File | null,
@@ -23,7 +22,7 @@ const ToolForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
     warranty: null as Date | null,
     remarks: "",
   });
-
+ 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -36,7 +35,10 @@ const ToolForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
     form.append("remarks", formData.remarks);
 
     if (formData.purchase_date) {
-      form.append("purchase_date", formData.purchase_date.toISOString().split("T")[0]);
+      form.append(
+        "purchase_date",
+        formData.purchase_date.toISOString().split("T")[0]
+      );
     }
 
     if (formData.warranty) {
@@ -48,10 +50,13 @@ const ToolForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
     }
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/tools`, {
-        method: "POST",
-        body: form,
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/api/tools`,
+        {
+          method: "POST",
+          body: form,
+        }
+      );
 
       if (response.ok) {
         toast.success("Tool added successfully!");
@@ -66,7 +71,6 @@ const ToolForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
     }
   };
 
-  
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -85,7 +89,6 @@ const ToolForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
       }));
     }
   };
-
 
   return (
     <form onSubmit={handleSubmit} className="grid grid-cols-3 gap-4">
@@ -225,8 +228,8 @@ const ToolForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
       </div>
 
       {/* Image */}
-{/* Image Upload */}
-<div className="flex flex-col">
+      {/* Image Upload */}
+      <div className="flex flex-col">
         <label className="mb-1 font-medium text-xs text-gray-700 dark:text-gray-300">
           Image
         </label>

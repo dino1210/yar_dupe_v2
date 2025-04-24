@@ -1,6 +1,6 @@
-// ToolForm.tsx
-import React, { useState, useEffect } from "react";
-import { toast } from "react-toastify"
+import React, { useState } from "react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "react-datepicker/dist/react-datepicker.css";
 import { Upload } from "lucide-react";
 
@@ -9,87 +9,56 @@ type ConsumableFormProps = {
   onAddSuccess: () => void;
 };
 
-type Category = {
-  id: number;
-  name: string;
-};
-
-interface ConsumableFormData {
-  picture: string;
-  tag: string;
-  name: string;
-  category: string;
-  quantity: number;
-  minStock: number;
-  unit: string;
-  location: string;
-  qr: string;
-}
-
-const ConsumableForm: React.FC<ConsumableFormProps> = ({
-  onClose,
-  onAddSuccess,
-}) => {
-  const [formData, setFormData] = useState<ConsumableFormData>({
-    picture: " ",
+const ConsumableForm: React.FC<ConsumableFormProps> = ({ onClose, onAddSuccess }) => {
+  const [formData, setFormData] = useState({
+    picture: null as File | null,
     tag: " ",
     name: " ",
     category: " ",
-    quantity: 0,
-    minStock: 0,
+    quantity: "",
+    minStock: "",
     unit: " ",
     location: " ",
-    qr: " ",
   });
-
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
-
+ 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const form = new FormData();
+    form.append("tag", formData.tag);
+    form.append("name", formData.name);
+    form.append("category", formData.category);
+    form.append("quantity", formData.quantity);
+    form.append("minStock", formData.minStock);
+    form.append("unit", formData.unit);
+    form.append("location", formData.location);
+
+
+    if (formData.picture) {
+      form.append("picture", formData.picture);
+    }
 
     try {
       const response = await fetch(
         `${import.meta.env.VITE_API_BASE_URL}/api/consumables`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
+          body: form,
         }
       );
-    
-          if (response.ok) {
-            toast.success("Consumable added successfully!");
-            onAddSuccess();
-            onClose();
-          } else {
-            toast.error("Failed to add consumable");
-          }
-        } catch (error) {
-          console.error("Error adding consumable", error);
-          toast.error("Error adding consumable");
-        }
-      };
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await fetch("/api/categories");
-        const data = await response.json();
-        setCategories(data);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
+      if (response.ok) {
+        toast.success("Consumable added successfully!");
+        onAddSuccess();
+        onClose();
+      } else {
+        toast.error("Failed to add consumable");
       }
-    };
-
-    fetchCategories();
-  }, []);
-
-  const filteredCategories = categories.filter((category) =>
-    category.name.toLowerCase().includes(formData.category?.toLowerCase() || "")
-  );
+    } catch (error) {
+      console.error("Error adding consumable", error);
+      toast.error("Error adding consumable");
+    }
+  };
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -101,12 +70,13 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({
     }));
   };
 
-  const handleCategorySelect = (category: Category) => {
-    setFormData({
-      ...formData,
-      category: category.name,
-    });
-    setShowSuggestions(false);
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setFormData((prevData) => ({
+        ...prevData,
+        picture: e.target.files![0],
+      }));
+    }
   };
 
   return (
@@ -152,22 +122,8 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({
           value={formData.category || ""}
           onChange={handleInputChange}
           required
-          onFocus={() => setShowSuggestions(true)}
           className="border rounded-md p-2 text-xs bg-white text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
         />
-        {showSuggestions && filteredCategories.length > 0 && (
-          <ul className="border mt-1 rounded-md bg-white dark:bg-gray-700 text-gray-700 dark:text-white text-xs max-h-40 overflow-y-auto">
-            {filteredCategories.map((category, index) => (
-              <li
-                key={index}
-                onClick={() => handleCategorySelect(category)}
-                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer"
-              >
-                {category.name}
-              </li>
-            ))}
-          </ul>
-        )}
       </div>
 
       {/* Quantity */}
@@ -238,20 +194,18 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({
           className="border rounded-md p-2 text-xs bg-white text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
         />
       </div>
-
-      {/* Image*/}
+      {/* Image Upload */}
       <div className="flex flex-col">
         <label className="mb-1 font-medium text-xs text-gray-700 dark:text-gray-300">
           Image
         </label>
-        <label className="cursor-pointer border rounded-md p-2 text-xs bg-white text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 text-center">
-          <Upload className="w-4 h-4 absolute" />
+        <label className="cursor-pointer border rounded-md p-2 text-xs bg-white text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 text-center relative">
+          <Upload className="w-4 h-4 absolute left-2 top-2" />
           Upload Image
           <input
             type="file"
-            name="image"
             accept="image/*"
-            onChange={handleInputChange}
+            onChange={handleImageChange}
             className="hidden"
           />
         </label>

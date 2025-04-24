@@ -12,7 +12,7 @@ const addTool = async (req, res) => {
             ...req.body,
             picture: file.filename
         };
-
+   
         const result = await Tool.addTool(toolData);
         res.status(201).json({ message: "Tool added successfully", data: result });
     } catch (err) {

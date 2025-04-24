@@ -1,66 +1,72 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Upload } from "lucide-react";
 
-type ToolFormProps = {
+type VehicleFormProps = {
   onClose: () => void;
   onAddSuccess: () => void;
 };
 
-type Category = {
-  id: number;
-  name: string;
-};
-
-interface VehicleFormData {
-  picture: string;
-  name: string;
-  brand: string;
-  plate_no: string;
-  category: string;
-  fuel_type: string;
-  location: string;
-  acquisition_date: string;
-  warranty: string;
-  maintenance_due: string;
-  remarks: string;
-  assigned_driver: string;
-}
-
-const VehicleForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
-  const [formData, setFormData] = useState<VehicleFormData>({
-    picture: "",
+const ToolForm: React.FC<VehicleFormProps> = ({ onClose, onAddSuccess }) => {
+  const [formData, setFormData] = useState({
+    picture: null as File | null,
     name: "",
     brand: "",
     plate_no: "",
     category: "",
     fuel_type: "",
     location: "",
-    acquisition_date: "",
-    warranty: "",
-    maintenance_due: "",
+    acquisition_date: null as Date | null,
+    warranty: null as Date | null,
+    maintenance_due: null as Date | null,
     remarks: "",
     assigned_driver: "",
   });
 
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const form = new FormData();
+    form.append("name", formData.name);
+    form.append("brand", formData.brand);
+    form.append("plate_no", formData.plate_no);
+    form.append("category", formData.category);
+    form.append("fuel_type", formData.fuel_type);
+    form.append("location", formData.location);
+    form.append("remarks", formData.remarks);
+    form.append("assigned_driver", formData.assigned_driver);
+
+    if (formData.acquisition_date) {
+      form.append(
+        "acquisition_date",
+        formData.acquisition_date.toISOString().split("T")[0]
+      );
+    }
+
+    if (formData.warranty) {
+      form.append("warranty", formData.warranty.toISOString().split("T")[0]);
+    }
+
+    if (formData.maintenance_due) {
+      form.append(
+        "maintenance_due",
+        formData.maintenance_due.toISOString().split("T")[0]
+      );
+    }
+
+    if (formData.picture) {
+      form.append("picture", formData.picture);
+    }
 
     try {
       const response = await fetch(
         `${import.meta.env.VITE_API_BASE_URL}/api/vehicles`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
+          body: form,
         }
       );
 
@@ -69,33 +75,13 @@ const VehicleForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
         onAddSuccess();
         onClose();
       } else {
-        toast.error("Failed to add Vehicle");
+        toast.error("Failed to add vehicle");
       }
     } catch (error) {
       console.error("Error adding vehicle", error);
       toast.error("Error adding vehicle");
     }
   };
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await fetch(
-          `${import.meta.env.VITE_BASE_API_URL}/api/categories`
-        );
-        const data = await response.json();
-        setCategories(data);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      }
-    };
-
-    fetchCategories();
-  }, []);
-
-  const filteredCategories = categories.filter((category) =>
-    category.name.toLowerCase().includes(formData.category?.toLowerCase() || "")
-  );
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -107,12 +93,13 @@ const VehicleForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
     }));
   };
 
-  const handleCategorySelect = (category: Category) => {
-    setFormData({
-      ...formData,
-      category: category.name,
-    });
-    setShowSuggestions(false);
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setFormData((prevData) => ({
+        ...prevData,
+        picture: e.target.files![0],
+      }));
+    }
   };
 
   return (
@@ -150,7 +137,7 @@ const VehicleForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
       {/* Plate No. */}
       <div className="flex flex-col">
         <label className="mb-1 font-medium text-xs text-gray-700 dark:text-gray-300">
-          Brand
+          Plate No.
         </label>
         <input
           type="text"
@@ -173,22 +160,8 @@ const VehicleForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
           value={formData.category || ""}
           onChange={handleInputChange}
           required
-          onFocus={() => setShowSuggestions(true)}
           className="border rounded-md p-2 text-xs bg-white text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
         />
-        {showSuggestions && filteredCategories.length > 0 && (
-          <ul className="border mt-1 rounded-md bg-white dark:bg-gray-700 text-gray-700 dark:text-white text-xs max-h-40 overflow-y-auto">
-            {filteredCategories.map((category, index) => (
-              <li
-                key={index}
-                onClick={() => handleCategorySelect(category)}
-                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer"
-              >
-                {category.name}
-              </li>
-            ))}
-          </ul>
-        )}
       </div>
 
       {/* Fuel Type */}
@@ -196,14 +169,16 @@ const VehicleForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
         <label className="mb-1 font-medium text-xs text-gray-700 dark:text-gray-300">
           Fuel Type
         </label>
-        <input
-          type="text"
+        <select
           name="fuel_type"
           value={formData.fuel_type || ""}
-          required
           onChange={handleInputChange}
-          className="border rounded-md p-2 text-xs bg-white text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
-        />
+          className="border rounded-md p-2 bg-white text-xs text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 w-full"
+        >
+          <option></option>
+          <option value="Gasoline">Gasoline</option>
+          <option value="Diesel">Diesel</option>
+        </select>
       </div>
 
       {/* Location */}
@@ -213,8 +188,9 @@ const VehicleForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
         </label>
         <input
           type="text"
-          name="description"
+          name="location"
           value={formData.location || ""}
+          required
           onChange={handleInputChange}
           className="border rounded-md p-2 text-xs bg-white text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
         />
@@ -226,20 +202,21 @@ const VehicleForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
           Acquisition Date
         </label>
         <DatePicker
-          selected={formData.acquisition_date ? new Date(formData.acquisition_date) : null}
+          selected={formData.acquisition_date}
           onChange={(date: Date | null) =>
-            setFormData((prevData) => ({
-              ...prevData,
-              warranty: date ? date.toISOString().split("T")[0] : "",
+            setFormData((prev) => ({
+              ...prev,
+              acquisition_date: date,
             }))
           }
           dateFormat="yyyy-MM-dd"
           placeholderText="Select a date"
-          className="border rounded-md p-2 bg-white text-xs text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 w-full "
+          className="border rounded-md p-2 bg-white text-xs text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 w-full"
           calendarClassName="dark:bg-gray-700 dark:text-black"
           showMonthDropdown
           showYearDropdown
           dropdownMode="select"
+          maxDate={new Date()}
         />
       </div>
 
@@ -249,21 +226,21 @@ const VehicleForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
           Warranty
         </label>
         <DatePicker
-          selected={formData.warranty ? new Date(formData.warranty) : null}
+          selected={formData.warranty}
           onChange={(date: Date | null) =>
-            setFormData((prevData) => ({
-              ...prevData,
-              warranty: date ? date.toISOString().split("T")[0] : "",
+            setFormData((prev) => ({
+              ...prev,
+              warranty: date,
             }))
           }
           dateFormat="yyyy-MM-dd"
           placeholderText="Select a date"
-          required
-          className="border rounded-md p-2 bg-white text-xs text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 w-full "
+          className="border rounded-md p-2 bg-white text-xs text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 w-full"
           calendarClassName="dark:bg-gray-700 dark:text-black"
           showMonthDropdown
           showYearDropdown
           dropdownMode="select"
+          maxDate={new Date()}
         />
       </div>
 
@@ -273,40 +250,38 @@ const VehicleForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
           Maintenance Due
         </label>
         <DatePicker
-          selected={
-            formData.maintenance_due ? new Date(formData.maintenance_due) : null
-          }
+          selected={formData.maintenance_due}
           onChange={(date: Date | null) =>
-            setFormData((prevData) => ({
-              ...prevData,
-              warranty: date ? date.toISOString().split("T")[0] : "",
+            setFormData((prev) => ({
+              ...prev,
+              maintenance_due: date,
             }))
           }
           dateFormat="yyyy-MM-dd"
           placeholderText="Select a date"
-          className="border rounded-md p-2 bg-white text-xs text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 w-full "
+          className="border rounded-md p-2 bg-white text-xs text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 w-full"
           calendarClassName="dark:bg-gray-700 dark:text-black"
           showMonthDropdown
           showYearDropdown
           dropdownMode="select"
+          maxDate={new Date()}
         />
       </div>
 
       {/* Remarks */}
       <div className="flex flex-col">
         <label className="mb-1 font-medium text-xs text-gray-700 dark:text-gray-300">
-          Status
+          Remarks
         </label>
-        <select
+        <input
+          type="text"
           name="remarks"
           value={formData.remarks || ""}
           onChange={handleInputChange}
-          className="border rounded-md p-2 bg-white text-xs text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 w-full"
-        >
-          <option value="Available">Available</option>
-        </select>
+          required
+          className="border rounded-md p-2 text-xs bg-white text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
+        />
       </div>
-
       {/* Assigned Driver */}
       <div className="flex flex-col">
         <label className="mb-1 font-medium text-xs text-gray-700 dark:text-gray-300">
@@ -321,20 +296,19 @@ const VehicleForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
           className="border rounded-md p-2 text-xs bg-white text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
         />
       </div>
-
       {/* Image */}
+      {/* Image Upload */}
       <div className="flex flex-col">
         <label className="mb-1 font-medium text-xs text-gray-700 dark:text-gray-300">
           Image
         </label>
-        <label className="cursor-pointer border rounded-md p-2 text-xs bg-white text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 text-center">
-          <Upload className="w-4 h-4 absolute" />
+        <label className="cursor-pointer border rounded-md p-2 text-xs bg-white text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 text-center relative">
+          <Upload className="w-4 h-4 absolute left-2 top-2" />
           Upload Image
           <input
             type="file"
-            name="Image"
             accept="image/*"
-            onChange={handleInputChange}
+            onChange={handleImageChange}
             className="hidden"
           />
         </label>
@@ -360,4 +334,4 @@ const VehicleForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
   );
 };
 
-export default VehicleForm;
+export default ToolForm;

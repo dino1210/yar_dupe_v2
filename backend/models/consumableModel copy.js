@@ -3,10 +3,10 @@ const db = require("../config/db");
 // ADD
 const addConsumable = async (consumableData) => {
     const { picture, tag, name, category, quantity, minStock, unit, location, date, status = "In Stock", qr } = consumableData;
-    const query = `INSERT INTO consumables (picture, tag, name, category, quantity, minStock, unit, location, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    const query = `INSERT INTO consumables (picture, tag, name, category, quantity, minStock, unit, location, status, qr) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
     try {
-        const [result] = await db.query(query, [picture, tag, name, category, quantity, minStock, unit, location, status]);
+        const [result] = await db.query(query, [picture, tag, name, category, quantity, minStock, unit, location, status, qr]);
         return result;
     } catch (err) {
         throw new Error('Error adding consumable: ' + err.message);

@@ -359,7 +359,7 @@ export default function VehiclesTable() {
             ) : (
               <TableRow>
                 <TableCell className="px-5 py-4 text-center text-gray-500 dark:text-gray-400">
-                  Error Fetching Vehicles
+                  No Vehicles Found
                 </TableCell>
               </TableRow>
             )}
