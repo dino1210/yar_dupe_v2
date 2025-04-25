@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 18, 2025 at 10:46 AM
+-- Generation Time: Apr 25, 2025 at 05:06 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -96,6 +96,38 @@ INSERT INTO `consumables` (`id`, `picture`, `tag`, `name`, `quantity`, `minStock
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `projects`
+--
+
+CREATE TABLE `projects` (
+  `id` int(11) NOT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `manager` varchar(255) DEFAULT NULL,
+  `person_in_charge` varchar(255) DEFAULT NULL,
+  `tools_equipment_used` text DEFAULT NULL,
+  `start_date` date DEFAULT NULL,
+  `end_date` date DEFAULT NULL,
+  `status` enum('Ongoing','Completed','Upcoming') DEFAULT NULL,
+  `remarks` text DEFAULT NULL,
+  `creator` varchar(100) DEFAULT 'Yard Admin'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `projects`
+--
+
+INSERT INTO `projects` (`id`, `title`, `manager`, `person_in_charge`, `tools_equipment_used`, `start_date`, `end_date`, `status`, `remarks`, `creator`) VALUES
+(1, 'Construction of Building A', 'Alice Amanda', 'Johnny Hernandez', 'Excavator, Mixer, Cement', '2024-02-01', '2024-12-01', 'Ongoing', 'Team B', 'Yard Admin'),
+(2, 'Renovation of Office HQ', 'Brian Santos', 'Micaela Leonardo', 'Ladder, Paint Sprayer', '2023-01-10', '2023-05-30', 'Completed', 'Final inspection passed', 'Yard Admin'),
+(3, 'Bridge Maintenance Project', 'Clarence Enriquez', 'Eric Marcelo', 'Hydraulic Jack, Welder', '2024-09-15', '2024-11-20', 'Upcoming', 'Scaffolding', 'Yard Admin'),
+(4, 'Road Paving Project', 'Angelo Gregorio', 'Daniel Allen', 'Mixer, Roller, Cement', '2024-05-10', '2024-10-30', 'Ongoing', 'Concrete Mixer', 'Yard Admin'),
+(5, 'Airport Expansion', 'Jennifer Cruz', 'Tomas Javier', 'Bulldozer, Concrete Pump', '2024-06-01', '2025-01-15', 'Upcoming', 'Runway ready', 'Yard Admin'),
+(6, 'Highway Widening Project', 'Julia Andrews', 'Jake Dela Rosa', 'Truck, Jackhammer, Mixer', '2024-03-20', '2024-10-10', 'Ongoing', 'Heavy usage area', 'Yard Admin'),
+(7, 'bake shop', 'nolly', 'NOLLY', 'HAMMER NI THOR ', '2025-04-25', '2025-04-25', 'Upcoming', NULL, 'Yard Admin');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `tools`
 --
 
@@ -154,19 +186,25 @@ CREATE TABLE `users` (
   `password` varchar(255) NOT NULL,
   `role` varchar(100) NOT NULL,
   `profile` varchar(300) NOT NULL,
-  `status` varchar(255) NOT NULL
+  `status` varchar(255) NOT NULL,
+  `Date_Created` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`, `profile`, `status`) VALUES
-(1, 'Admin', 'admin@gmail.com', '$2a$10$ysgopAQfZawXdZ1g/FR14.H6AHlM9WXN3b8xgFumPfCslOuggBGrC', 'admin', '', ''),
-(2, 'Project Manager', 'projectmanager@gmail.com', '$2a$10$5igFGny7DJqMhytkBf4kVeqGbM4K6W/irDNE85PkcQlpgKXDJspY2', 'project manager', '', ''),
-(3, 'Staff', 'staff@gmail.com', '$2a$10$HubgO1cxr6VuWG1/ckSXm.j/C1CAHT7IvcnCRaO5Xq5SD/4FWinmm', 'staff', '', ''),
-(4, 'Nolly Alvarado', 'nolly@gmail.com', '$2a$10$1w0n9/8yC97EtQdzZIOarelAVOfrvIPrF.Pxk2CQRXDlQ26O9C.Q6', 'admin', '', 'Active'),
-(5, 'Angelo Padilla', 'angelo@gmail.com', '$2a$10$P6q/ONJd9m7bMzfwD4TMJugPFtP2apWKyeb478CMy/isNN3oYTgMK', 'admin', '', 'Active');
+INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`, `profile`, `status`, `Date_Created`) VALUES
+(1, 'ronald', 'ronald@gmail.com', '$2b$10$LTq7sXS0k4lOuXeTjedC2..byxQPm9PehQ8VrhX56QsWzeOCHtwsa', 'Admin', '', 'Active', '2025-04-25 10:16:40'),
+(2, 'Admin', 'admin@gmail.com', '$2a$10$ysgopAQfZawXdZ1g/FR14.H6AHlM9WXN3b8xgFumPfCslOuggBGrC', 'Admin', '', 'Active', '2025-04-25 10:16:40'),
+(3, 'Project Manager', 'projectmanager@gmail.com', '$2a$10$5igFGny7DJqMhytkBf4kVeqGbM4K6W/irDNE85PkcQlpgKXDJspY2', 'Project Manager', '', 'Active', '2025-04-25 10:16:40'),
+(4, 'Staff', 'staff@gmail.com', '$2a$10$HubgO1cxr6VuWG1/ckSXm.j/C1CAHT7IvcnCRaO5Xq5SD/4FWinmm', 'Staff', '', 'Active', '2025-04-25 10:16:40'),
+(5, 'Nolly Alvarado', 'nolly@gmail.com', '$2a$10$1w0n9/8yC97EtQdzZIOarelAVOfrvIPrF.Pxk2CQRXDlQ26O9C.Q6', 'admin', '', 'Active', '2025-04-25 10:16:40'),
+(6, 'Angelo Padilla', 'angelo@gmail.com', '$2a$10$P6q/ONJd9m7bMzfwD4TMJugPFtP2apWKyeb478CMy/isNN3oYTgMK', 'admin', '', 'Active', '2025-04-25 10:16:40'),
+(7, 'ronald', 'ronald@gmail.com', '$2b$10$999.aCNUGqYklg2dIz4LCOK095JkqZ.hgCqdHvY7NUQyc4j0382n6', 'Admin', '', 'Active', '2025-04-25 10:16:40'),
+(8, 'angelo', 'angelo@gmail.com', '$2b$10$gqTxodjorPomIf0VAxUg/.UMgUC.kYuJ1zq/vPXJ05kb701.PPuvK', 'Admin', '', 'Active', '2025-04-25 10:16:40'),
+(9, 'edan', 'edan@gmail.com', '$2b$10$IhWQsb6kdlPmwzcpEXa58.Y6Lgk0bNIZxYFVNHGhcbWdPmlXExQQa', 'Staff', '', 'Inactive', '2025-04-25 10:16:40'),
+(10, 'jestro', 'jestro@gmail.com', '$2b$10$5Yf3qdC4mUSMKMqc0SgsmeTf/QqOKKNEhjL9SF7D0CrlrTnKou3Uu', 'Staff', '', 'Active', '2025-04-25 10:16:40');
 
 -- --------------------------------------------------------
 
@@ -235,6 +273,12 @@ ALTER TABLE `consumables`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `projects`
+--
+ALTER TABLE `projects`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `tools`
 --
 ALTER TABLE `tools`
@@ -269,10 +313,22 @@ ALTER TABLE `consumables`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
+-- AUTO_INCREMENT for table `projects`
+--
+ALTER TABLE `projects`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
 -- AUTO_INCREMENT for table `tools`
 --
 ALTER TABLE `tools`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=79;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `vehicles`

@@ -16,6 +16,9 @@ const consumablesLogsRoutes = require("./routes/consumablesLogsRoutes")
 
 const metricsRoutes = require("./routes/metricsRoutes")
 
+const projectsRoutes = require("./routes/projectsRoutes");
+
+
 const path = require("path");
 
 dotenv.config();
@@ -27,6 +30,9 @@ app.use(cors());
 // Auth 
 app.use("/auth", authRoutes);
 app.use("/api", userRoutes);
+
+app.use("/api/users", userRoutes); // ✅ This is the correct path
+
 
 // Resources 
 app.use("/api/tools", toolsRoutes);
@@ -43,6 +49,8 @@ app.use("/api/consumables-logs", consumablesLogsRoutes);
 
 // Metrics
 app.use("/api/metrics", metricsRoutes);
+
+app.use("/api/projects", projectsRoutes);
 
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 
