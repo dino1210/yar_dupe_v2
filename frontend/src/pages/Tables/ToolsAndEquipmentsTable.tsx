@@ -326,11 +326,14 @@ export default function ToolsAndEquipmentsTable() {
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                       {tool.warranty
-                        ? new Date(tool.purchase_date).toLocaleDateString("en-US", {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                          })
+                        ? new Date(tool.purchase_date).toLocaleDateString(
+                            "en-US",
+                            {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            }
+                          ) 
                         : "-"}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
@@ -361,16 +364,23 @@ export default function ToolsAndEquipmentsTable() {
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                       <img
-                        src={tool.qr}
-                        alt={`QR Code`}
+                        src={`${
+                          import.meta.env.VITE_API_BASE_URL
+                        }/assets/qr/tools/${tool.qr}`}
+                        alt={`${tool.name}' Image`}
                         className="w-auto h-15 mx-auto rounded-lg object-cover cursor-pointer"
-                        onClick={() => setSelectedImage(tool.qr)}
+                        onClick={() =>
+                          setSelectedImage(
+                            `${
+                              import.meta.env.VITE_API_BASE_URL
+                            }/assets/qr/tools/${tool.qr}`
+                          )
+                        }
                       />
                     </TableCell>
                     <TableCell className="px-8 py-3 text-xs text-gray-500 dark:text-gray-400 text-center">
                       <div className="flex items-center justify-center space-x-2 w-full h-full">
                         <button
-                         
                           className="px-3 py-1 text-xs font-medium text-white bg-blue-800 rounded-lg hover:bg-blue-900"
                           title="Edit"
                         >
@@ -481,7 +491,6 @@ export default function ToolsAndEquipmentsTable() {
           onConfirm={handleConfirmDelete}
           itemName={selectedName}
         />
-
       </div>
     </div>
   );
