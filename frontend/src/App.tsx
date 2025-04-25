@@ -1,4 +1,4 @@
-import { HashRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import SignIn from "./pages/AuthPages/SignIn";
 import SignUp from "./pages/AuthPages/SignUp";
@@ -35,6 +35,7 @@ import RoleBasedRoute from "./components/auth/RolebasedRoutes";
 import ModeSelector from "./pages/OtherPage/ModeSelector";
 import AppLayoutMobile from "./layout/AppLayoutMobile";
 import HomeMobile from "./pages/Mobile/HomeMobile";
+import CreateProject from "./pages/Mobile/CreateProject";
 
 export default function App() {
   return (
@@ -48,7 +49,14 @@ export default function App() {
 
             {/* Mobile */}
             <Route element={<AppLayoutMobile />}>
-              <Route path="/select-mode" element={<ModeSelector />} />
+              <Route
+                path="/select-mode"
+                element={
+                  <ProtectedRoute>
+                    <ModeSelector />
+                  </ProtectedRoute>
+                }
+              />
               <Route
                 path="/mobile-home"
                 element={
@@ -57,7 +65,16 @@ export default function App() {
                   </ProtectedRoute>
                 }
               />
+              <Route
+                path="/create-project"
+                element={
+                  <ProtectedRoute>
+                    <CreateProject />
+                  </ProtectedRoute>
+                }
+              />
             </Route>
+
             <Route element={<AppLayout />}>
               <Route
                 index

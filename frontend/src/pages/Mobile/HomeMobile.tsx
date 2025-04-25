@@ -2,11 +2,14 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Plus } from "lucide-react";
 import jsQR from "jsqr";
+import PageBreadcrumb from "../../components/common/PageBreadCrumb";
+import PageMeta from "../../components/common/PageMeta";
 
 const MobileScannerHome = () => {
   const navigate = useNavigate();
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [scannedData, setScannedData] = useState<any>(null);
   const [showModal, setShowModal] = useState(false);
   const [resourceType, setResourceType] = useState<"tool" | "vehicle" | null>(
@@ -108,7 +111,12 @@ const MobileScannerHome = () => {
 
   return (
     <div className="flex flex-col h-[85vh] rounded-2xl border border-gray-200 bg-white px-5 py-6 dark:border-gray-800 dark:bg-white/[0.03]">
-      <h3 className="mb-6 text-center font-semibold text-gray-800 dark:text-white/90 text-xl sm:text-2xl bg-blue-100 dark:bg-gray-800 px-4 py-2 rounded-lg w-fit mx-auto">
+      <div>
+        <PageMeta title="Settings" description="" />
+        <PageBreadcrumb pageTitle="Settings" />
+        <div className="min-h-screen rounded-2xl border border-gray-200 bg-white px-5 py-7 dark:border-gray-800 dark:bg-white/[0.03] xl:px-10 xl:py-12">
+          <div className="mx-auto w-full max-w-[630px] text-center">
+          <h3 className="mb-6 text-center font-semibold text-gray-800 dark:text-white/90 text-xl sm:text-2xl bg-blue-100 dark:bg-gray-800 px-4 py-2 rounded-lg w-fit mx-auto">
         Scan to View Info
       </h3>
 
@@ -143,7 +151,7 @@ const MobileScannerHome = () => {
               />
             )}
             <p className="text-center">
-              <strong>{scannedData.name}</strong> 
+              <strong>{scannedData.name}</strong>
             </p>
 
             {resourceType === "tool" && (
@@ -264,6 +272,9 @@ const MobileScannerHome = () => {
           </div>
         </div>
       )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
