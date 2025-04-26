@@ -31,7 +31,7 @@ app.use(cors());
 app.use("/auth", authRoutes);
 app.use("/api", userRoutes);
 
-app.use("/api/users", userRoutes); // ✅ This is the correct path
+app.use("/api/users", userRoutes); 
 
 
 // Resources 

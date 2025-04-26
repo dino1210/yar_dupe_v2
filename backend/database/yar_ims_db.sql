@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 26, 2025 at 03:40 AM
+-- Generation Time: Apr 26, 2025 at 10:02 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -93,7 +93,7 @@ INSERT INTO `projects` (`id`, `title`, `manager`, `person_in_charge`, `tools_equ
 (4, 'Road Paving Project', 'Angelo Gregorio', 'Daniel Allen', 'Mixer, Roller, Cement', '2024-05-10', '2024-10-30', 'Ongoing', 'Concrete Mixer', 'Yard Admin'),
 (5, 'Airport Expansion', 'Jennifer Cruz', 'Tomas Javier', 'Bulldozer, Concrete Pump', '2024-06-01', '2025-01-15', 'Upcoming', 'Runway ready', 'Yard Admin'),
 (6, 'Highway Widening Project', 'Julia Andrews', 'Jake Dela Rosa', 'Truck, Jackhammer, Mixer', '2024-03-20', '2024-10-10', 'Ongoing', 'Heavy usage area', 'Yard Admin'),
-(7, 'bake shop', 'nolly', 'NOLLY', 'HAMMER NI THOR ', '2025-04-25', '2025-04-25', 'Upcoming', NULL, 'Yard Admin');
+(7, 'bake shop', 'nolly', 'NOLLY', 'HAMMER NI THOR ', '2025-04-24', '2025-04-24', 'Upcoming', NULL, 'Yard Admin');
 
 -- --------------------------------------------------------
 
@@ -122,7 +122,7 @@ CREATE TABLE `tools` (
 --
 
 INSERT INTO `tools` (`id`, `picture`, `name`, `brand`, `category`, `tag`, `description`, `purchase_date`, `warranty`, `status`, `remarks`, `qr`, `qr_code_id`) VALUES
-(79, '1745625844538-701692642.jpg', 'tygbh', 'bkhj', 'bhjn', 'khbjn', 'gukhj', '2025-04-01', '2025-04-08', 'Available', 'jknm', 'TOOL-487a2c4b-e99f-416e-9724-7d76ff8ae7c0.png', 'TOOL-487a2c4b-e99f-416e-9724-7d76ff8ae7c0');
+(80, '1745647502007-348548733.jpg', 'Makita Angle Grinder', 'Makita', 'Angle Grinder', '123', 'Test', '2025-03-31', '2025-04-29', 'Available', 'Bago to ya', 'TOOL-dd37d75b-5df1-4914-950c-5e84888f876e.png', 'TOOL-dd37d75b-5df1-4914-950c-5e84888f876e');
 
 -- --------------------------------------------------------
 
@@ -137,19 +137,19 @@ CREATE TABLE `users` (
   `password` varchar(255) NOT NULL,
   `role` varchar(100) NOT NULL,
   `profile` varchar(300) NOT NULL,
-  `status` varchar(255) NOT NULL
+  `status` varchar(255) NOT NULL,
+  `date_created` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`, `profile`, `status`) VALUES
-(1, 'Admin', 'admin', '$2a$10$ysgopAQfZawXdZ1g/FR14.H6AHlM9WXN3b8xgFumPfCslOuggBGrC', 'Admin', '', ''),
-(2, 'Project Manager', 'projectmanager', '$2a$10$5igFGny7DJqMhytkBf4kVeqGbM4K6W/irDNE85PkcQlpgKXDJspY2', 'Manager', '', ''),
-(3, 'Staff', 'staff@gmail.com', '$2a$10$HubgO1cxr6VuWG1/ckSXm.j/C1CAHT7IvcnCRaO5Xq5SD/4FWinmm', 'Staff', '', ''),
-(4, 'Nolly Alvarado', 'nolly@gmail.com', '$2a$10$1w0n9/8yC97EtQdzZIOarelAVOfrvIPrF.Pxk2CQRXDlQ26O9C.Q6', 'Staff', '', 'Active'),
-(5, 'Angelo Padilla', 'angelo@gmail.com', '$2a$10$P6q/ONJd9m7bMzfwD4TMJugPFtP2apWKyeb478CMy/isNN3oYTgMK', 'Admin', '', 'Active');
+INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`, `profile`, `status`, `date_created`) VALUES
+(1, 'Admin', 'admin', '$2a$10$ysgopAQfZawXdZ1g/FR14.H6AHlM9WXN3b8xgFumPfCslOuggBGrC', 'Admin', '', '', '0000-00-00'),
+(3, 'Staff', 'staff@gmail.com', '$2a$10$HubgO1cxr6VuWG1/ckSXm.j/C1CAHT7IvcnCRaO5Xq5SD/4FWinmm', 'Staff', '', '', '0000-00-00'),
+(4, 'Nolly Alvarado', 'nolly@gmail.com', '$2a$10$1w0n9/8yC97EtQdzZIOarelAVOfrvIPrF.Pxk2CQRXDlQ26O9C.Q6', 'Staff', '', 'Active', '0000-00-00'),
+(5, 'Angelo Padilla', 'angelo@gmail.com', '$2a$10$P6q/ONJd9m7bMzfwD4TMJugPFtP2apWKyeb478CMy/isNN3oYTgMK', 'Admin', '', 'Active', '0000-00-00');
 
 -- --------------------------------------------------------
 
@@ -229,7 +229,7 @@ ALTER TABLE `consumables`
 -- AUTO_INCREMENT for table `tools`
 --
 ALTER TABLE `tools`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
 
 --
 -- AUTO_INCREMENT for table `vehicles`

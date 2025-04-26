@@ -133,9 +133,9 @@ const MobileScannerHome = () => {
   return (
     <div className="flex flex-col h-[85vh] rounded-2xl border border-gray-200 bg-white px-5 py-6 dark:border-gray-800 dark:bg-white/[0.03]">
       <div>
-        <PageMeta title="Settings" description="" />
-        <PageBreadcrumb pageTitle="Settings" />
-        <div className="h-[73vh] rounded-2xl border border-gray-200 bg-white px-5 py-7 dark:border-gray-800 dark:bg-white/[0.03] xl:px-10 xl:py-12">
+        <PageMeta title="Mobile Scanner" description="" />
+        <PageBreadcrumb pageTitle="Mobile Scanner" />
+        <div className="h-[73vh] rounded-2xl border border-gray-200 bg-white px-5 py-7 dark:border-gray-800 dark:bg-white/[0.03]">
           <div className="mx-auto w-full max-w-[630px] text-center">
             <h3 className="mb-6 text-center font-semibold text-gray-800 dark:text-white/90 text-xl sm:text-2xl bg-blue-100 dark:bg-gray-800 px-4 py-2 rounded-lg w-fit mx-auto">
               Scan to View Info
@@ -201,7 +201,7 @@ const MobileScannerHome = () => {
                       className="w-24 h-24 object-cover mx-auto rounded-lg border border-gray-600 dark:border-gray-200 mb-4"
                     />
                   )}
-                  <p className="text-center">
+                  <p className="text-center text-xl">
                     <strong>{scannedData.name}</strong>
                   </p>
 
