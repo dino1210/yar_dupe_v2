@@ -226,7 +226,7 @@ export default function VehiclesTable() {
   };
 
   return (
-    <div className="overflow-y-hidden rounded-xl border w-full border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03] text-xs">
+    <div className="overflow-y-hidden rounded-xl border w-full border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03] text-gray-500 text-center dark:text-gray-50 whitespace-nowrap text-xs">
       <div className="px-5 py-3 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center justify-between">
         <div className="flex flex-wrap gap-2 items-center">
           {/* Filters */}
@@ -408,13 +408,12 @@ export default function VehiclesTable() {
       </div>
 
       {/* Pagination */}
-      <div className="px-5 py-3 flex space-x-5 items-center text-xs">
+      <div className="px-5 py-5 flex space-x-5 items-center text-xs">
         <select
           value={dataLimit}
           onChange={(e) => setDataLimit(Number(e.target.value))}
-          className="border p-2 text-xs rounded-md bg-white dark:bg-gray-900 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
+          className="border p-2.5 w-20 text-xs rounded-md bg-white dark:bg-gray-900 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
         >
-          <option value={5}>5 Items</option>
           <option value={10}>10 Items</option>
           <option value={20}>20 Items</option>
           <option value={50}>50 Items</option>

@@ -373,9 +373,10 @@ export default function ToolsAndEquipmentsTable() {
         <select
           value={dataLimit}
           onChange={(e) => setDataLimit(Number(e.target.value))}
-          className="border p-2 text-xs rounded-md bg-white dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
+          className="border p-2 w-20 text-xs rounded-md bg-white dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
         >
           <option value={10}>10 Items</option>
+          <option value={20}>20 Items</option>
           <option value={50}>50 Items</option>
           <option value={10000}>All Items</option>
         </select>

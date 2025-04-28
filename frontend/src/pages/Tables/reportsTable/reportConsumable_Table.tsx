@@ -354,11 +354,12 @@ export default function ConsumablesTable() {
             setDataLimit(Number(e.target.value));
             setCurrentPage(1);
           }}
-          className="border p-1 text-xs rounded-md bg-white dark:bg-gray-900 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 dark:hover:bg-gray-800"
+          className="border p-1 w-20 text-xs rounded-md bg-white dark:bg-gray-900 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 dark:hover:bg-gray-800"
         >
           <option value={10}>10 Items</option>
           <option value={20}>20 Items</option>
           <option value={50}>50 Items</option>
+          <option value={9999}>All Items</option>
         </select>
 
         <div className="flex items-center space-x-1">
