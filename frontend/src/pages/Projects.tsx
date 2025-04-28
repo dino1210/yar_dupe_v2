@@ -46,10 +46,10 @@ const formatDate = (dateString: string) => {
 };
 
 const statusStyles: Record<string, string> = {
-  Ongoing: "bg-green-100 text-green-700",
-  Completed: "bg-blue-100 text-blue-700",
-  Upcoming: "bg-yellow-100 text-yellow-700",
-  Cancelled: "bg-red-100 text-red-700",
+  Ongoing: "border-green-500",
+  Completed: "border-blue-500",
+  Upcoming: "border-yellow-500",
+  Cancelled: "border-red-500",
 };
 
 const statusIcons: Record<string, ReactNode> = {
@@ -261,31 +261,23 @@ export default function Projects() {
         {filteredProjects.map((proj) => (
           <div
             key={proj.id}
-            className={`bg-white dark:bg-gray-800 rounded-xl shadow-md border-l-4 p-6 transition-all hover:shadow-lg hover:scale-[1.01] ${
-              proj.status === "Completed"
-                ? "border-blue-500 bg-blue-100" // Completed status color
-                : proj.status === "Ongoing"
-                ? "border-green-500 bg-green-100" // Ongoing status color
-                : proj.status === "Upcoming"
-                ? "border-yellow-500 bg-yellow-100" // Upcoming status color
-                : "border-red-500 bg-red-100" // Cancelled status color
+            className={`bg-white dark:bg-gray-800 text-gray-800 dark:text-white rounded-xl shadow-md border-l-4 p-6 transition-all hover:shadow-lg hover:scale-[1.01] ${
+              statusStyles[proj.status || "Upcoming"]
             }`}
           >
             <div className="flex flex-col gap-4">
-              <h3 className="text-xl font-semibold text-blue-800 dark:text-blue-300 truncate">
-                {proj.title}
-              </h3>
-              <p className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
-                {statusIcons[proj.status]} Status: {proj.status}
+              <h3 className="text-xl font-semibold truncate">{proj.title}</h3>
+              <p className="flex items-center gap-2">
+                {statusIcons[proj.status || "Upcoming"]} Status: {proj.status}
               </p>
-              <p className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
+              <p className="flex items-center gap-2">
                 <User2 className="w-5 h-5" /> Manager: {proj.manager}
               </p>
-              <p className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
+              <p className="flex items-center gap-2">
                 <UserRoundCheck className="w-5 h-5" /> PIC:{" "}
                 {proj.personInCharge || "Not Assigned"}
               </p>
-              <p className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
+              <p className="flex items-center gap-2">
                 <CalendarDays className="w-5 h-5" />{" "}
                 {formatDate(proj.startDate)} — {formatDate(proj.endDate)}
               </p>
@@ -626,7 +618,6 @@ export default function Projects() {
         </div>
       </Dialog>
 
-      {/* View Details Modal */}
       {/* View Details Modal */}
       <Dialog
         open={viewModalOpen}

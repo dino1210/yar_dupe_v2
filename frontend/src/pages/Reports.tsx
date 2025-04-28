@@ -14,62 +14,43 @@ export default function Reports() {
   const renderContent = () => {
     if (!selectedReport) {
       return (
-        <div className="w-full max-w-5xl mx-auto rounded-xl border border-gray-200 bg-white p-10 shadow-md dark:border-gray-700 dark:bg-gray-900 transition-all">
-          <h2 className="text-3xl font-bold mb-2 text-center text-gray-800 dark:text-white">
-            Reports
+        <div className="w-full max-w-6xl mx-auto rounded-3xl border border-gray-200 bg-white/80 backdrop-blur-md p-12 shadow-2xl dark:border-gray-700 dark:bg-gray-900/80 transition-all">
+          <h2 className="text-4xl font-extrabold mb-4 text-center text-gray-800 dark:text-white tracking-tight">
+            Reports Dashboard
           </h2>
-          <p className="text-center text-gray-500 dark:text-gray-400 mb-10">
-            Select a category below to generate and view detailed reports.
+          <p className="text-center text-gray-500 dark:text-gray-400 mb-12 text-lg">
+            Select a report category below to view detailed analytics.
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Tools Report */}
-            <button
-              onClick={() => setSelectedReport("tools")}
-              className="flex flex-col items-center justify-center gap-3 rounded-lg border border-gray-300 bg-gray-50 p-8 text-gray-700 hover:bg-gray-100 hover:shadow-lg dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 transition-all"
-            >
-              <div className="p-4 rounded-full bg-gray-100 dark:bg-gray-700">
-                <Drill size={36} className="text-black dark:text-white" />
-              </div>
-              <span className="font-semibold text-lg">Tools</span>
-            </button>
-
-            {/* Consumables Report */}
-            <button
-              onClick={() => setSelectedReport("consumables")}
-              className="flex flex-col items-center justify-center gap-3 rounded-lg border border-gray-300 bg-gray-50 p-8 text-gray-700 hover:bg-gray-100 hover:shadow-lg dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 transition-all"
-            >
-              <div className="p-4 rounded-full bg-gray-100 dark:bg-gray-700">
-                <FlaskConical
-                  size={36}
-                  className="text-black dark:text-white"
-                />
-              </div>
-              <span className="font-semibold text-lg">Consumables</span>
-            </button>
-
-            {/* Vehicles Report */}
-            <button
-              onClick={() => setSelectedReport("vehicles")}
-              className="flex flex-col items-center justify-center gap-3 rounded-lg border border-gray-300 bg-gray-50 p-8 text-gray-700 hover:bg-gray-100 hover:shadow-lg dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 transition-all"
-            >
-              <div className="p-4 rounded-full bg-gray-100 dark:bg-gray-700">
-                <Car size={36} className="text-black dark:text-white" />
-              </div>
-              <span className="font-semibold text-lg">Vehicles</span>
-            </button>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+            {/* Card Button Template */}
+            {[
+              { label: "Tools", icon: Drill, type: "tools" },
+              { label: "Consumables", icon: FlaskConical, type: "consumables" },
+              { label: "Vehicles", icon: Car, type: "vehicles" },
+            ].map((item, index) => (
+              <button
+                key={index}
+                onClick={() => setSelectedReport(item.type as any)}
+                className="flex flex-col items-center justify-center gap-4 rounded-2xl border border-gray-300 bg-gradient-to-br from-gray-50 to-gray-100 p-10 text-gray-700 hover:scale-105 hover:shadow-xl dark:from-gray-800 dark:to-gray-900 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800 transition-transform duration-300"
+              >
+                <div className="p-5 rounded-full bg-gray-200 dark:bg-gray-700">
+                  <item.icon size={40} className="text-black dark:text-white" />
+                </div>
+                <span className="font-semibold text-xl">{item.label}</span>
+              </button>
+            ))}
           </div>
         </div>
       );
     }
 
-    // Detailed Report View
     return (
-      <div className="w-full rounded-xl border border-gray-200 bg-white p-8 shadow-md dark:border-gray-700 dark:bg-gray-900 transition-all">
-        <div className="flex items-center mb-6">
+      <div className="w-full max-w-6xl mx-auto rounded-3xl border border-gray-200 bg-white/80 backdrop-blur-md p-10 shadow-2xl dark:border-gray-700 dark:bg-gray-900/80 transition-all">
+        <div className="flex items-center mb-8">
           <button
             onClick={() => setSelectedReport(null)}
-            className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-200 hover:text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 transition-all"
+            className="inline-flex items-center gap-2 rounded-full border border-gray-300 bg-gray-100 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-200 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white transition-all"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -91,28 +72,28 @@ export default function Reports() {
 
         <div>
           {selectedReport === "tools" && (
-            <div>
-              <h2 className="text-2xl font-bold mb-6 text-gray-800 dark:text-white">
-                Tools & Equipments Report
+            <>
+              <h2 className="text-3xl font-bold mb-6 text-gray-800 dark:text-white">
+                Tools & Equipment Report
               </h2>
               <ReportToolTable />
-            </div>
+            </>
           )}
           {selectedReport === "consumables" && (
-            <div>
-              <h2 className="text-2xl font-bold mb-6 text-gray-800 dark:text-white">
+            <>
+              <h2 className="text-3xl font-bold mb-6 text-gray-800 dark:text-white">
                 Consumables Report
               </h2>
               <ReportConsumableTable />
-            </div>
+            </>
           )}
           {selectedReport === "vehicles" && (
-            <div>
-              <h2 className="text-2xl font-bold mb-6 text-gray-800 dark:text-white">
+            <>
+              <h2 className="text-3xl font-bold mb-6 text-gray-800 dark:text-white">
                 Vehicles Report
               </h2>
               <ReportVehicleTable />
-            </div>
+            </>
           )}
         </div>
       </div>
@@ -120,7 +101,7 @@ export default function Reports() {
   };
 
   return (
-    <div className="px-4 py-8">
+    <div className="px-6 py-12 bg-gradient-to-b from-gray-100 to-white dark:from-gray-900 dark:to-black min-h-screen">
       <PageMeta
         title="Reports"
         description="Generated reports of system activities"
