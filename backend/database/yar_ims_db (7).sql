@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 26, 2025 at 10:02 AM
+-- Generation Time: Apr 28, 2025 at 04:28 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -63,6 +63,13 @@ CREATE TABLE `consumables` (
   `category` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `consumables`
+--
+
+INSERT INTO `consumables` (`id`, `picture`, `tag`, `name`, `quantity`, `minStock`, `unit`, `location`, `date`, `status`, `qr`, `category`) VALUES
+(33, '1745748191151-692231350.jfif', ' asd', ' asd', 1, 2, 'pcs', ' ad', '2025-04-27', 'In Stock', '', ' asd');
+
 -- --------------------------------------------------------
 
 --
@@ -75,6 +82,8 @@ CREATE TABLE `projects` (
   `manager` varchar(255) DEFAULT NULL,
   `person_in_charge` varchar(255) DEFAULT NULL,
   `tools_equipment_used` text DEFAULT NULL,
+  `consumables_used` text DEFAULT NULL,
+  `vehicles_used` text DEFAULT NULL,
   `start_date` date DEFAULT NULL,
   `end_date` date DEFAULT NULL,
   `status` enum('Ongoing','Completed','Upcoming') DEFAULT NULL,
@@ -86,14 +95,8 @@ CREATE TABLE `projects` (
 -- Dumping data for table `projects`
 --
 
-INSERT INTO `projects` (`id`, `title`, `manager`, `person_in_charge`, `tools_equipment_used`, `start_date`, `end_date`, `status`, `remarks`, `creator`) VALUES
-(1, 'Construction of Building A', 'Alice Amanda', 'Johnny Hernandez', 'Excavator, Mixer, Cement', '2024-02-01', '2024-12-01', 'Ongoing', 'Team B', 'Yard Admin'),
-(2, 'Renovation of Office HQ', 'Brian Santos', 'Micaela Leonardo', 'Ladder, Paint Sprayer', '2023-01-10', '2023-05-30', 'Completed', 'Final inspection passed', 'Yard Admin'),
-(3, 'Bridge Maintenance Project', 'Clarence Enriquez', 'Eric Marcelo', 'Hydraulic Jack, Welder', '2024-09-15', '2024-11-20', 'Upcoming', 'Scaffolding', 'Yard Admin'),
-(4, 'Road Paving Project', 'Angelo Gregorio', 'Daniel Allen', 'Mixer, Roller, Cement', '2024-05-10', '2024-10-30', 'Ongoing', 'Concrete Mixer', 'Yard Admin'),
-(5, 'Airport Expansion', 'Jennifer Cruz', 'Tomas Javier', 'Bulldozer, Concrete Pump', '2024-06-01', '2025-01-15', 'Upcoming', 'Runway ready', 'Yard Admin'),
-(6, 'Highway Widening Project', 'Julia Andrews', 'Jake Dela Rosa', 'Truck, Jackhammer, Mixer', '2024-03-20', '2024-10-10', 'Ongoing', 'Heavy usage area', 'Yard Admin'),
-(7, 'bake shop', 'nolly', 'NOLLY', 'HAMMER NI THOR ', '2025-04-24', '2025-04-24', 'Upcoming', NULL, 'Yard Admin');
+INSERT INTO `projects` (`id`, `title`, `manager`, `person_in_charge`, `tools_equipment_used`, `consumables_used`, `vehicles_used`, `start_date`, `end_date`, `status`, `remarks`, `creator`) VALUES
+(19, 'Sample ', 'Edan', 'Edan ', 'Makita Angle Grinder ', ' asd', 'Fortuner', '2025-04-26', '2025-04-28', 'Upcoming', NULL, 'Yard Admin');
 
 -- --------------------------------------------------------
 
@@ -122,7 +125,8 @@ CREATE TABLE `tools` (
 --
 
 INSERT INTO `tools` (`id`, `picture`, `name`, `brand`, `category`, `tag`, `description`, `purchase_date`, `warranty`, `status`, `remarks`, `qr`, `qr_code_id`) VALUES
-(80, '1745647502007-348548733.jpg', 'Makita Angle Grinder', 'Makita', 'Angle Grinder', '123', 'Test', '2025-03-31', '2025-04-29', 'Available', 'Bago to ya', 'TOOL-dd37d75b-5df1-4914-950c-5e84888f876e.png', 'TOOL-dd37d75b-5df1-4914-950c-5e84888f876e');
+(81, 'Makita.jpg ', 'Makita Angle Grinder ', 'Makita ', 'Angle Grinder ', 'EXC-101', 'MATIBAY', '2025-04-26', '2025-04-27', 'Available', 'goods ', 'TOOL-8ce16b26-773f-4b92-a3d9-15ccb6ca6bbf.png', 'TOOL-8ce16b26-773f-4b92-a3d9-15ccb6ca6bbf'),
+(82, '1745806872334-842461458.jpg', 'Excavator', 'JASMINE ', 'Tools', 'TAM-728', 'MATIBAY', '2025-04-27', '2025-04-27', 'Available', 'goods ', 'TOOL-5f4d6933-8f6c-4b40-9868-3cae062fb13d.png', 'TOOL-5f4d6933-8f6c-4b40-9868-3cae062fb13d');
 
 -- --------------------------------------------------------
 
@@ -146,10 +150,15 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`, `profile`, `status`, `date_created`) VALUES
-(1, 'Admin', 'admin', '$2a$10$ysgopAQfZawXdZ1g/FR14.H6AHlM9WXN3b8xgFumPfCslOuggBGrC', 'Admin', '', '', '0000-00-00'),
-(3, 'Staff', 'staff@gmail.com', '$2a$10$HubgO1cxr6VuWG1/ckSXm.j/C1CAHT7IvcnCRaO5Xq5SD/4FWinmm', 'Staff', '', '', '0000-00-00'),
+(1, 'Admin', 'admin', '$2a$10$ysgopAQfZawXdZ1g/FR14.H6AHlM9WXN3b8xgFumPfCslOuggBGrC', 'Admin', '', 'Active', '0000-00-00'),
+(3, 'Staff', 'staff@gmail.com', '$2a$10$HubgO1cxr6VuWG1/ckSXm.j/C1CAHT7IvcnCRaO5Xq5SD/4FWinmm', 'Staff', '', 'Active', '0000-00-00'),
 (4, 'Nolly Alvarado', 'nolly@gmail.com', '$2a$10$1w0n9/8yC97EtQdzZIOarelAVOfrvIPrF.Pxk2CQRXDlQ26O9C.Q6', 'Staff', '', 'Active', '0000-00-00'),
-(5, 'Angelo Padilla', 'angelo@gmail.com', '$2a$10$P6q/ONJd9m7bMzfwD4TMJugPFtP2apWKyeb478CMy/isNN3oYTgMK', 'Admin', '', 'Active', '0000-00-00');
+(5, 'Angelo Padilla', 'angelo@gmail.com', '$2a$10$P6q/ONJd9m7bMzfwD4TMJugPFtP2apWKyeb478CMy/isNN3oYTgMK', 'Admin', '', 'Active', '0000-00-00'),
+(6, 'ronald', 'ronald', '$2b$10$7klWLslBs8v6VKC66VCEke8iYJ09YzakllcEfPHnuTh.yQ.SuNTSu', 'Admin', '', 'Active', '2025-04-27'),
+(7, 'edan', 'edan', '$2b$10$OKOLZJ8/A/O0.E8xehH3XuYJmFj4t0q8Gtdt3G2ACaz8kKdCHqNsW', 'Admin', '', 'Active', '2025-04-28'),
+(8, 'ghelo', 'ghelo', '$2b$10$aQxt8l2f5b1ssbijGdAqheLW1.Hd05abzpMlyTXOuOMvESXNHH49.', 'Staff', '', 'Active', '2025-04-28'),
+(9, 'jestro', 'jestro', '$2b$10$t0MxpvHUfh9DX6opn7zPDescw3O6h/ChtyOnISu3qPB5lSH6bNnDG', 'Admin', '', 'Active', '2025-04-28'),
+(10, 'ronaldjr', 'ronaldjr', '$2b$10$chCU3FQeSgVSXaFjJNh/IefjvfIcloriWOH/WI29N97mjEKwQ7I8e', 'Admin', '', 'Active', '2025-04-28');
 
 -- --------------------------------------------------------
 
@@ -176,6 +185,15 @@ CREATE TABLE `vehicles` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Dumping data for table `vehicles`
+--
+
+INSERT INTO `vehicles` (`id`, `picture`, `name`, `brand`, `plate_no`, `category`, `fuel_type`, `location`, `acquisition_date`, `status`, `remarks`, `maintenance_due`, `assigned_driver`, `qr`, `warranty`) VALUES
+(22, '1745748467998-903997280.jfif', 'Fortuner', 'Toyota', '671UIE', 'kotse', 'Diesel', 'qc', '2025-04-26', 'Available', 'goods ', '2025-04-26', 'Ronald', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHQAAAB0CAYAAABUmhYnAAAAAklEQVR4AewaftIAAAKWSURBVO3BQW7sWAwEwSxC979yzl9y9QBB6rbNYUT8hzVGsUYp1ijFGqVYoxRrlGKNUqxRijVKsUYp1ijFGqVYoxRrlGKNUqxRLh5KwjepdEnoVLok3KHSJeGbVJ4o1ijFGqVYo1y8TOVNSXhC5SQJd6i8KQlvKtYoxRqlW', '2025-04-26'),
+(23, '1745799526463-490888521.jpg', 'L300', 'Toyota', '671UIE', 'Vehicles', 'Diesel', 'qc', '2025-04-27', 'Available', 'Heavy equipment for digging', '2025-04-27', 'Ronald', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHQAAAB0CAYAAABUmhYnAAAAAklEQVR4AewaftIAAAKdSURBVO3BQW7kQAwEwUxC//9yrY88NSBIM14TjDA/WGMUa5RijVKsUYo1SrFGKdYoxRqlWKMUa5RijVKsUYo1SrFGKdYoxRrl4iGVb0pCp9Il4Q6VLgmdyjcl4YlijVKsUYo1ysXLkvAmlTtUuiR0Kk8k4U0qbyrWKMUap', '2025-04-27'),
+(24, '1745804447208-11234666.jpg', 'Innova', 'Toyota', '671UIE', 'Vehicles', 'Diesel', 'qc', '2025-04-27', 'Available', 'goods ', '2025-04-27', 'Ronald', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHQAAAB0CAYAAABUmhYnAAAAAklEQVR4AewaftIAAAKtSURBVO3BQY7cQAwEwSxC//9yeo88NSBIM/bSjIg/WGMUa5RijVKsUYo1SrFGKdYoxRqlWKMUa5RijVKsUYo1SrFGKdYoxRrl4qEkfJNKl4QTlS4JJypdEr5J5YlijVKsUYo1ysXLVN6UhDtUPknlTUl4U7FGKdYoxRrl4', '2025-04-27');
+
+--
 -- Indexes for dumped tables
 --
 
@@ -189,6 +207,12 @@ ALTER TABLE `categories`
 -- Indexes for table `consumables`
 --
 ALTER TABLE `consumables`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `projects`
+--
+ALTER TABLE `projects`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -223,19 +247,31 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `consumables`
 --
 ALTER TABLE `consumables`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+
+--
+-- AUTO_INCREMENT for table `projects`
+--
+ALTER TABLE `projects`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `tools`
 --
 ALTER TABLE `tools`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `vehicles`
 --
 ALTER TABLE `vehicles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
