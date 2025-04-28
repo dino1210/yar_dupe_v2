@@ -21,7 +21,6 @@ import { Dialog } from "@headlessui/react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-// Interfaces
 interface ProjectType {
   id: number;
   title: string;
