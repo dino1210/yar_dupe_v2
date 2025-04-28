@@ -89,7 +89,6 @@ export default function ToolsAndEquipmentsTable() {
     }
   };
 
-  // Export CSV
   const exportCSV = () => {
     const now = new Date();
     const formattedDate = now
@@ -140,7 +139,6 @@ export default function ToolsAndEquipmentsTable() {
     document.body.removeChild(link);
   };
 
-  // Export PDF
   const exportPDF = () => {
     const now = new Date();
     const formattedDate = now
@@ -149,14 +147,11 @@ export default function ToolsAndEquipmentsTable() {
       .replace("T", "_")
       .replace(":", "-");
 
-    const doc = new jsPDF({
-      orientation: "landscape",
-    });
+    const doc = new jsPDF({ orientation: "landscape" });
 
     doc.setFontSize(16);
     doc.text("Tools and Equipments Report", 14, 15);
 
-    // Current Date and Time
     doc.setFontSize(10);
     doc.text(
       `Generated on: ${now.toLocaleDateString()} ${now.toLocaleTimeString()}`,
@@ -216,7 +211,7 @@ export default function ToolsAndEquipmentsTable() {
           <select
             value={filterName}
             onChange={(e) => setFilterName(e.target.value)}
-            className="border p-2 rounded-md text-xs bg-white dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
+            className="border p-2 rounded-md text-xs w-48 bg-white dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
           >
             <option value="">All Tools/Equipments</option>
             {uniqueNames.map((name) => (
@@ -228,7 +223,7 @@ export default function ToolsAndEquipmentsTable() {
           <select
             value={filterCategory}
             onChange={(e) => setFilterCategory(e.target.value)}
-            className="border p-2 rounded-md text-xs bg-white dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
+            className="border p-2 rounded-md text-xs w-48 bg-white dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
           >
             <option value="">All Categories</option>
             {uniqueCategories.map((category) => (
@@ -240,7 +235,7 @@ export default function ToolsAndEquipmentsTable() {
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="border p-2 rounded-md text-xs bg-white dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
+            className="border p-2 rounded-md text-xs w-48 bg-white dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
           >
             <option value="">All Statuses</option>
             {uniqueStatuses.map((status) => (
