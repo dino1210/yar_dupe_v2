@@ -1,5 +1,12 @@
 import { useEffect, useState } from "react";
 import { Car, Drill, PaintBucket } from "lucide-react";
+import { ReactNode } from "react";
+
+interface MetricCardProps {
+  icon: ReactNode;
+  label: string;
+  value: number;
+}
 
 export default function EcommerceMetrics() {
   const [metrics, setMetrics] = useState({
@@ -46,7 +53,7 @@ export default function EcommerceMetrics() {
   );
 }
 
-function MetricCard({ icon, label, value }) {
+function MetricCard({ icon, label, value } : MetricCardProps ) {
   return (
     <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
       <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">

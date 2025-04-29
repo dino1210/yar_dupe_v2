@@ -191,23 +191,24 @@ const MobileScannerHome = () => {
             {/* Modal */}
             {showModal && scannedData && (
               <div className="fixed inset-0 bg-black/50 flex text-gray-800 dark:text-gray-300 items-center justify-center z-50">
-                <div className="rounded-2xl border border-gray-200 bg-white dark:bg-gray-800 px-10 py-9 dark:border-gray-800  space-y-1 max-h-[90vh] overflow-y-auto">
-                  {scannedData.picture && (
-                    <img
-                      src={`${
-                        import.meta.env.VITE_API_BASE_URL
-                      }/assets/images/tools/${scannedData.picture}`}
-                      alt="Tool"
-                      className="w-24 h-24 object-cover mx-auto rounded-lg border border-gray-600 dark:border-gray-200 mb-4"
-                    />
-                  )}
+                <div className="rounded-2xl border border-gray-200 bg-white dark:bg-gray-800 px-10 py-9 dark:border-gray-800 space-y-4 max-h-[90vh] overflow-y-auto">
                   <p className="text-center text-xl">
                     <strong>{scannedData.name}</strong>
                   </p>
 
                   {resourceType === "tool" && (
                     <>
-                      <div className="text-start pl-7 pr-12">
+                      {scannedData.picture && (
+                        <img
+                          src={`${
+                            import.meta.env.VITE_API_BASE_URL
+                          }/assets/images/tools/${scannedData.picture}`}
+                          alt="Tool"
+                          className="w-24 h-24 object-cover mx-auto rounded-lg border border-gray-600 dark:border-gray-200 mb-4"
+                        />
+                      )}
+
+                      <div className="text-start pl-7 pr-12 space-y-1">
                         <p>
                           <strong>Tag:</strong> {scannedData.tag}
                         </p>
@@ -258,33 +259,45 @@ const MobileScannerHome = () => {
 
                   {resourceType === "vehicle" && (
                     <>
-                      <p>
-                        <strong>Plate Number:</strong> {scannedData.plate}
-                      </p>
-                      <p>
-                        <strong>Type:</strong> {scannedData.type}
-                      </p>
-                      <p>
-                        <strong>Brand:</strong> {scannedData.brand}
-                      </p>
-                      <p>
-                        <strong>Status:</strong> {scannedData.status}
-                      </p>
-                      <p>
-                        <strong>Model:</strong> {scannedData.model}
-                      </p>
-                      <p>
-                        <strong>Year:</strong> {scannedData.year}
-                      </p>
-                      <p>
-                        <strong>Remarks:</strong> {scannedData.remarks}
-                      </p>
+                      {scannedData.picture && (
+                        <img
+                          src={`${
+                            import.meta.env.VITE_API_BASE_URL
+                          }/assets/images/vehicles/${scannedData.picture}`}
+                          alt="Vehicle"
+                          className="w-24 h-24 object-cover mx-auto rounded-lg border border-gray-600 dark:border-gray-200 mb-4"
+                        />
+                      )}
+
+                      <div className="text-start pl-7 pr-12 space-y-1">
+                        <p>
+                          <strong>Plate Number:</strong> {scannedData.plate}
+                        </p>
+                        <p>
+                          <strong>Type:</strong> {scannedData.type}
+                        </p>
+                        <p>
+                          <strong>Brand:</strong> {scannedData.brand}
+                        </p>
+                        <p>
+                          <strong>Status:</strong> {scannedData.status}
+                        </p>
+                        <p>
+                          <strong>Model:</strong> {scannedData.model}
+                        </p>
+                        <p>
+                          <strong>Year:</strong> {scannedData.year}
+                        </p>
+                        <p>
+                          <strong>Remarks:</strong> {scannedData.remarks}
+                        </p>
+                      </div>
                     </>
                   )}
                   <div>
                     <button
                       onClick={() => setShowModal(false)}
-                      className="mt-4 bg-white border border-gray-800 dark:bg-gray-700 text-gray-800 dark:text-gray-300 px-4 py-2 rounded-lg w-full"
+                      className="bg-white border border-gray-800 dark:bg-gray-700 text-gray-800 dark:text-gray-300 px-4 py-2 rounded-lg w-full"
                     >
                       View Logs
                     </button>

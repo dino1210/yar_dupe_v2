@@ -20,7 +20,7 @@ import {
 import axios from "axios";
 import AddResourceModal from "../../components/ui/modal/AddResourceModal/AddResourceModal";
 import DeleteModal from "../../components/ui/modal/DeleteModal";
-import { File } from "lucide-react";
+import { File, Eye } from "lucide-react";
 import { toast } from "react-toastify";
 
 // Define the expected structure
@@ -40,6 +40,7 @@ interface Vehicles {
   maintenance_due: string;
   assigned_driver: string;
   attachment: string;
+  history: string;
   qr: string;
 }
 
@@ -263,6 +264,7 @@ export default function VehiclesTable() {
                   "Maintenance Due",
                   "Asigned Driver",
                   "Attachment",
+                  "History",
                   "QR",
                   "Actions",
                 ].map((header, index) => (
@@ -347,7 +349,14 @@ export default function VehiclesTable() {
                       {vehicle.remarks}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                      {vehicle.maintenance_due}
+                      {new Date(vehicle.maintenance_due).toLocaleDateString(
+                        "en-US",
+                        {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        }
+                      )}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                       {vehicle.assigned_driver}
@@ -360,11 +369,26 @@ export default function VehiclesTable() {
                       {vehicle.attachment}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
+                      <button className="flex flex-row gap-1 border border-gray-600 bg-white hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 m-auto rounded-lg px-7 py-2">
+                        <Eye className="w-auto h-4 m-auto" />
+                        <p className="m-auto">View</p>
+                      </button>
+                      {vehicle.history}
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                       <img
-                        src={vehicle.qr}
-                        alt={`QR Code`}
+                        src={`${
+                          import.meta.env.VITE_API_BASE_URL
+                        }/assets/qr/vehicles/${vehicle.qr}`}
+                        alt={`${vehicle.name}' Image`}
                         className="w-auto h-15 mx-auto rounded-lg object-cover cursor-pointer"
-                        onClick={() => setSelectedImage(vehicle.qr)}
+                        onClick={() =>
+                          setSelectedImage(
+                            `${
+                              import.meta.env.VITE_API_BASE_URL
+                            }/assets/qr/vehicles/${vehicle.qr}`
+                          )
+                        }
                       />
                     </TableCell>
                     <TableCell className="px-8 py-3 text-xs text-gray-500 dark:text-gray-400 text-center">

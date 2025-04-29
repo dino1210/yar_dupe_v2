@@ -53,18 +53,14 @@ export default function ToolsAndEquipmentsTable() {
   const [tools, setTools] = useState<Tool[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("");
-  const [statusFilter] = useState("");
-  const [dataLimit, setDataLimit] = useState<number>(5); // State for data limit
-  const [currentPage, setCurrentPage] = useState(1); // State for current page
+  const [categoryFilter, setCategoryFilter] = useState<string>("");
+  const [statusFilter, setStatusFilter] = useState<string>("");  // Separate statusFilter
+  const [dataLimit, setDataLimit] = useState<number>(5); 
+  const [currentPage, setCurrentPage] = useState(1);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
-
   const [isAscending, setIsAscending] = useState(true);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  //delete
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [selectedName, setSelectedName] = useState<string>("");
@@ -93,7 +89,6 @@ export default function ToolsAndEquipmentsTable() {
           method: "DELETE",
         }
       );
-      // Trigger a refetch or update your state
       setIsDeleteModalOpen(false);
       setSelectedId(null);
       toast.success("Deleted successfully");
@@ -119,7 +114,6 @@ export default function ToolsAndEquipmentsTable() {
 
   useEffect(() => {
     fetchTools();
-
     axios
       .get(`${import.meta.env.VITE_API_BASE_URL}/api/categories`)
       .then((response) => {
@@ -132,7 +126,7 @@ export default function ToolsAndEquipmentsTable() {
 
   if (loading) return <p>Loading...</p>;
 
-  const handleAddSuccess = () => {
+   const handleAddSuccess = () => {
     fetchTools();
     setIsModalOpen(false);
   };
@@ -165,22 +159,11 @@ export default function ToolsAndEquipmentsTable() {
         <Search className="absolute text-gray-300 m-2 w-auto h-5" />
         <input
           type="text"
-          placeholder="           Search by name or tag"
+          placeholder="Search by name or tag"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="border p-2 text-xs rounded-md w-full sm:w-1/3 bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
         />
-        <select
-          value={categoryFilter}
-          onChange={(e) => setCategoryFilter(e.target.value)}
-          className="border p-2 text-xs rounded-md w-full sm:w-1/4 bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
-        >
-          <option value="">Brand</option>
-          <option value="Makita">Makita</option>
-          <option value="Stanley">Stanley</option>
-          <option value="Ryobi">Ryobi</option>
-          <option value="Proto">Proto</option>
-        </select>
         <select
           value={categoryFilter}
           onChange={(e) => setCategoryFilter(e.target.value)}
@@ -194,13 +177,14 @@ export default function ToolsAndEquipmentsTable() {
           ))}
         </select>
         <select
-          value={categoryFilter}
-          onChange={(e) => setCategoryFilter(e.target.value)}
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
           className="border p-2 text-xs rounded-md w-full sm:w-1/4 bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
         >
           <option value="">Status</option>
-          <option value="Tools">Tools</option>
-          <option value="Equipments">Equipments</option>
+          <option value="Available">Available</option>
+          <option value="Issued-Out">Issued-Out</option>
+          <option value="Disabled">Disabled</option>
         </select>
         <button
           type="button"
@@ -296,7 +280,7 @@ export default function ToolsAndEquipmentsTable() {
                       />
                     </TableCell>
                     <TableCell className="px-5 py-4 sm:px-6 text-center">
-                      <span className="block font-medium text-gray-800 text-theme-xs dark:text-white/70">
+                      <span className="block font-medium text-gray-800 text-theme-xs text-start dark:text-white/70">
                         {tool.tag}
                       </span>
                     </TableCell>

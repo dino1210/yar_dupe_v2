@@ -391,7 +391,7 @@ export default function ConsumablesTable() {
           >
             <option value={10}>10 Items</option>
             <option value={20}>20 Items</option>
-            <option value={50}>50 Items</option>
+            <option value={9999}>All Items</option>
           </select>
         </div>
 

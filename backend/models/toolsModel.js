@@ -83,18 +83,6 @@ const addTool = async (toolData) => {
   }
 };
 
-// DELETE
-const deleteTool = async (toolID) => {
-  const query = `DELETE FROM tools WHERE id = ?`;
-
-  try {
-    const [result] = await db.query(query, [toolID]);
-    return result;
-  } catch (err) {
-    throw new Error("Error deleting tool: " + err.message);
-  }
-};
-
 // UPDATE
 const updateTool = async (toolData) => {
   const {
@@ -137,6 +125,20 @@ const updateTool = async (toolData) => {
     throw new Error("Error updating tool: " + err.message);
   }
 };
+
+
+// DELETE
+const deleteTool = async (toolID) => {
+  const query = `DELETE FROM tools WHERE id = ?`;
+
+  try {
+    const [result] = await db.query(query, [toolID]);
+    return result;
+  } catch (err) {
+    throw new Error("Error deleting tool: " + err.message);
+  }
+};
+
 
 // GET ALL TOOLS
 const getAllTools = async () => {

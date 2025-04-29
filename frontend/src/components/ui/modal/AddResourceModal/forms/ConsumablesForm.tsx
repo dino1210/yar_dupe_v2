@@ -169,6 +169,7 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({ onClose, onAddSuccess }
         >
           <option value="">Select unit</option>
           <option value="ml">ml</option>
+          <option value="kg">kg</option>
           <option value="pcs">pcs</option>
           <option value="tubes">tubes</option>
           <option value="rolls">rolls</option>

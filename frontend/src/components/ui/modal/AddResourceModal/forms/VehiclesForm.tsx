@@ -240,7 +240,6 @@ const ToolForm: React.FC<VehicleFormProps> = ({ onClose, onAddSuccess }) => {
           showMonthDropdown
           showYearDropdown
           dropdownMode="select"
-          maxDate={new Date()}
         />
       </div>
 
@@ -264,7 +263,6 @@ const ToolForm: React.FC<VehicleFormProps> = ({ onClose, onAddSuccess }) => {
           showMonthDropdown
           showYearDropdown
           dropdownMode="select"
-          maxDate={new Date()}
         />
       </div>
 

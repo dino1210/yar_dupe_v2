@@ -178,7 +178,7 @@ export default function UserManagementTable() {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-4 text-gray-500 dark:text-gray-400">No users found</TableCell>
+                <TableCell className="text-center py-4 text-gray-500 dark:text-gray-400">No users found</TableCell>
               </TableRow>
             )}
           </TableBody>

@@ -33,7 +33,7 @@ const Login = () => {
       toast.success("Login successful");
       navigate("/select-mode");
     } catch (err) {
-      toast.error("Login unsuccessful", err);
+      toast.error("Login unsuccessful");
       setLoginError(
         err instanceof Error ? err.message : "An unexpected error occurred."
       );
