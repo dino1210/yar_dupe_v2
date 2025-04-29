@@ -54,8 +54,8 @@ export default function ToolsAndEquipmentsTable() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string>("");
-  const [statusFilter, setStatusFilter] = useState<string>("");  // Separate statusFilter
-  const [dataLimit, setDataLimit] = useState<number>(5); 
+  const [statusFilter, setStatusFilter] = useState<string>(""); // Separate statusFilter
+  const [dataLimit, setDataLimit] = useState<number>(5);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -126,7 +126,7 @@ export default function ToolsAndEquipmentsTable() {
 
   if (loading) return <p>Loading...</p>;
 
-   const handleAddSuccess = () => {
+  const handleAddSuccess = () => {
     fetchTools();
     setIsModalOpen(false);
   };
@@ -317,7 +317,7 @@ export default function ToolsAndEquipmentsTable() {
                               month: "long",
                               day: "numeric",
                             }
-                          ) 
+                          )
                         : "-"}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">

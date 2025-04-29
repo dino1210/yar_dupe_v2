@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const reportToolsController = require("../controllers/reportTools_Cont");
 
-router.get("/tools-report", reportToolsController.getAllToolsReport);
+// ✅ GET all tools logs report (for resource log UI)
+router.get("/", reportToolsController.getAllToolsReport);
 
 module.exports = router;

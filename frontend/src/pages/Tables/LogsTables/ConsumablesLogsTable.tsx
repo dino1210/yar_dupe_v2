@@ -8,303 +8,248 @@ import {
 } from "../../../components/ui/table";
 import Badge from "../../../components/ui/badge/Badge";
 import {
-  RotateCcw,
+  Search,
   ArrowDownAZ,
   ArrowUpAZ,
-  Plus,
+  RotateCcw,
   Funnel,
-  Search,
+  Plus,
 } from "lucide-react";
 import axios from "axios";
-import AddResourceModal from "../../../components/ui/modal/AddResourceModal/AddResourceModal";
 
-// Define the expected structure
-interface Tool {
+interface ConsumableLog {
   id: number;
-  tag: string;
-  name: string;
-  category: string;
+  consumable_name: string;
+  issued_date: string;
   status: string;
-  project: string;
-  location: string;
-  issued_to: string;
-  date_issued: string;
-  date_returned: string;
-  remarks: string;
-  timestamp: string;
+  performed_by: string;
+  category?: string;
+  brand?: string;
 }
 
-interface Category {
-  id: number;
-  category_name: string;
-  category_type: string;
-}
-
-export default function ToolsAndEquipmentsTable() {
-  const [tools, setTools] = useState<Tool[]>([]);
+export default function ConsumablesLogsTable() {
+  const [logs, setLogs] = useState<ConsumableLog[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("");
-  const [statusFilter] = useState("");
-  const [dataLimit, setDataLimit] = useState<number>(5); // State for data limit
-  const [currentPage, setCurrentPage] = useState(1); // State for current page
-  const [categories, setCategories] = useState<Category[]>([]);
-
+  const [brandFilter, setBrandFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
   const [isAscending, setIsAscending] = useState(true);
+  const [dataLimit, setDataLimit] = useState<number>(10);
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
-
-
-  const fetchTools = () => {
+  const fetchLogs = () => {
     setLoading(true);
     axios
-      .get(`${import.meta.env.VITE_API_BASE_URL}/api/tools`)
+      .get(`${import.meta.env.VITE_API_BASE_URL}/api/consumables-logs`)
       .then((response) => {
-        setTools(response.data.tools);
+        setLogs(response.data);
         setLoading(false);
       })
       .catch((error) => {
-        console.error("Error fetching tools:", error);
+        console.error("Error fetching consumable logs:", error);
         setLoading(false);
       });
   };
 
   useEffect(() => {
-    fetchTools();
-
-    axios
-      .get(`${import.meta.env.VITE_API_BASE_URL}/api/categories`)
-      .then((response) => {
-        setCategories(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching categories", error);
-      });
+    fetchLogs();
   }, []);
 
-  if (loading) return <p>Loading...</p>;
-
-  const handleAddSuccess = () => {
-    fetchTools();
-    setIsModalOpen(false);
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return isNaN(date.getTime())
+      ? "—"
+      : date.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        });
   };
 
-  // Filter tools based on search, category, and status
-  const filteredTools = tools.filter((tool) => {
-    const matchesSearch =
-      tool.name.toLowerCase().includes(search.toLowerCase()) ||
-      tool.tag.toLowerCase().includes(search.toLowerCase());
-
-    const matchesCategory = categoryFilter
-      ? tool.category === categoryFilter
+  const filteredLogs = logs.filter((log) => {
+    const matchSearch = log.consumable_name
+      .toLowerCase()
+      .includes(search.toLowerCase());
+    const matchCategory = categoryFilter
+      ? (log.category || "") === categoryFilter
       : true;
-    const matchesStatus = statusFilter ? tool.status === statusFilter : true;
-
-    return matchesSearch && matchesCategory && matchesStatus;
+    const matchBrand = brandFilter ? (log.brand || "") === brandFilter : true;
+    const matchStatus = statusFilter ? log.status === statusFilter : true;
+    return matchSearch && matchCategory && matchBrand && matchStatus;
   });
 
-  // Pagination Logic
-  const totalPages = Math.ceil(filteredTools.length / dataLimit);
-  const currentTools = filteredTools.slice(
+  const sortedLogs = filteredLogs.sort((a, b) => {
+    const dateA = new Date(a.issued_date).getTime();
+    const dateB = new Date(b.issued_date).getTime();
+    return isAscending ? dateA - dateB : dateB - dateA;
+  });
+
+  const totalPages = Math.ceil(sortedLogs.length / dataLimit);
+  const paginatedLogs = sortedLogs.slice(
     (currentPage - 1) * dataLimit,
     currentPage * dataLimit
   );
 
-  return (
-    <div className="overflow-y-hidden rounded-xl border w-full border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
-      {/* Filter Controls */}
-      <div className="sticky top-0 overflow-x-auto z-10 px-5 py-3 flex flex-col sm:flex-row gap-2 bg-white dark:bg-gray-800 shadow-sm">
-        <Search className="absolute text-gray-300 m-2 w-auto h-5" />
-        <input
-          type="text"
-          placeholder="           Search by name or tag"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="border p-2 text-xs rounded-md w-full sm:w-1/3 bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
-        />
-        <select
-          value={categoryFilter}
-          onChange={(e) => setCategoryFilter(e.target.value)}
-          className="border p-2 text-xs rounded-md w-full sm:w-1/4 bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
-        >
-          <option value="">Brand</option>
-          <option value="Tools">Tools</option>
-          <option value="Equipments">Equipments</option>
-        </select>
-        <select
-          value={categoryFilter}
-          onChange={(e) => setCategoryFilter(e.target.value)}
-          className="border p-2 text-xs rounded-md w-full sm:w-1/4 bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
-        >
-          <option value="">Category</option>
-          {categories.map((category) => (
-            <option key={category.id} value={category.category_name}>
-              {category.category_name}
-            </option>
-          ))}
-        </select>
-        <select
-          value={categoryFilter}
-          onChange={(e) => setCategoryFilter(e.target.value)}
-          className="border p-2 text-xs rounded-md w-full sm:w-1/4 bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
-        >
-          <option value="">Status</option>
-          <option value="Tools">Tools</option>
-          <option value="Equipments">Equipments</option>
-        </select>
-        <button
-          type="button"
-          onClick={() => setIsAscending(!isAscending)}
-          className="border p-2 text-xs rounded-md bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
-        >
-          {isAscending ? (
-            <ArrowDownAZ className="w-auto h-5" />
-          ) : (
-            <ArrowUpAZ className="w-auto h-5" />
-          )}
-        </button>
-        <button
-          type="button"
-          className="border p-2 text-xs rounded-md bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
-        >
-          <RotateCcw className="w-auto h-5" />
-        </button>
-        <button
-          type="button"
-          className="border p-2 text-xs rounded-md bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
-        >
-          <Funnel className="w-auto h-5" />
-        </button>
-        <button
-          onClick={handleOpenModal}
-          type="button"
-          className="flex items-center gap-2 px-2 text-xs rounded-md bg-white dark:bg-blue-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
-        >
-          New
-          <Plus className="w-4 h-4" />
-        </button>
-        <AddResourceModal
-          isOpen={isModalOpen}
-          onClose={handleCloseModal}
-          onAddSuccess={handleAddSuccess}
-          resourceType="Tool"
-        />
-      </div>
-      <div className="max-w-full overflow-x-auto">
-        {/* Table */}
-        <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-800">
-          <Table className="">
-            {/* Table Header */}
-            <TableHeader className="border-b border-t text-sm border-gray-100 dark:border-white/[0.05]">
-              <TableRow>
-                {[
-                  
-                ].map((header, index) => (
-                  <TableCell
-                    key={index}
-                    isHeader
-                    className="px-10 py-3 font-medium text-gray-500 text-center text-theme-sm dark:text-gray-50 whitespace-nowrap"
-                  >
-                    {header}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHeader>
+  if (loading)
+    return (
+      <p className="p-5 text-center text-sm text-gray-500 dark:text-gray-400">
+        Loading...
+      </p>
+    );
 
-            {/* Table Body */}
-            <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-              {currentTools.length > 0 ? (
-                currentTools.map((tool) => (
-                  <TableRow key={tool.id}>
-                    <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                      {new Date(tool.timestamp).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })}
-                    </TableCell>
-                    <TableCell className="px-5 py-4 sm:px-6 text-center">
-                      <span className="block font-medium text-gray-800 text-theme-xs dark:text-white/70">
-                        {tool.tag}
-                      </span>
-                    </TableCell>
-                    <TableCell className="px-5 py-4 sm:px-6 text-center">
-                      <span className="block font-medium text-gray-800 text-theme-xs dark:text-gray-400">
-                        {tool.name}
-                      </span>
-                    </TableCell>
-                    <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                      {tool.category}
-                    </TableCell>
-                    <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                      <Badge
-                        size="sm"
-                        color={
-                          tool.status === "Returned" ? "success" : "warning"
-                        }
-                      >
-                        {tool.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="px-1 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                      {tool.project}
-                    </TableCell>
-                    <TableCell className="px-1 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                      {tool.location}
-                    </TableCell>
-                    <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                      {new Date(tool.date_issued).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })}
-                    </TableCell>
-                    <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                      {tool.remarks}
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell className="px-5 py-4 text-center text-gray-500 dark:text-gray-400">
-                    No tools found
+  return (
+    <div className="rounded-2xl border border-gray-200 dark:border-white/[0.05] bg-white dark:bg-gray-900 shadow-lg">
+      {/* Filters */}
+      <div className="sticky top-0 z-10 px-6 py-4 flex flex-wrap items-center gap-3 bg-white dark:bg-gray-800 shadow-sm border-b dark:border-gray-700">
+        <div className="relative w-full sm:w-1/4">
+          <Search className="absolute left-3 top-2.5 text-gray-400 w-4 h-4" />
+          <input
+            type="text"
+            placeholder="Search by name"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="pl-10 pr-3 py-2 text-sm rounded-md w-full bg-white dark:bg-gray-800 text-gray-800 dark:text-white border border-gray-300 dark:border-gray-600"
+          />
+        </div>
+
+        {[
+          {
+            label: "Brand",
+            value: brandFilter,
+            onChange: setBrandFilter,
+            options: ["SampleBrand"],
+          },
+          {
+            label: "Category",
+            value: categoryFilter,
+            onChange: setCategoryFilter,
+            options: ["Chemical"],
+          },
+          {
+            label: "Status",
+            value: statusFilter,
+            onChange: setStatusFilter,
+            options: ["Issued Out", "Returned"],
+          },
+        ].map(({ label, value, onChange, options }) => (
+          <select
+            key={label}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            className="border px-3 py-2 text-sm rounded-md w-full sm:w-1/6 bg-white dark:bg-gray-800 text-gray-800 dark:text-white border-gray-300 dark:border-gray-600"
+          >
+            <option value="">{label}</option>
+            {options.map((opt) => (
+              <option key={opt} value={opt}>
+                {opt}
+              </option>
+            ))}
+          </select>
+        ))}
+
+        <div className="flex gap-2 items-center">
+          <button
+            onClick={() => setIsAscending(!isAscending)}
+            className="border p-2 rounded-md bg-white dark:bg-gray-800 text-gray-600 dark:text-white border-gray-300 dark:border-gray-600"
+          >
+            {isAscending ? (
+              <ArrowDownAZ className="w-4 h-4" />
+            ) : (
+              <ArrowUpAZ className="w-4 h-4" />
+            )}
+          </button>
+          <button className="border p-2 rounded-md bg-white dark:bg-gray-800 text-gray-600 dark:text-white border-gray-300 dark:border-gray-600">
+            <RotateCcw className="w-4 h-4" />
+          </button>
+          <button className="border p-2 rounded-md bg-white dark:bg-gray-800 text-gray-600 dark:text-white border-gray-300 dark:border-gray-600">
+            <Funnel className="w-4 h-4" />
+          </button>
+        </div>
+
+        <button
+          type="button"
+          className="ml-auto flex items-center gap-2 px-4 py-2 text-sm rounded-md bg-blue-600 text-white hover:bg-blue-700"
+        >
+          New <Plus className="w-4 h-4" />
+        </button>
+      </div>
+
+      {/* Table */}
+      <div className="overflow-x-auto">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableCell className="text-center font-bold">Date</TableCell>
+              <TableCell className="text-center font-bold">
+                Consumable
+              </TableCell>
+              <TableCell className="text-center font-bold">
+                Performed By
+              </TableCell>
+              <TableCell className="text-center font-bold">Status</TableCell>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {paginatedLogs.length > 0 ? (
+              paginatedLogs.map((log) => (
+                <TableRow
+                  key={log.id}
+                  className="hover:bg-gray-50 dark:hover:bg-gray-800"
+                >
+                  <TableCell className="text-center text-sm text-gray-700 dark:text-gray-300">
+                    {formatDate(log.issued_date)}
+                  </TableCell>
+                  <TableCell className="text-center text-sm font-medium text-gray-900 dark:text-white">
+                    {log.consumable_name}
+                  </TableCell>
+                  <TableCell className="text-center text-sm text-gray-700 dark:text-gray-300">
+                    {log.performed_by}
+                  </TableCell>
+                  <TableCell className="text-center text-sm">
+                    <Badge
+                      size="sm"
+                      color={log.status === "Returned" ? "success" : "warning"}
+                    >
+                      {log.status}
+                    </Badge>
                   </TableCell>
                 </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
+              ))
+            ) : (
+              <tr>
+                <td
+                  colSpan={4}
+                  className="text-center text-gray-500 dark:text-gray-400 py-4"
+                >
+                  No consumables found
+                </td>
+              </tr>
+            )}
+          </TableBody>
+        </Table>
       </div>
 
-      {/* Data Limit Selector */}
-      <div className="px-5 py-3 flex space-x-5 items-center">
-        <div>
-          <select
-            value={dataLimit}
-            onChange={(e) => setDataLimit(Number(e.target.value))}
-            className="border p-2 text-xs rounded-md bg-white dark:bg-gray-900 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 dark:hover:bg-gray-800"
-          >
-            <option value={10}>10 Items</option>
-            <option value={50}>50 Items</option>
-            <option value={10000}>All Items</option>
-          </select>
-        </div>
-
-        {/* Pagination Controls */}
+      {/* Pagination */}
+      <div className="px-6 py-4 flex justify-between items-center border-t dark:border-gray-700">
+        <select
+          value={dataLimit}
+          onChange={(e) => {
+            setDataLimit(Number(e.target.value));
+            setCurrentPage(1);
+          }}
+          className="border px-3 py-2 text-sm rounded-md bg-white dark:bg-gray-900 text-gray-700 dark:text-white border-gray-300 dark:border-gray-600"
+        >
+          <option value={5}>5 Items</option>
+          <option value={10}>10 Items</option>
+          <option value={50}>50 Items</option>
+          <option value={10000}>All Items</option>
+        </select>
         <div className="flex items-center space-x-2">
           <button
             disabled={currentPage === 1}
             onClick={() => setCurrentPage(currentPage - 1)}
-            className="border px-3 py-2 text-xs rounded-md bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 dark:hover:bg-gray-900"
+            className="border px-3 py-2 text-sm rounded-md bg-white dark:bg-gray-800 text-gray-700 dark:text-white"
           >
             &lt;
           </button>
@@ -312,11 +257,11 @@ export default function ToolsAndEquipmentsTable() {
             <button
               key={index}
               onClick={() => setCurrentPage(index + 1)}
-              className={`px-3 py-2 text-xs font-medium ${
+              className={`px-3 py-2 text-sm font-medium rounded-md border ${
                 currentPage === index + 1
                   ? "bg-blue-700 text-white"
-                  : "bg-white text-blue-700"
-              } border px-3 py-2 text-xs rounded-md bg-white dark:bg-gray-900 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 dark:hover:bg-gray-800`}
+                  : "bg-white text-blue-700 dark:bg-gray-900 dark:text-white"
+              }`}
             >
               {index + 1}
             </button>
@@ -324,7 +269,7 @@ export default function ToolsAndEquipmentsTable() {
           <button
             disabled={currentPage === totalPages}
             onClick={() => setCurrentPage(currentPage + 1)}
-            className="border px-3 py-2 text-xs rounded-md bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 dark:hover:bg-gray-900"
+            className="border px-3 py-2 text-sm rounded-md bg-white dark:bg-gray-800 text-gray-700 dark:text-white"
           >
             &gt;
           </button>
