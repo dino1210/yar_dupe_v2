@@ -10,14 +10,27 @@ const {
 const upload = require("../middleware/uploadTool");
 const db = require("../config/db");
 
-// Upload Image for tool
+// ✅ Upload tool image
 router.post("/", upload.single("picture"), addTool);
+
+// ✅ Update tool
 router.put("/:id", upload.single("picture"), updateTool);
 
-// Delete tool
+// ✅ Delete tool
 router.delete("/:id", deleteTool);
 
-// Get tool by QR code
+// ✅ Select only available tools (for Add Project modal)
+router.get("/select/all", async (req, res) => {
+  try {
+    const [rows] = await db.query('SELECT name FROM tools WHERE status = "Available"');
+    res.json(rows);
+  } catch (err) {
+    console.error("Error fetching available tools:", err);
+    res.status(500).send("Server error");
+  }
+});
+
+// ✅ Get tool details by QR code
 router.get("/qr/:qr", async (req, res) => {
   const qr = decodeURIComponent(req.params.qr);
   try {
@@ -33,19 +46,18 @@ router.get("/qr/:qr", async (req, res) => {
   }
 });
 
-/// ✅ Select only available tools (for Add Project Modal)
-router.get("/select/all", async (req, res) => {
+// ✅ Get tool by ID
+router.get("/:id", getToolById);
+
+// ✅ Get all tools (correct structure)
+router.get("/", async (req, res) => {
   try {
-    const [rows] = await db.query('SELECT name FROM tools WHERE status = "Available"');
-    res.json(rows);
+    const [rows] = await db.query("SELECT * FROM tools");
+    res.json({ tools: rows });   // <-- naka { tools: [...] } para safe sa frontend
   } catch (err) {
-    console.error("Error fetching available tools:", err);
+    console.error("Error fetching tools:", err);
     res.status(500).send("Server error");
   }
 });
-
-// Get all tools and tool by id
-router.get("/", getAllTools);
-router.get("/:id", getToolById);
 
 module.exports = router;

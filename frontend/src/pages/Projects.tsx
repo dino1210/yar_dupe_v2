@@ -30,6 +30,7 @@ interface ProjectType {
   consumables: string;
   vehicles: string;
   startDate: string;
+  location: string;
   endDate: string;
   status?: string;
 }
@@ -85,6 +86,7 @@ export default function Projects() {
     personInCharge: "",
     tools: "",
     consumables: "",
+    location: "",
     vehicles: "",
     startDate: "",
     endDate: "",
@@ -99,12 +101,15 @@ export default function Projects() {
 
   const fetchProjects = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/projects");
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/api/projects`
+      );
       const formatted = res.data.map((p: any) => ({
         id: p.id,
         title: p.title,
         manager: p.manager,
         personInCharge: p.person_in_charge,
+        location: p.location,
         tools: p.tools_equipment_used,
         consumables: p.consumables_used,
         vehicles: p.vehicles_used,
@@ -122,19 +127,33 @@ export default function Projects() {
   const fetchResources = async () => {
     try {
       const [toolsRes, consumablesRes, vehiclesRes] = await Promise.all([
-        axios.get("http://localhost:5000/api/tools/select/all"),
-        axios.get("http://localhost:5000/api/consumables/select/all"),
-        axios.get("http://localhost:5000/api/vehicles/select/all"),
+        axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/tools/select/all`),
+        axios.get(
+          `${import.meta.env.VITE_API_BASE_URL}/api/consumables/select/all`
+        ),
+        axios.get(
+          `${import.meta.env.VITE_API_BASE_URL}/api/vehicles/select/all`
+        ),
       ]);
 
-      if (Array.isArray(toolsRes.data))
-        setToolsList(toolsRes.data.map((item) => item.name));
-      if (Array.isArray(consumablesRes.data))
-        setConsumablesList(consumablesRes.data.map((item) => item.name));
-      if (Array.isArray(vehiclesRes.data))
-        setVehiclesList(vehiclesRes.data.map((item) => item.name));
-    } catch (err) {
-      console.error("Error fetching resources:", err);
+      // Set Available Tools
+      if (Array.isArray(toolsRes.data)) {
+        setToolsList(toolsRes.data.map((tool) => tool.name));
+      }
+
+      // Set Available Consumables
+      if (Array.isArray(consumablesRes.data)) {
+        setConsumablesList(
+          consumablesRes.data.map((consumable) => consumable.name)
+        );
+      }
+
+      // Set Available Vehicles
+      if (Array.isArray(vehiclesRes.data)) {
+        setVehiclesList(vehiclesRes.data.map((vehicle) => vehicle.name));
+      }
+    } catch (error) {
+      console.error("Error fetching resources:", error);
       toast.error("Error loading resources!");
     }
   };
@@ -153,6 +172,7 @@ export default function Projects() {
         tools: "",
         consumables: "",
         vehicles: "",
+        location: "",
         startDate: "",
         endDate: "",
         status: "Ongoing",
@@ -176,18 +196,36 @@ export default function Projects() {
       toast.error("Please fill out all required fields correctly.");
       return;
     }
+
     try {
       setLoading(true);
+
       if (isEditing) {
         await axios.put(
-          `http://localhost:5000/api/projects/${formData.id}`,
+          `${import.meta.env.VITE_API_BASE_URL}/api/projects/${formData.id}`,
           formData
         );
         toast.success("Project updated successfully!");
       } else {
-        await axios.post("http://localhost:5000/api/projects", formData);
+        await axios.post(
+          `${import.meta.env.VITE_API_BASE_URL}/api/projects`,
+          formData
+        );
         toast.success("Project added successfully!");
+        fetchProjects();
+        setIsModalOpen(false);
+
+        // 🔥 After CREATE PROJECT, update tools, vehicles, consumables
+        await axios.post(
+          `${import.meta.env.VITE_API_BASE_URL}/api/projects/update-resources`,
+          {
+            tools: formData.tools,
+            consumables: formData.consumables,
+            vehicles: formData.vehicles,
+          }
+        );
       }
+
       fetchProjects();
       setIsModalOpen(false);
     } catch (err) {
@@ -361,6 +399,21 @@ export default function Projects() {
                   }
                   className="p-2 rounded border bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600"
                   placeholder="Enter PIC"
+                />
+              </div>
+
+              <div className="flex flex-col">
+                <label className="text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
+                  Location
+                </label>
+                <input
+                  type="text"
+                  value={formData.location}
+                  onChange={(e) =>
+                    setFormData({ ...formData, location: e.target.value })
+                  }
+                  className="p-2 rounded border bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600"
+                  placeholder="Enter Location"
                 />
               </div>
 
@@ -661,6 +714,12 @@ export default function Projects() {
                       <CheckCircle2 className="w-5 h-5" />{" "}
                       <strong>Status:</strong> {selectedProject.status}
                     </p>
+
+                    <p className="flex items-center gap-2">
+                      <CheckCircle2 className="w-5 h-5" />{" "}
+                      <strong>Location:</strong> {selectedProject.location}
+                    </p>
+
                     <p className="flex items-center gap-2">
                       <CalendarDays className="w-5 h-5" />{" "}
                       <strong>End Date:</strong>{" "}

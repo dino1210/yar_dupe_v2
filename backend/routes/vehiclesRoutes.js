@@ -10,28 +10,40 @@ const {
 const upload = require("../middleware/uploadVehicle");
 const db = require("../config/db");
 
-//  Upload Image for vehicle
+// ✅ Upload Image and Add Vehicle
 router.post("/", upload.single("picture"), addVehicle);
+
+// ✅ Update Vehicle Info
 router.put("/:id", upload.single("picture"), updateVehicle);
 
-//  Delete vehicle
+// ✅ Delete Vehicle
 router.delete("/:id", deleteVehicle);
 
-//  Select only available vehicles (for Add Project Modal)
-
+// ✅ Select Available Vehicles only (for Add Project Modal)
 router.get("/select/all", async (req, res) => {
   try {
-    const [rows] = await db.query('SELECT name FROM vehicles WHERE status = "Available"');
+    const [rows] = await db.query(
+      'SELECT name FROM vehicles WHERE status = "Available"'
+    );
     res.json(rows);
   } catch (err) {
-    console.error("Error fetching available vehicles:", err);
-    res.status(500).send("Server error");
+    console.error("Error fetching available vehicles:", err.message);
+    res.status(500).json({ error: "Server error" });
   }
 });
 
+// ✅ Get All Vehicles (Full List)
+router.get("/", async (req, res) => {
+  try {
+    const [rows] = await db.query("SELECT * FROM vehicles");
+    res.json({ vehicles: rows }); // <-- IMPORTANT: wrap into { vehicles: [...] }
+  } catch (err) {
+    console.error("Error fetching vehicles:", err.message);
+    res.status(500).json({ error: "Server error" });
+  }
+});
 
-//  Get all vehicles and vehicle by id
-router.get("/", getAllVehicles);
+// ✅ Get Single Vehicle by ID
 router.get("/:id", getVehicleById);
 
 module.exports = router;
