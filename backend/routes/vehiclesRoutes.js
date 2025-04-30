@@ -15,7 +15,7 @@ router.post("/", upload.single("picture"), addVehicle);
 
 // ✅ Update Vehicle Info
 router.put("/:id", upload.single("picture"), updateVehicle);
-
+ 
 // ✅ Delete Vehicle
 router.delete("/:id", deleteVehicle);
 

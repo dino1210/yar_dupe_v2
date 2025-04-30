@@ -2,6 +2,17 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../config/db");
+const {
+  addTool,
+  deleteTool,
+  updateTool,
+  getAllTools,
+  getToolById,
+} = require("../controllers/toolsController");
+const upload = require("../middleware/uploadTool")
+
+router.post("/", upload.single("picture"), addTool);
+router.put("/:id", upload.single("picture"), updateTool);
 
 // ✅ GET all tools (for ToolsAndEquipmentsTable fetch)
 router.get("/", async (req, res) => {
@@ -64,5 +75,9 @@ router.get("/select/all", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch available tools" });
   }
 });
+
+router.delete("/:id", deleteTool);
+router.get("/", getAllTools);
+router.get("/:id", getToolById);
 
 module.exports = router;

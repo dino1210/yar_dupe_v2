@@ -1,14 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router";
 
-import {
-  ChevronDownIcon,
-  DocsIcon,
-  GridIcon,
-  HorizontaLDots,
-} from "../icons";
+import { ChevronDownIcon, DocsIcon, GridIcon, HorizontaLDots } from "../icons";
 import { useSidebar } from "../context/SidebarContext";
-import { Boxes, CalendarCog, Package2, Settings, User, FileClock } from "lucide-react";
+import { Boxes, CalendarCog, Package2, User, FileClock } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 type NavItem = {
@@ -32,7 +27,7 @@ const navItems: NavItem[] = [
       { name: "Tools and Equipments", path: "/tools", pro: false },
       { name: "Consumables", path: "/consumables", pro: false },
       { name: "Vehicles", path: "/vehicles", pro: false },
-    ]
+    ],
   },
   {
     icon: <FileClock />,
@@ -42,7 +37,7 @@ const navItems: NavItem[] = [
       { name: "Tools and Equipments Logs", path: "/tools-logs", pro: false },
       { name: "Consumables Logs", path: "/consumables-logs", pro: false },
       { name: "Vehicles Logs", path: "/vehicles-logs", pro: false },
-    ]
+    ],
   },
   {
     icon: <Boxes />,
@@ -64,19 +59,9 @@ const navItems: NavItem[] = [
     name: "User Management",
     path: "/usermanagement",
   },
-  {
-    icon: <Settings />,
-    name: "Settings",
-    path: "/settings",
-  },
-
-
-
-
 ];
 
-const othersItems: NavItem[] = [
-];
+const othersItems: NavItem[] = [];
 
 const AppSidebar: React.FC = () => {
   const { user } = useAuth();
@@ -149,7 +134,7 @@ const AppSidebar: React.FC = () => {
   };
 
   const roleVisibleItems: Record<string, string[]> = {
-    admin: navItems.map(item => item.name), // All items
+    admin: navItems.map((item) => item.name), // All items
     manager: [
       "Dashboard",
       "Resources",
@@ -166,13 +151,13 @@ const AppSidebar: React.FC = () => {
       "Settings",
     ],
   };
-  
+
   const getVisibleNavItems = () => {
     if (!role) return [];
-  
+
     const allowedItems = roleVisibleItems[role] || [];
-  
-    return navItems.filter(item => allowedItems.includes(item.name));
+
+    return navItems.filter((item) => allowedItems.includes(item.name));
   };
 
   const renderMenuItems = (items: NavItem[], menuType: "main" | "others") => (
@@ -292,14 +277,10 @@ const AppSidebar: React.FC = () => {
                 ))}
               </ul>
             </div>
-
-            
           )}
         </li>
-        
       ))}
     </ul>
-    
   );
 
   return (

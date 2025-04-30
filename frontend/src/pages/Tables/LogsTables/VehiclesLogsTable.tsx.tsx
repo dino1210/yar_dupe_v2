@@ -164,7 +164,7 @@ export default function VehiclesLogsTable() {
         </button>
       </div>
 
-      <Table>
+      <Table className="text-gray-800 dark:text-white border border-b-2">
         <TableHeader>
           <TableRow>
             <TableCell className="text-center font-semibold">Date</TableCell>

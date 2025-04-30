@@ -22,7 +22,7 @@ const ToolForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
     warranty: null as Date | null,
     remarks: "",
   });
- 
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -51,7 +51,7 @@ const ToolForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess }) => {
 
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/api/tools`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/tools/`,
         {
           method: "POST",
           body: form,

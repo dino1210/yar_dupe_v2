@@ -196,7 +196,7 @@ export default function ToolsAndEquipmentsTable() {
       </div>
 
       {/* Table */}
-      <Table>
+      <Table className="text-gray-600 dark:text-white m-5">
         <TableHeader>
           <TableRow>
             <TableCell className="text-center font-semibold">Date</TableCell>

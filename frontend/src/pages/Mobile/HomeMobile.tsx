@@ -33,7 +33,7 @@ const MobileScannerHome = () => {
   );
 
   const handleCreateProjectClick = () => {
-    navigate("/create-project");
+    navigate("/projects");
   };
 
   const handleViewProjects = () => {
