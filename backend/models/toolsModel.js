@@ -49,6 +49,7 @@ const addTool = async (toolData) => {
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
 
+  
   try {
     const [result] = await db.query(insertQuery, [
       picture,

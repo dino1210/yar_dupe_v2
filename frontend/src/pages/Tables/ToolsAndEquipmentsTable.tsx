@@ -379,12 +379,12 @@ export default function ToolsAndEquipmentsTable() {
                         >
                           <Trash2 className="w-3 h-7" />
                         </button>
-                        <button
+                        {/* <button
                           className="px-3 py-1 text-xs font-medium text-white bg-orange-800 rounded-lg hover:bg-orange-900"
                           title="Disable"
                         >
                           <CircleOff className="w-3 h-7" />
-                        </button>
+                        </button> */}
                       </div>
                     </TableCell>
                   </TableRow>

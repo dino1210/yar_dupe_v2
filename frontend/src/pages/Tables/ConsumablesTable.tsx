@@ -358,13 +358,13 @@ export default function ConsumablesTable() {
                         >
                           <Trash2 className="w-3 h-7" />
                         </button>
-                        <button
+                        {/* <button
                           onClick={() => handleDelete(consumable.id)}
                           className="px-3 py-1 text-xs font-medium text-white bg-orange-800 rounded-lg hover:bg-orange-900"
                           title="Disable"
                         >
                           <CircleOff className="w-3 h-7" />
-                        </button>
+                        </button> */}
                       </div>
                     </TableCell>
                   </TableRow>

@@ -10,7 +10,6 @@ import Badge from "../../../components/ui/badge/Badge";
 import {
   ArrowDownAZ,
   ArrowUpAZ,
-  Plus,
   Funnel,
   RotateCcw,
   Search,
@@ -178,14 +177,6 @@ export default function ToolsAndEquipmentsTable() {
             <Funnel className="w-4 h-4" />
           </button>
         </div>
-
-        <button
-          onClick={() => setIsModalOpen(true)}
-          type="button"
-          className="flex items-center gap-2 px-2 py-2 text-xs rounded-md bg-blue-600 text-white"
-        >
-          New <Plus className="w-4 h-4" />
-        </button>
 
         <AddResourceModal
           isOpen={isModalOpen}

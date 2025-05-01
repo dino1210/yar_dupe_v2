@@ -13,7 +13,6 @@ import {
   ArrowUpAZ,
   RotateCcw,
   Funnel,
-  Plus,
 } from "lucide-react";
 import axios from "axios";
 
@@ -156,12 +155,12 @@ export default function VehiclesLogsTable() {
             <Funnel className="w-4 h-4" />
           </button>
         </div>
-        <button
+        {/* <button
           type="button"
           className="flex items-center gap-2 px-2 py-2 text-xs rounded-md bg-blue-600 text-white"
         >
           New <Plus className="w-4 h-4" />
-        </button>
+        </button> */}
       </div>
 
       <Table className="text-gray-800 dark:text-white border border-b-2">

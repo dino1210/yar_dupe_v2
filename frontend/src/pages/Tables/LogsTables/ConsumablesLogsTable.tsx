@@ -167,12 +167,12 @@ export default function ConsumablesLogsTable() {
           </button>
         </div>
 
-        <button
+        {/* <button
           type="button"
           className="ml-auto flex items-center gap-2 px-4 py-2 text-sm rounded-md bg-blue-600 text-white hover:bg-blue-700"
         >
           New <Plus className="w-4 h-4" />
-        </button>
+        </button> */}
       </div>
 
       {/* Table */}

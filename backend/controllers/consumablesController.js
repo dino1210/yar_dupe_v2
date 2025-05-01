@@ -69,4 +69,27 @@ const getConsumableById = async (req, res) => {
     }
 };
 
-module.exports = { addConsumable, deleteConsumable, updateConsumable, getAllConsumables, getConsumableById };
+// Controller for SELECT ONLY AVAILABLE CONSUMABLES (for dropdown/table)
+const getAvailableConsumables = async (req, res) => {
+    const db = require("../config/db");
+    try {
+        const [rows] = await db.query(
+            "SELECT name, tag, category, quantity, unit FROM consumables WHERE quantity > 0"
+        );
+        res.status(200).json(rows);
+    } catch (err) {
+        console.error("Error fetching available consumables:", err.message);
+        res.status(500).json({ message: "Server error", error: err.message });
+    }
+};
+
+
+module.exports = {
+  addConsumable,
+  deleteConsumable,
+  updateConsumable,
+  getAllConsumables,
+  getConsumableById,
+  getAvailableConsumables 
+};
+

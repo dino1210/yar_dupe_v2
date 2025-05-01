@@ -271,25 +271,43 @@ const MobileScannerHome = () => {
 
                       <div className="text-start pl-7 pr-12 space-y-1">
                         <p>
-                          <strong>Plate Number:</strong> {scannedData.plate}
+                          <strong>Brand:</strong> {scannedData.brand}
                         </p>
                         <p>
-                          <strong>Type:</strong> {scannedData.type}
+                          <strong>Plate No.:</strong> {scannedData.plate_no}
                         </p>
                         <p>
                           <strong>Brand:</strong> {scannedData.brand}
                         </p>
                         <p>
+                          <strong>Category:</strong> {scannedData.category}
+                        </p>
+                        <p>
+                          <strong>Fuel Type:</strong> {scannedData.fuel_type}
+                        </p>
+                        <p>
+                          <strong>Location:</strong> {scannedData.location}
+                        </p>
+                        <p>
+                          <strong>Acquisition Date:</strong>
+                          {scannedData.acquisition_date}
+                        </p>
+                        <p>
+                          <strong>Maintenance Due:</strong>
+                          {scannedData.maintenance_due}
+                        </p>
+                        <p>
+                          <strong>Warranty:</strong> {scannedData.warranty}
+                        </p>
+                        <p>
                           <strong>Status:</strong> {scannedData.status}
                         </p>
                         <p>
-                          <strong>Model:</strong> {scannedData.model}
-                        </p>
-                        <p>
-                          <strong>Year:</strong> {scannedData.year}
-                        </p>
-                        <p>
                           <strong>Remarks:</strong> {scannedData.remarks}
+                        </p>
+                        <p>
+                          <strong>Assigned Driver:</strong>{" "}
+                          {scannedData.assigned_driver}
                         </p>
                       </div>
                     </>

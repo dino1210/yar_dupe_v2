@@ -21,6 +21,21 @@ import { Dialog } from "@headlessui/react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
+interface Tool {
+  name: string;
+  tag: string;
+  category: string;
+  remarks: string;
+}
+
+interface Consumables {
+  name: string;
+  tag: string;
+  category: string;
+  quantity: string;
+  unit: string;
+}
+
 interface ProjectType {
   id: number;
   title: string;
@@ -34,6 +49,13 @@ interface ProjectType {
   endDate: string;
   status?: string;
 }
+
+const formatDateToYYYYMMDD = (date: Date): string => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
 
 // Utils
 const formatDate = (dateString: string) => {
@@ -59,9 +81,13 @@ const statusIcons: Record<string, ReactNode> = {
   Cancelled: <XCircle className="w-4 h-4 text-red-500" />,
 };
 
+const loggedInUser = JSON.parse(localStorage.getItem("user") || "{}");
+console.log("LOGGED-IN USER:", loggedInUser);
+
 // Main Component
 export default function Projects() {
   const [projects, setProjects] = useState<ProjectType[]>([]);
+  const [showToolSearchTable, setShowToolSearchTable] = useState(false);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -70,6 +96,14 @@ export default function Projects() {
   const [selectedProject, setSelectedProject] = useState<ProjectType | null>(
     null
   );
+
+  const [loggedInUser, setLoggedInUser] = useState<{ name?: string }>({});
+
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+    setLoggedInUser(storedUser);
+  }, []);
+
   const [toolsList, setToolsList] = useState<string[]>([]);
   const [consumablesList, setConsumablesList] = useState<string[]>([]);
   const [vehiclesList, setVehiclesList] = useState<string[]>([]);
@@ -79,6 +113,30 @@ export default function Projects() {
   const [selectedConsumable, setSelectedConsumable] = useState<string>("");
   const [selectedVehicle, setSelectedVehicle] = useState<string>("");
 
+  const [searchText, setSearchText] = useState("");
+  const [allTools, setAllTools] = useState<Tool[]>([]);
+  const [consumablesListDetails, setConsumablesListDetails] = useState<any[]>(
+    []
+  );
+  const [searchConsumable, setSearchConsumable] = useState("");
+  const [showConsumableSearchTable, setShowConsumableSearchTable] =
+    useState(false);
+  const [selectedConsumablesCount, setSelectedConsumablesCount] = useState<{
+    [name: string]: number;
+  }>({});
+
+  const filteredConsumables = consumablesListDetails.filter((item) =>
+    item.name.toLowerCase().includes(searchConsumable.toLowerCase())
+  );
+
+  const [vehiclesListDetails, setVehiclesListDetails] = useState<any[]>([]);
+  const [searchVehicle, setSearchVehicle] = useState("");
+  const [showVehicleSearchTable, setShowVehicleSearchTable] = useState(false);
+
+  const filteredVehicles = vehiclesListDetails.filter((vehicle) =>
+    vehicle.name.toLowerCase().includes(searchVehicle.toLowerCase())
+  );
+
   const [formData, setFormData] = useState<ProjectType>({
     id: 0,
     title: "",
@@ -86,11 +144,11 @@ export default function Projects() {
     personInCharge: "",
     tools: "",
     consumables: "",
-    location: "",
     vehicles: "",
+    location: "",
     startDate: "",
     endDate: "",
-    status: "Ongoing",
+    status: "",
   });
 
   // Fetch Data
@@ -99,24 +157,74 @@ export default function Projects() {
     fetchResources();
   }, []);
 
+  useEffect(() => {
+    fetchAllTools();
+  }, []);
+
+  const fetchAllTools = async () => {
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/api/tools`
+      );
+      setAllTools(Array.isArray(res.data) ? res.data : res.data.tools || []);
+    } catch (error) {
+      console.error("Failed to fetch tools:", error);
+    }
+  };
+
+  const filteredTools = allTools.filter((tool: Tool) =>
+    tool.name.toLowerCase().includes(searchText.toLowerCase())
+  );
+
   const fetchProjects = async () => {
     try {
       const res = await axios.get(
         `${import.meta.env.VITE_API_BASE_URL}/api/projects`
       );
-      const formatted = res.data.map((p: any) => ({
-        id: p.id,
-        title: p.title,
-        manager: p.manager,
-        personInCharge: p.person_in_charge,
-        location: p.location,
-        tools: p.tools_equipment_used,
-        consumables: p.consumables_used,
-        vehicles: p.vehicles_used,
-        startDate: p.start_date,
-        endDate: p.end_date,
-        status: p.status,
-      }));
+
+      const today = new Date().toISOString().split("T")[0];
+
+      const formatted = await Promise.all(
+        res.data.map(async (p: any) => {
+          let autoStatus = p.status;
+
+          //  Only auto-update if NOT Completed or Cancelled
+          if (
+            !["Cancelled", "Completed"].includes(p.status) &&
+            p.status === "Upcoming" &&
+            p.start_date <= today
+          ) {
+            autoStatus = "Ongoing";
+
+            try {
+              await axios.put(
+                `${import.meta.env.VITE_API_BASE_URL}/api/projects/${p.id}`,
+                {
+                  ...p,
+                  status: autoStatus,
+                }
+              );
+            } catch (err) {
+              console.error("Failed to auto-update project status:", err);
+            }
+          }
+
+          return {
+            id: p.id,
+            title: p.title,
+            manager: p.manager,
+            personInCharge: p.person_in_charge,
+            location: p.location,
+            tools: p.tools_equipment_used,
+            consumables: p.consumables_used,
+            vehicles: p.vehicles_used,
+            startDate: p.start_date,
+            endDate: p.end_date,
+            status: autoStatus,
+          };
+        })
+      );
+
       setProjects(formatted);
     } catch (err) {
       console.error("Error fetching projects:", err);
@@ -129,12 +237,14 @@ export default function Projects() {
       const [toolsRes, consumablesRes, vehiclesRes] = await Promise.all([
         axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/tools/select/all`),
         axios.get(
-          `${import.meta.env.VITE_API_BASE_URL}/api/consumables/select/all`
+          `${import.meta.env.VITE_API_BASE_URL}/api/consumables/select/details`
         ),
         axios.get(
-          `${import.meta.env.VITE_API_BASE_URL}/api/vehicles/select/all`
+          `${import.meta.env.VITE_API_BASE_URL}/api/vehicles/select/details`
         ),
       ]);
+
+      console.log("CONSUMABLES RESPONSE:", consumablesRes.data);
 
       // Set Available Tools
       if (Array.isArray(toolsRes.data)) {
@@ -143,19 +253,24 @@ export default function Projects() {
 
       // Set Available Consumables
       if (Array.isArray(consumablesRes.data)) {
-        setConsumablesList(
-          consumablesRes.data.map((consumable) => consumable.name)
-        );
+        setConsumablesListDetails(consumablesRes.data); // <-- full objects for table
+        setConsumablesList(consumablesRes.data.map((c) => c.name)); // names only
       }
 
       // Set Available Vehicles
       if (Array.isArray(vehiclesRes.data)) {
+        setVehiclesListDetails(vehiclesRes.data);
         setVehiclesList(vehiclesRes.data.map((vehicle) => vehicle.name));
       }
     } catch (error) {
       console.error("Error fetching resources:", error);
       toast.error("Error loading resources!");
     }
+  };
+
+  const handleViewDetails = (project: ProjectType) => {
+    setSelectedProject(project);
+    setViewModalOpen(true);
   };
 
   const handleOpenModal = (project?: ProjectType) => {
@@ -167,7 +282,7 @@ export default function Projects() {
       setFormData({
         id: 0,
         title: "",
-        manager: "",
+        manager: loggedInUser.name || "", // auto-fill from logged in user
         personInCharge: "",
         tools: "",
         consumables: "",
@@ -175,17 +290,16 @@ export default function Projects() {
         location: "",
         startDate: "",
         endDate: "",
-        status: "Ongoing",
+        status: "",
       });
+
+      setSelectedTool("");
+      setSelectedConsumable("");
+      setSelectedVehicle("");
+      setSelectedConsumablesCount({});
     }
     setIsModalOpen(true);
   };
-
-  const handleViewDetails = (project: ProjectType) => {
-    setSelectedProject(project);
-    setViewModalOpen(true);
-  };
-
   const handleSave = async () => {
     if (
       !formData.title ||
@@ -201,32 +315,99 @@ export default function Projects() {
       setLoading(true);
 
       if (isEditing) {
+        const today = new Date().toISOString().split("T")[0];
+        let updatedEndDate = formData.endDate;
+
+        if (
+          formData.status === "Completed" ||
+          formData.status === "Cancelled"
+        ) {
+          updatedEndDate = today;
+        }
+
+        const updatedData = {
+          ...formData,
+          endDate: updatedEndDate,
+        };
+
+        const prevStatus = projects.find((p) => p.id === formData.id)?.status;
+
         await axios.put(
           `${import.meta.env.VITE_API_BASE_URL}/api/projects/${formData.id}`,
-          formData
+          updatedData
         );
+
+        // Only issue if changed from something else to Ongoing
+        if (prevStatus !== "Ongoing" && formData.status === "Ongoing") {
+          console.log(">>> CALLING issue-resources for Ongoing project");
+
+          await axios.put(
+            `${import.meta.env.VITE_API_BASE_URL}/api/projects/issue-resources`,
+            {
+              tools: formData.tools.split(",").filter(Boolean),
+              consumables: formData.consumables.split(",").filter(Boolean),
+              vehicles: formData.vehicles.split(",").filter(Boolean),
+              personInCharge: formData.personInCharge,
+            }
+          );
+        }
+
         toast.success("Project updated successfully!");
       } else {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const startDate = new Date(formData.startDate);
+        startDate.setHours(0, 0, 0, 0);
+
+        const autoStatus = startDate <= today ? "Ongoing" : "Upcoming";
+
+        const updatedFormData = {
+          ...formData,
+          status: autoStatus,
+        };
+
         await axios.post(
           `${import.meta.env.VITE_API_BASE_URL}/api/projects`,
-          formData
+          updatedFormData
         );
-        toast.success("Project added successfully!");
-        fetchProjects();
-        setIsModalOpen(false);
 
-        // 🔥 After CREATE PROJECT, update tools, vehicles, consumables
-        await axios.post(
-          `${import.meta.env.VITE_API_BASE_URL}/api/projects/update-resources`,
-          {
-            tools: formData.tools,
-            consumables: formData.consumables,
-            vehicles: formData.vehicles,
-          }
-        );
+        if (autoStatus === "Ongoing") {
+          await axios.put(
+            `${import.meta.env.VITE_API_BASE_URL}/api/projects/issue-resources`,
+            {
+              tools: formData.tools.split(",").filter(Boolean),
+              consumables: formData.consumables.split(",").filter(Boolean),
+              vehicles: formData.vehicles.split(",").filter(Boolean),
+            }
+          );
+        }
+
+        toast.success("Project added successfully!");
+
+        // Reset form
+        setFormData({
+          id: 0,
+          title: "",
+          manager: loggedInUser.name || "",
+          personInCharge: "",
+          tools: "",
+          consumables: "",
+          vehicles: "",
+          location: "",
+          startDate: "",
+          endDate: "",
+          status: "",
+        });
+
+        setSelectedTool("");
+        setSelectedConsumable("");
+        setSelectedVehicle("");
+
+        setIsModalOpen(false);
       }
 
-      fetchProjects();
+      await fetchProjects();
       setIsModalOpen(false);
     } catch (err) {
       console.error("Error saving project:", err);
@@ -326,8 +507,9 @@ export default function Projects() {
                 >
                   <Search className="w-4 h-4" /> View
                 </button>
-                {/* Hide Edit button for Completed projects */}
-                {proj.status !== "Completed" && (
+
+                {/* Only show Edit if not Completed or Cancelled */}
+                {!["Completed", "Cancelled"].includes(proj.status || "") && (
                   <button
                     onClick={() => handleOpenModal(proj)}
                     className="text-blue-600 hover:underline flex items-center gap-1"
@@ -362,27 +544,12 @@ export default function Projects() {
                 <input
                   type="text"
                   value={formData.title}
+                  readOnly={isEditing}
                   onChange={(e) =>
                     setFormData({ ...formData, title: e.target.value })
                   }
                   className="p-2 rounded border bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600"
                   placeholder="Enter title"
-                />
-              </div>
-
-              {/* Manager */}
-              <div className="flex flex-col">
-                <label className="text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
-                  Manager
-                </label>
-                <input
-                  type="text"
-                  value={formData.manager}
-                  onChange={(e) =>
-                    setFormData({ ...formData, manager: e.target.value })
-                  }
-                  className="p-2 rounded border bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600"
-                  placeholder="Enter manager"
                 />
               </div>
 
@@ -394,8 +561,12 @@ export default function Projects() {
                 <input
                   type="text"
                   value={formData.personInCharge}
+                  readOnly={isEditing}
                   onChange={(e) =>
-                    setFormData({ ...formData, personInCharge: e.target.value })
+                    setFormData({
+                      ...formData,
+                      personInCharge: e.target.value,
+                    })
                   }
                   className="p-2 rounded border bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600"
                   placeholder="Enter PIC"
@@ -409,6 +580,7 @@ export default function Projects() {
                 <input
                   type="text"
                   value={formData.location}
+                  readOnly={isEditing}
                   onChange={(e) =>
                     setFormData({ ...formData, location: e.target.value })
                   }
@@ -417,107 +589,141 @@ export default function Projects() {
                 />
               </div>
 
-              {/* Status */}
+              {/* Status (editable only when editing) */}
               <div className="flex flex-col">
                 <label className="text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
                   Status
                 </label>
-                <select
-                  value={formData.status}
-                  onChange={(e) =>
-                    setFormData({ ...formData, status: e.target.value })
-                  }
-                  className="p-2 rounded border bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600"
-                >
-                  <option value="Upcoming">Upcoming</option>
-                  <option value="Ongoing">Ongoing</option>
-                  <option value="Completed">Completed</option>
-                  <option value="Cancelled">Cancelled</option>
-                </select>
+                {isEditing ? (
+                  <select
+                    value={formData.status}
+                    onChange={(e) => {
+                      const newStatus = e.target.value;
+                      const today = new Date().toISOString().split("T")[0];
+
+                      const updatedForm = {
+                        ...formData,
+                        status: newStatus,
+                      };
+
+                      if (
+                        newStatus === "Completed" ||
+                        newStatus === "Cancelled"
+                      ) {
+                        updatedForm.endDate = today;
+                      }
+
+                      setFormData(updatedForm);
+                    }}
+                    className="p-2 rounded border bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600"
+                  >
+                    <option value="" disabled>
+                      -- Select Status --
+                    </option>
+
+                    {/* Always show current status */}
+                    {![
+                      "Upcoming",
+                      "Ongoing",
+                      "Completed",
+                      "Cancelled",
+                    ].includes(formData.status || "") && (
+                      <option value={formData.status}>{formData.status}</option>
+                    )}
+
+                    {formData.status === "Upcoming" && (
+                      <>
+                        <option value="Upcoming">Upcoming</option>
+                        <option value="Ongoing">Ongoing</option>
+                        <option value="Cancelled">Cancelled</option>
+                      </>
+                    )}
+
+                    {formData.status === "Ongoing" && (
+                      <>
+                        <option value="Ongoing">Ongoing</option>
+                        <option value="Completed">Completed</option>
+                        <option value="Cancelled">Cancelled</option>
+                      </>
+                    )}
+
+                    {formData.status === "Completed" && (
+                      <option value="Completed">Completed</option>
+                    )}
+
+                    {formData.status === "Cancelled" && (
+                      <option value="Cancelled">Cancelled</option>
+                    )}
+                  </select>
+                ) : (
+                  <input
+                    type="text"
+                    value={formData.status}
+                    readOnly
+                    className="p-2 rounded border bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-white border-gray-300 dark:border-gray-600"
+                  />
+                )}
               </div>
 
-              {/* Start Date */}
-              <div className="flex flex-col">
-                <label className="text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
-                  Start Date
-                </label>
-                <DatePicker
-                  selected={
-                    formData.startDate ? new Date(formData.startDate) : null
-                  }
-                  onChange={(date) =>
-                    date &&
-                    setFormData({
-                      ...formData,
-                      startDate: date.toISOString().split("T")[0],
-                    })
-                  }
-                  className="p-2 rounded border bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600"
-                  placeholderText="Start Date"
-                  dateFormat="yyyy-MM-dd"
-                />
-              </div>
+              <div className="col-span-2 grid grid-cols-2 gap-4">
+                {/* Start Date */}
+                <div className="flex flex-col">
+                  <label className="text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
+                    Start Date
+                  </label>
+                  <DatePicker
+                    selected={
+                      formData.startDate ? new Date(formData.startDate) : null
+                    }
+                    onChange={(date) =>
+                      date &&
+                      setFormData({
+                        ...formData,
+                        startDate: formatDateToYYYYMMDD(
+                          new Date(
+                            date.getTime() +
+                              Math.abs(date.getTimezoneOffset() * 60000)
+                          )
+                        ),
+                      })
+                    }
+                    className="w-full p-2 rounded border bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600"
+                    placeholderText="Start Date"
+                    dateFormat="yyyy-MM-dd"
+                  />
+                </div>
 
-              {/* End Date */}
-              <div className="flex flex-col">
-                <label className="text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
-                  End Date
-                </label>
-                <DatePicker
-                  selected={
-                    formData.endDate ? new Date(formData.endDate) : null
-                  }
-                  onChange={(date) =>
-                    date &&
-                    setFormData({
-                      ...formData,
-                      endDate: date.toISOString().split("T")[0],
-                    })
-                  }
-                  className="p-2 rounded border bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600"
-                  placeholderText="End Date"
-                  dateFormat="yyyy-MM-dd"
-                />
+                {/* Expected End Date */}
+                <div className="flex flex-col">
+                  <label className="text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
+                    Expected End Date
+                  </label>
+                  <DatePicker
+                    selected={
+                      formData.endDate ? new Date(formData.endDate) : null
+                    }
+                    onChange={(date) =>
+                      date &&
+                      setFormData({
+                        ...formData,
+                        endDate: formatDateToYYYYMMDD(
+                          new Date(
+                            date.getTime() +
+                              Math.abs(date.getTimezoneOffset() * 60000)
+                          )
+                        ),
+                      })
+                    }
+                    className="w-full p-2 rounded border bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600"
+                    placeholderText="Expected End Date"
+                    dateFormat="yyyy-MM-dd"
+                  />
+                </div>
               </div>
 
               {/* Tools */}
               <div className="flex flex-col col-span-2">
-                <label className="text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
-                  Tools
-                </label>
-                <div className="flex gap-2">
-                  <select
-                    value={selectedTool}
-                    onChange={(e) => setSelectedTool(e.target.value)}
-                    className="flex-1 p-2 rounded border bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600"
-                  >
-                    <option value="">Select Tool</option>
-                    {toolsList.map((item, i) => (
-                      <option key={i} value={item}>
-                        {item}
-                      </option>
-                    ))}
-                  </select>
-                  <button
-                    onClick={() => {
-                      if (
-                        selectedTool &&
-                        !formData.tools.split(",").includes(selectedTool)
-                      ) {
-                        setFormData({
-                          ...formData,
-                          tools: [...formData.tools.split(","), selectedTool]
-                            .filter(Boolean)
-                            .join(","),
-                        });
-                        setSelectedTool("");
-                      }
-                    }}
-                    className="px-4 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm"
-                  >
-                    + Add
-                  </button>
-                </div>
+                {/* Selected Badges */}
                 <div className="mt-2 flex flex-wrap gap-2">
                   {formData.tools
                     ?.split(",")
@@ -525,113 +731,257 @@ export default function Projects() {
                     .map((tool, idx) => (
                       <span
                         key={idx}
-                        className="px-3 py-1 bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-200 rounded-full text-xs"
+                        className="flex items-center gap-2 px-3 py-1 bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-200 rounded-full text-xs"
                       >
                         {tool}
+                        <button
+                          onClick={() => {
+                            const updatedTools = formData.tools
+                              .split(",")
+                              .filter((t) => t !== tool)
+                              .join(",");
+                            setFormData({ ...formData, tools: updatedTools });
+                          }}
+                          className="ml-1 text-red-600 dark:text-red-300 hover:underline"
+                        >
+                          ×
+                        </button>
                       </span>
                     ))}
                 </div>
+
+                {/* Search Bar */}
+                <div className="mt-4">
+                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Search Tool
+                  </label>
+                  <input
+                    type="text"
+                    value={searchText}
+                    onChange={(e) => setSearchText(e.target.value)}
+                    onFocus={() => setShowToolSearchTable(true)}
+                    onBlur={() => {
+                      setTimeout(() => setShowToolSearchTable(false), 200);
+                    }}
+                    placeholder="Search tool name..."
+                    className="mt-1 w-full p-2 rounded border bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600"
+                  />
+                </div>
+
+                {/* Tool Table */}
+                {showToolSearchTable && (
+                  <div className="mt-3 overflow-x-auto rounded-md border border-gray-200 dark:border-gray-700 max-h-60 overflow-y-auto">
+                    <table className="min-w-full text-sm text-left">
+                      <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-white">
+                        <tr>
+                          <th className="px-4 py-2">Name</th>
+                          <th className="px-4 py-2">Tag</th>
+                          <th className="px-4 py-2">Category</th>
+                          <th className="px-4 py-2">Remarks</th>
+                          <th className="px-4 py-2">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-900">
+                        {filteredTools
+                          .filter(
+                            (tool) =>
+                              tool.status === "Available" &&
+                              !formData.tools.split(",").includes(tool.name)
+                          )
+                          .map((tool, index) => (
+                            <tr key={index}>
+                              <td className="px-4 py-2 text-gray-800 dark:text-gray-200">
+                                {tool.name}
+                              </td>
+                              <td className="px-4 py-2 text-gray-800 dark:text-gray-200">
+                                {tool.tag}
+                              </td>
+                              <td className="px-4 py-2 text-gray-800 dark:text-gray-200">
+                                {tool.category}
+                              </td>
+                              <td className="px-4 py-2 text-gray-800 dark:text-gray-200">
+                                {tool.remarks}
+                              </td>
+                              <td className="px-4 py-2">
+                                <button
+                                  onClick={() => {
+                                    const selected = [
+                                      ...formData.tools.split(","),
+                                      tool.name,
+                                    ]
+                                      .filter(Boolean)
+                                      .join(",");
+                                    setFormData({
+                                      ...formData,
+                                      tools: selected,
+                                    });
+                                    toast.success(`${tool.name} selected`);
+                                  }}
+                                  className="text-blue-600 hover:underline"
+                                >
+                                  Select
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
               </div>
 
               {/* Consumables */}
               <div className="flex flex-col col-span-2">
-                <label className="text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
-                  Consumables
-                </label>
-                <div className="flex gap-2">
-                  <select
-                    value={selectedConsumable}
-                    onChange={(e) => setSelectedConsumable(e.target.value)}
-                    className="flex-1 p-2 rounded border bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600"
-                  >
-                    <option value="">Select Consumable</option>
-                    {consumablesList.map((item, i) => (
-                      <option key={i} value={item}>
-                        {item}
-                      </option>
-                    ))}
-                  </select>
-                  <button
-                    onClick={() => {
-                      if (
-                        selectedConsumable &&
-                        !formData.consumables
-                          .split(",")
-                          .includes(selectedConsumable)
-                      ) {
-                        setFormData({
-                          ...formData,
-                          consumables: [
-                            ...formData.consumables.split(","),
-                            selectedConsumable,
-                          ]
-                            .filter(Boolean)
-                            .join(","),
-                        });
-                        setSelectedConsumable("");
-                      }
-                    }}
-                    className="px-4 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm"
-                  >
-                    + Add
-                  </button>
-                </div>
+                {/* Selected Badges */}
                 <div className="mt-2 flex flex-wrap gap-2">
-                  {formData.consumables
-                    ?.split(",")
-                    .filter(Boolean)
-                    .map((consumable, idx) => (
-                      <span
-                        key={idx}
-                        className="px-3 py-1 bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-200 rounded-full text-xs"
+                  {Object.entries(selectedConsumablesCount).map(
+                    ([name, count]) => (
+                      <div
+                        key={name}
+                        className="flex items-center gap-2 px-3 py-1 bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-200 rounded-full text-xs"
                       >
-                        {consumable}
-                      </span>
-                    ))}
+                        <span className="font-semibold">
+                          {name} ({count})
+                        </span>
+                        <button
+                          onClick={() => {
+                            const updatedCount = {
+                              ...selectedConsumablesCount,
+                            };
+                            delete updatedCount[name];
+
+                            setSelectedConsumablesCount(updatedCount);
+
+                            const allNames = Object.entries(updatedCount)
+                              .flatMap(([n, c]) => Array(c).fill(n))
+                              .join(",");
+
+                            setFormData({ ...formData, consumables: allNames });
+                            toast.success(`${name} removed`);
+                          }}
+                          className="ml-1 text-red-600 dark:text-red-300 hover:underline"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    )
+                  )}
                 </div>
+
+                {/* Search Bar */}
+                <div className="mt-4">
+                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Search Consumable
+                  </label>
+                  <input
+                    type="text"
+                    value={searchConsumable}
+                    onChange={(e) => setSearchConsumable(e.target.value)}
+                    onFocus={() => setShowConsumableSearchTable(true)}
+                    onBlur={() => {
+                      setTimeout(
+                        () => setShowConsumableSearchTable(false),
+                        200
+                      );
+                    }}
+                    placeholder="Search consumable name..."
+                    className="mt-1 w-full p-2 rounded border bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600"
+                  />
+                </div>
+
+                {/* Consumable Table */}
+                {showConsumableSearchTable && (
+                  <div className="mt-3 overflow-x-auto rounded-md border border-gray-200 dark:border-gray-700 max-h-60 overflow-y-auto">
+                    <table className="min-w-full text-sm text-left">
+                      <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-white">
+                        <tr>
+                          <th className="px-4 py-2">Item Name</th>
+                          <th className="px-4 py-2">Tag/Code</th>
+                          <th className="px-4 py-2">Category</th>
+                          <th className="px-4 py-2">Quantity</th>
+                          <th className="px-4 py-2">Unit</th>
+                          <th className="px-4 py-2">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-900">
+                        {consumablesListDetails
+                          .filter(
+                            (item: any) =>
+                              item.name
+                                .toLowerCase()
+                                .includes(searchConsumable.toLowerCase()) &&
+                              Number(item.quantity) -
+                                (selectedConsumablesCount[item.name] || 0) >
+                                0
+                          )
+                          .map((item: any, index: number) => {
+                            const available =
+                              Number(item.quantity) -
+                              (selectedConsumablesCount[item.name] || 0);
+
+                            return (
+                              <tr key={index}>
+                                <td className="px-4 py-2 text-gray-800 dark:text-gray-200">
+                                  {item.name}
+                                </td>
+                                <td className="px-4 py-2 text-gray-800 dark:text-gray-200">
+                                  {item.tag}
+                                </td>
+                                <td className="px-4 py-2 text-gray-800 dark:text-gray-200">
+                                  {item.category}
+                                </td>
+                                <td className="px-4 py-2 text-gray-800 dark:text-gray-200">
+                                  {available}
+                                </td>
+                                <td className="px-4 py-2 text-gray-800 dark:text-gray-200">
+                                  {item.unit}
+                                </td>
+                                <td className="px-4 py-2">
+                                  <button
+                                    onClick={() => {
+                                      const current =
+                                        selectedConsumablesCount[item.name] ||
+                                        0;
+                                      if (current < Number(item.quantity)) {
+                                        const newCount = {
+                                          ...selectedConsumablesCount,
+                                        };
+                                        newCount[item.name] = current + 1;
+
+                                        setSelectedConsumablesCount(newCount);
+
+                                        const allNames = Object.entries(
+                                          newCount
+                                        )
+                                          .flatMap(([name, count]) =>
+                                            Array(count).fill(name)
+                                          )
+                                          .join(",");
+
+                                        setFormData({
+                                          ...formData,
+                                          consumables: allNames,
+                                        });
+                                        toast.success(`${item.name} selected`);
+                                      }
+                                    }}
+                                    className="text-green-600 hover:underline"
+                                  >
+                                    Select
+                                  </button>
+                                </td>
+                              </tr>
+                            );
+                          })}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
               </div>
 
               {/* Vehicles */}
               <div className="flex flex-col col-span-2">
-                <label className="text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
-                  Vehicles
-                </label>
-                <div className="flex gap-2">
-                  <select
-                    value={selectedVehicle}
-                    onChange={(e) => setSelectedVehicle(e.target.value)}
-                    className="flex-1 p-2 rounded border bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600"
-                  >
-                    <option value="">Select Vehicle</option>
-                    {vehiclesList.map((item, i) => (
-                      <option key={i} value={item}>
-                        {item}
-                      </option>
-                    ))}
-                  </select>
-                  <button
-                    onClick={() => {
-                      if (
-                        selectedVehicle &&
-                        !formData.vehicles.split(",").includes(selectedVehicle)
-                      ) {
-                        setFormData({
-                          ...formData,
-                          vehicles: [
-                            ...formData.vehicles.split(","),
-                            selectedVehicle,
-                          ]
-                            .filter(Boolean)
-                            .join(","),
-                        });
-                        setSelectedVehicle("");
-                      }
-                    }}
-                    className="px-4 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm"
-                  >
-                    + Add
-                  </button>
-                </div>
+                {/* Selected Badges */}
                 <div className="mt-2 flex flex-wrap gap-2">
                   {formData.vehicles
                     ?.split(",")
@@ -639,12 +989,110 @@ export default function Projects() {
                     .map((vehicle, idx) => (
                       <span
                         key={idx}
-                        className="px-3 py-1 bg-purple-100 dark:bg-purple-800 text-purple-800 dark:text-purple-200 rounded-full text-xs"
+                        className="flex items-center gap-2 px-3 py-1 bg-purple-100 dark:bg-purple-800 text-purple-800 dark:text-purple-200 rounded-full text-xs"
                       >
                         {vehicle}
+                        <button
+                          onClick={() => {
+                            const updatedVehicles = formData.vehicles
+                              .split(",")
+                              .filter((v) => v !== vehicle)
+                              .join(",");
+                            setFormData({
+                              ...formData,
+                              vehicles: updatedVehicles,
+                            });
+                          }}
+                          className="ml-1 text-red-600 dark:text-red-300 hover:underline"
+                        >
+                          ×
+                        </button>
                       </span>
                     ))}
                 </div>
+
+                {/* Search Bar */}
+                <div className="mt-4">
+                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Search Vehicle
+                  </label>
+                  <input
+                    type="text"
+                    value={searchVehicle}
+                    onChange={(e) => setSearchVehicle(e.target.value)}
+                    onFocus={() => setShowVehicleSearchTable(true)}
+                    onBlur={() => {
+                      setTimeout(() => setShowVehicleSearchTable(false), 200);
+                    }}
+                    placeholder="Search vehicle name..."
+                    className="mt-1 w-full p-2 rounded border bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600"
+                  />
+                </div>
+
+                {/* Vehicle Table */}
+                {showVehicleSearchTable && (
+                  <div className="mt-3 overflow-x-auto rounded-md border border-gray-200 dark:border-gray-700 max-h-60 overflow-y-auto">
+                    <table className="min-w-full text-sm text-left">
+                      <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-white">
+                        <tr>
+                          <th className="px-4 py-2">Name</th>
+                          <th className="px-4 py-2">Plate No</th>
+                          <th className="px-4 py-2">Category</th>
+                          <th className="px-4 py-2">Driver</th>
+                          <th className="px-4 py-2">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-900">
+                        {filteredVehicles
+                          .filter(
+                            (item) =>
+                              !formData.vehicles
+                                .split(",")
+                                .includes(item.name) &&
+                              item.name
+                                .toLowerCase()
+                                .includes(searchVehicle.toLowerCase())
+                          )
+                          .map((item, index) => (
+                            <tr key={index}>
+                              <td className="px-4 py-2 text-gray-800 dark:text-gray-200">
+                                {item.name}
+                              </td>
+                              <td className="px-4 py-2 text-gray-800 dark:text-gray-200">
+                                {item.plate_no}
+                              </td>
+                              <td className="px-4 py-2 text-gray-800 dark:text-gray-200">
+                                {item.category}
+                              </td>
+                              <td className="px-4 py-2 text-gray-800 dark:text-gray-200">
+                                {item.assigned_driver}
+                              </td>
+                              <td className="px-4 py-2">
+                                <button
+                                  onClick={() => {
+                                    const updated = [
+                                      ...formData.vehicles.split(","),
+                                      item.name,
+                                    ]
+                                      .filter(Boolean)
+                                      .join(",");
+                                    setFormData({
+                                      ...formData,
+                                      vehicles: updated,
+                                    });
+                                    toast.success(`${item.name} selected`);
+                                  }}
+                                  className="text-purple-600 hover:underline"
+                                >
+                                  Select
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -722,7 +1170,7 @@ export default function Projects() {
 
                     <p className="flex items-center gap-2">
                       <CalendarDays className="w-5 h-5" />{" "}
-                      <strong>End Date:</strong>{" "}
+                      <strong>Expected Date:</strong>{" "}
                       {formatDate(selectedProject.endDate)}
                     </p>
                   </div>

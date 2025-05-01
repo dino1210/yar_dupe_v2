@@ -41,6 +41,9 @@ app.use("/auth", authRoutes);
 // User Management
 app.use("/api/users", userRoutes);
 
+app.use("/api/projects", require("./routes/projectsRoutes"));
+
+
 // Resource Management
 app.use("/api/tools", toolsRoutes);
 app.use("/api/consumables", consumablesRoutes);

@@ -1,4 +1,3 @@
-// controllers/projectsController.js
 const db = require("../config/db");
 
 // GET all projects
@@ -12,7 +11,7 @@ exports.getAllProjects = async (req, res) => {
   }
 };
 
-// CREATE new project (with tools, vehicles, consumables, location)
+// CREATE new project
 exports.createProject = async (req, res) => {
   const {
     title,
@@ -37,75 +36,130 @@ exports.createProject = async (req, res) => {
       [title, manager, personInCharge, location, creator, tools, consumables, vehicles, startDate, endDate, status]
     );
 
-    // Tools update + logs
-    if (tools) {
-      const toolsArray = tools.split(",").map(t => t.trim());
-
-      for (const toolName of toolsArray) {
-        const [[tool]] = await db.query(`SELECT * FROM tools WHERE name = ? LIMIT 1`, [toolName]);
-
-        if (tool) {
-          await db.query(`UPDATE tools SET status = 'Issued Out' WHERE id = ?`, [tool.id]);
-
-          await db.query(
-            `INSERT INTO tools_logs (tool_tag, tool_name, performed_by, issued_date, status)
-             VALUES (?, ?, ?, NOW(), 'Issued Out')`,
-            [tool.tag_code, tool.name, manager]
-          );
-        } else {
-          console.warn("Tool not found:", toolName);
+    if (status === "Ongoing") {
+      await exports.issueResources({
+        body: {
+          tools: tools ? tools.split(",").map(t => t.trim()) : [],
+          consumables: consumables ? consumables.split(",").map(c => c.trim()) : [],
+          vehicles: vehicles ? vehicles.split(",").map(v => v.trim()) : [],
+          personInCharge,
+          location
         }
-      }
-    }
-
-    // Vehicles update + logs
-    if (vehicles) {
-      const vehiclesArray = vehicles.split(",").map(v => v.trim());
-
-      for (const vehicleName of vehiclesArray) {
-        const [[vehicle]] = await db.query(`SELECT * FROM vehicles WHERE name = ? LIMIT 1`, [vehicleName]);
-
-        if (vehicle) {
-          await db.query(`UPDATE vehicles SET status = 'Issued Out' WHERE id = ?`, [vehicle.id]);
-
-          await db.query(
-            `INSERT INTO vehicles_logs (vehicle_name, performed_by, issued_date, status)
-             VALUES (?, ?, NOW(), 'Issued Out')`,
-            [vehicle.name, manager]
-          );
-        } else {
-          console.warn("Vehicle not found:", vehicleName);
-        }
-      }
-    }
-
-    // Consumables quantity update + logs
-    if (consumables) {
-      const consumablesArray = consumables.split(",").map(c => c.trim());
-
-      for (const consumableName of consumablesArray) {
-        await db.query(
-          `UPDATE consumables 
-           SET quantity = quantity - 1 
-           WHERE name = ? AND quantity > 0`,
-          [consumableName]
-        );
-
-        await db.query(
-          `INSERT INTO consumables_logs (consumable_name, performed_by, issued_date, status)
-           VALUES (?, ?, NOW(), 'Issued Out')`,
-          [consumableName, manager]
-        );
-      }
+      }, { status: () => ({ json: () => {} }) });
     }
 
     res.status(201).json({
       id: result.insertId,
-      message: "Project created and resources updated successfully."
+      message: "Project created successfully."
     });
   } catch (err) {
     console.error("CREATE PROJECT ERROR:", err.message);
     res.status(500).json({ error: err.message });
+  }
+};
+
+// ISSUE resources on demand or triggered
+exports.issueResources = async (req, res) => {
+  const { tools = [], consumables = [], vehicles = [], personInCharge, location } = req.body;
+  const performedBy = personInCharge || "System Auto";
+
+  try {
+    for (const name of tools) {
+      const [[tool]] = await db.query(`SELECT * FROM tools WHERE name = ? LIMIT 1`, [name]);
+      if (tool) {
+        await db.query(`UPDATE tools SET status = 'Issued Out' WHERE id = ?`, [tool.id]);
+        await db.query(
+          `INSERT INTO tools_logs (tool_tag, tool_name, performed_by, issued_date, status, location)
+           VALUES (?, ?, ?, NOW(), 'Issued Out', ?)`,
+          [tool.tag_code, tool.name, performedBy, location]
+        );
+      }
+    }
+
+    for (const name of vehicles) {
+      const [[vehicle]] = await db.query(`SELECT * FROM vehicles WHERE name = ? LIMIT 1`, [name]);
+      if (vehicle) {
+        await db.query(`UPDATE vehicles SET status = 'Issued Out' WHERE id = ?`, [vehicle.id]);
+        await db.query(
+          `INSERT INTO vehicles_logs (vehicle_name, performed_by, issued_date, status)
+           VALUES (?, ?, NOW(), 'Issued Out')`,
+          [vehicle.name, performedBy]
+        );
+      }
+    }
+
+   for (const name of consumables) {
+  const [[consumable]] = await db.query(`SELECT * FROM consumables WHERE name = ? LIMIT 1`, [name]);
+  if (consumable) {
+    await db.query(
+      `UPDATE consumables SET quantity = quantity + 1 WHERE id = ?`,
+      [consumable.id]
+    );
+    await db.query(
+      `INSERT INTO consumables_logs (consumable_name, performed_by, issued_date, status)
+       VALUES (?, ?, NOW(), 'Returned')`,
+      [consumable.name, performedBy]
+    );
+  }
+}
+
+    if (res.status) {
+      res.status(200).json({ message: "Resources successfully issued." });
+    }
+  } catch (err) {
+    console.error("ISSUE RESOURCES ERROR:", err.message);
+    if (res.status) {
+      res.status(500).json({ error: "Server error while issuing resources." });
+    }
+  }
+};
+
+// RETURN resources when project is Completed or Cancelled
+exports.returnResources = async (req, res) => {
+  const { tools = [], consumables = [], vehicles = [], personInCharge, location } = req.body;
+  const performedBy = personInCharge || "System Auto";
+
+  try {
+    for (const name of tools) {
+      const [[tool]] = await db.query(`SELECT * FROM tools WHERE name = ? LIMIT 1`, [name]);
+      if (tool) {
+        await db.query(`UPDATE tools SET status = 'Available' WHERE id = ?`, [tool.id]);
+        await db.query(
+          `INSERT INTO tools_logs (tool_tag, tool_name, performed_by, issued_date, status, location)
+           VALUES (?, ?, ?, NOW(), 'Returned', ?)`,
+          [tool.tag_code, tool.name, performedBy, location]
+        );
+      }
+    }
+
+    for (const name of vehicles) {
+      const [[vehicle]] = await db.query(`SELECT * FROM vehicles WHERE name = ? LIMIT 1`, [name]);
+      if (vehicle) {
+        await db.query(`UPDATE vehicles SET status = 'Available' WHERE id = ?`, [vehicle.id]);
+        await db.query(
+          `INSERT INTO vehicles_logs (vehicle_name, performed_by, issued_date, status)
+           VALUES (?, ?, NOW(), 'Returned')`,
+          [vehicle.name, performedBy]
+        );
+      }
+    }
+
+    for (const name of consumables) {
+      await db.query(
+        `UPDATE consumables SET quantity = quantity + 1 WHERE name = ?`,
+        [name]
+      );
+      await db.query(
+        `INSERT INTO consumables_logs (consumable_name, performed_by, issued_date, status)
+         VALUES (?, ?, NOW(), 'Returned')`,
+        [name, performedBy]
+      );
+    }
+
+    res.status(200).json({ message: "Resources successfully returned." });
+  } catch (err) {
+    console.error("RETURN RESOURCES ERROR:", err.message);
+    res.status(500).json({ error: "Server error while returning resources." });
   }
 };
 
@@ -127,26 +181,29 @@ exports.updateProject = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const query = `
-      UPDATE projects 
-      SET title = ?, manager = ?, person_in_charge = ?, location = ?, 
-          tools_equipment_used = ?, consumables_used = ?, vehicles_used = ?, 
-          start_date = ?, end_date = ?, status = ?
-      WHERE id = ?
-    `;
-    await db.query(query, [
-      title,
-      manager,
-      personInCharge,
-      location,
-      tools,
-      consumables,
-      vehicles,
-      startDate,
-      endDate,
-      status,
-      id,
-    ]);
+    const [[oldProject]] = await db.query(`SELECT * FROM projects WHERE id = ?`, [id]);
+    const oldStatus = oldProject.status;
+
+    await db.query(
+      `UPDATE projects 
+       SET title = ?, manager = ?, person_in_charge = ?, location = ?, 
+           tools_equipment_used = ?, consumables_used = ?, vehicles_used = ?, 
+           start_date = ?, end_date = ?, status = ?
+       WHERE id = ?`,
+      [title, manager, personInCharge, location, tools, consumables, vehicles, startDate, endDate, status, id]
+    );
+
+    if (["Completed", "Cancelled"].includes(status) && oldStatus !== status) {
+      await exports.returnResources({
+        body: {
+          tools: tools ? tools.split(",").map(t => t.trim()) : [],
+          consumables: consumables ? consumables.split(",").map(c => c.trim()) : [],
+          vehicles: vehicles ? vehicles.split(",").map(v => v.trim()) : [],
+          personInCharge,
+          location
+        }
+      }, { status: () => ({ json: () => {} }) });
+    }
 
     res.json({ message: "Project updated successfully." });
   } catch (err) {
