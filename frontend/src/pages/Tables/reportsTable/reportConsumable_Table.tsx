@@ -244,14 +244,15 @@ export default function ConsumablesTable() {
           >
             Download ▼
           </button>
+
           {showExportDropdown && (
-            <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-md shadow-lg z-10">
+            <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-md shadow-lg z-10 flex flex-col">
               <button
                 onClick={() => {
                   exportPDF();
                   setShowExportDropdown(false);
                 }}
-                className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
+                className="w-full text-left px-4 py-2 text-sm text-gray-800 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700"
               >
                 Export PDF
               </button>
@@ -260,7 +261,7 @@ export default function ConsumablesTable() {
                   exportCSV();
                   setShowExportDropdown(false);
                 }}
-                className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
+                className="w-full text-left px-4 py-2 text-sm text-gray-800 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700"
               >
                 Export CSV
               </button>

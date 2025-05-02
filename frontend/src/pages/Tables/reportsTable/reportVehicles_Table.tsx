@@ -295,8 +295,9 @@ export default function VehiclesTable() {
           >
             Download <ChevronDown size={16} />
           </button>
+
           {isDownloadOpen && (
-            <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 border rounded-md shadow-md z-10">
+            <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 border rounded-md shadow-md z-10 flex flex-col">
               <button
                 onClick={handleExportPDF}
                 className="w-full text-left px-4 py-2 text-xs hover:bg-gray-100 dark:hover:bg-gray-700"
