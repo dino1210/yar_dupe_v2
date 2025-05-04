@@ -20,6 +20,7 @@ const addVehicle = async (vehicleData) => {
     warranty,
     maintenance_due,
     assigned_driver,
+    added_by,
   } = vehicleData;
 
   // Generate unique QR code ID
@@ -36,7 +37,12 @@ const addVehicle = async (vehicleData) => {
     fs.mkdirSync(qrFolderPath, { recursive: true });
   }
 
-  const insertQuery = `INSERT INTO vehicles (picture, name, brand, plate_no, category, fuel_type, location, acquisition_date, status, remarks, maintenance_due, warranty, assigned_driver, qr_code_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+  const insertQuery = `
+    INSERT INTO vehicles (
+      picture, name, brand, plate_no, category, fuel_type, location, acquisition_date,
+      status, remarks, maintenance_due, warranty, assigned_driver, qr_code_id, added_by
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `;
 
   try {
     const [result] = await db.query(insertQuery, [
@@ -54,6 +60,7 @@ const addVehicle = async (vehicleData) => {
       warranty,
       assigned_driver,
       qrCodeId,
+      added_by,
     ]);
 
     const vehicleId = result.insertId;
@@ -90,35 +97,47 @@ const updateVehicle = async (vehicleData) => {
     status,
     remarks,
     maintenance_due,
+    warranty,
     assigned_driver,
-    qr,
   } = vehicleData;
 
   const query = `
-        UPDATE vehicles SET picture = ?, name = ?, brand = ?, plate_no = ?, category = ?, 
-        fuel_type = ?, location = ?, acquisition_date = ?, status = ?, remarks = ?, maintenance_due = ?, 
-        assigned_driver = ?, qr = ?, qr_code_id
-        WHERE id = ?
-    `;
+    UPDATE vehicles SET 
+      picture = ?, 
+      name = ?, 
+      brand = ?, 
+      plate_no = ?, 
+      category = ?, 
+      fuel_type = ?, 
+      location = ?, 
+      acquisition_date = ?, 
+      status = ?, 
+      remarks = ?, 
+      maintenance_due = ?, 
+      warranty = ?,
+      assigned_driver = ?
+    WHERE id = ?
+  `;
+
+  const values = [
+    picture,
+    name,
+    brand,
+    plate_no,
+    category,
+    fuel_type,
+    location,
+    acquisition_date,
+    status,
+    remarks,
+    maintenance_due,
+    warranty,
+    assigned_driver,
+    id,
+  ];
 
   try {
-    const [result] = await db.query(query, [
-      picture,
-      name,
-      brand,
-      plate_no,
-      category,
-      fuel_type,
-      location,
-      acquisition_date,
-      status,
-      remarks,
-      maintenance_due,
-      assigned_driver,
-      qr,
-      id,
-    ]);
-
+    const [result] = await db.query(query, values);
     return result;
   } catch (err) {
     throw new Error("Error updating vehicle: " + err.message);
@@ -137,7 +156,7 @@ const deleteVehicle = async (vehicleID) => {
   }
 };
 
-// GET ALL TOOLS
+// GET ALL VEHICLES
 const getAllVehicles = async () => {
   const query = `SELECT * FROM vehicles`;
 
@@ -149,13 +168,13 @@ const getAllVehicles = async () => {
   }
 };
 
-// GET SINGLE TOOL BY ID
+// GET SINGLE VEHICLE BY ID
 const getVehicleById = async (vehicleId) => {
   const query = `SELECT * FROM vehicles WHERE id = ?`;
 
   try {
     const [results] = await db.query(query, [vehicleId]);
-    return results[0]; // Return the first tool, or undefined if not found
+    return results[0];
   } catch (err) {
     throw new Error("Error fetching vehicle by ID: " + err.message);
   }

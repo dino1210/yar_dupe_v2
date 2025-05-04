@@ -1,9 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const projectController = require("../controllers/projectsController");
+const { getProjectStats } = require("../controllers/projectsController");
+
 
 // GET all
 router.get("/", projectController.getAllProjects);
+
 
 // POST new 
 router.post("/", projectController.createProject);
@@ -16,5 +19,7 @@ router.put("/return-resources", projectController.returnResources);
 
 // PUT update
 router.put("/:id", projectController.updateProject);
+router.get("/stats", getProjectStats);
+
 
 module.exports = router;

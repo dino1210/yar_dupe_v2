@@ -845,20 +845,23 @@ export default function Projects() {
                         </span>
                         <button
                           onClick={() => {
-                            const updatedCount = {
-                              ...selectedConsumablesCount,
-                            };
-                            delete updatedCount[name];
-
+                            const updatedCount = { ...selectedConsumablesCount };
+                            if (updatedCount[name] > 1) {
+                              updatedCount[name] -= 1;
+                            } else {
+                              delete updatedCount[name];
+                            }
+                          
                             setSelectedConsumablesCount(updatedCount);
-
+                          
                             const allNames = Object.entries(updatedCount)
                               .flatMap(([n, c]) => Array(c).fill(n))
                               .join(",");
-
+                          
                             setFormData({ ...formData, consumables: allNames });
                             toast.success(`${name} removed`);
                           }}
+                          
                           className="ml-1 text-red-600 dark:text-red-300 hover:underline"
                         >
                           ×

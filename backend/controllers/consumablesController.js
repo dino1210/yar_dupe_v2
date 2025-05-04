@@ -34,17 +34,24 @@ const deleteConsumable = async (req, res) => {
 // Controller for UPDATE
 const updateConsumable = async (req, res) => {
     const consumableId = req.params.id;
-    const consumableData = req.body;
-    consumableData.id = consumableId;
-
+  
+    const file = req.file;
+    const existingPicture = req.body.existingPicture;
+  
+    const consumableData = {
+      ...req.body,
+      id: consumableId,
+      picture: file ? file.filename : existingPicture, 
+    };
+  
     try {
-        const result = await Consumable.updateConsumable(consumableData);
-        res.status(200).json({ message: "Consumable updated successfully", data: result });
+      const result = await Consumable.updateConsumable(consumableData);
+      res.status(200).json({ message: "Consumable updated successfully", data: result });
     } catch (err) {
-        res.status(500).json({ message: "Error updating consumable", error: err.message });
+      res.status(500).json({ message: "Error updating consumable", error: err.message });
     }
-};
-
+  };
+  
 // Controller for GET ALL CONSUMABLES
 const getAllConsumables = async (req, res) => {
     try {
@@ -73,9 +80,15 @@ const getConsumableById = async (req, res) => {
 const getAvailableConsumables = async (req, res) => {
     const db = require("../config/db");
     try {
-        const [rows] = await db.query(
-            "SELECT name, tag, category, quantity, unit FROM consumables WHERE quantity > 0"
-        );
+        const [rows] = await db.query(`
+            SELECT name, tag, category, quantity, unit,
+                CASE
+                    WHEN quantity = 0 THEN 'No Stock'
+                    WHEN quantity > minStock THEN 'In Stock'
+                    ELSE 'Low Stock'
+                END AS status
+            FROM consumables
+        `);
         res.status(200).json(rows);
     } catch (err) {
         console.error("Error fetching available consumables:", err.message);
@@ -84,12 +97,30 @@ const getAvailableConsumables = async (req, res) => {
 };
 
 
+
+// Controller for GET LOW STOCK CONSUMABLES (quantity <= 4)
+const getLowStockConsumables = async (req, res) => {
+    const db = require("../config/db");
+    try {
+        const [rows] = await db.query(
+            "SELECT * FROM consumables WHERE quantity <= 4"
+        );
+        res.status(200).json(rows);
+    } catch (err) {
+        console.error("Error fetching low stock consumables:", err.message);
+        res.status(500).json({ message: "Server error", error: err.message });
+    }
+};
+
+
+
 module.exports = {
   addConsumable,
   deleteConsumable,
   updateConsumable,
   getAllConsumables,
   getConsumableById,
-  getAvailableConsumables 
+  getAvailableConsumables, 
+  getLowStockConsumables,
 };
 

@@ -58,7 +58,7 @@ exports.createProject = async (req, res) => {
   }
 };
 
-// ISSUE resources on demand or triggered
+// ISSUE resources
 exports.issueResources = async (req, res) => {
   const { tools = [], consumables = [], vehicles = [], personInCharge, location } = req.body;
   const performedBy = personInCharge || "System Auto";
@@ -88,20 +88,17 @@ exports.issueResources = async (req, res) => {
       }
     }
 
-   for (const name of consumables) {
-  const [[consumable]] = await db.query(`SELECT * FROM consumables WHERE name = ? LIMIT 1`, [name]);
-  if (consumable) {
-    await db.query(
-      `UPDATE consumables SET quantity = quantity + 1 WHERE id = ?`,
-      [consumable.id]
-    );
-    await db.query(
-      `INSERT INTO consumables_logs (consumable_name, performed_by, issued_date, status)
-       VALUES (?, ?, NOW(), 'Returned')`,
-      [consumable.name, performedBy]
-    );
-  }
-}
+    for (const name of consumables) {
+      const [[consumable]] = await db.query(`SELECT * FROM consumables WHERE name = ? LIMIT 1`, [name]);
+      if (consumable) {
+        await db.query(`UPDATE consumables SET quantity = quantity - 1 WHERE id = ?`, [consumable.id]);
+        await db.query(
+          `INSERT INTO consumables_logs (consumable_name, performed_by, issued_date, status)
+           VALUES (?, ?, NOW(), 'Issued Out')`,
+          [consumable.name, performedBy]
+        );
+      }
+    }
 
     if (res.status) {
       res.status(200).json({ message: "Resources successfully issued." });
@@ -114,7 +111,7 @@ exports.issueResources = async (req, res) => {
   }
 };
 
-// RETURN resources when project is Completed or Cancelled
+// RETURN resources
 exports.returnResources = async (req, res) => {
   const { tools = [], consumables = [], vehicles = [], personInCharge, location } = req.body;
   const performedBy = personInCharge || "System Auto";
@@ -145,10 +142,7 @@ exports.returnResources = async (req, res) => {
     }
 
     for (const name of consumables) {
-      await db.query(
-        `UPDATE consumables SET quantity = quantity + 1 WHERE name = ?`,
-        [name]
-      );
+      await db.query(`UPDATE consumables SET quantity = quantity + 1 WHERE name = ?`, [name]);
       await db.query(
         `INSERT INTO consumables_logs (consumable_name, performed_by, issued_date, status)
          VALUES (?, ?, NOW(), 'Returned')`,
@@ -163,7 +157,7 @@ exports.returnResources = async (req, res) => {
   }
 };
 
-// UPDATE existing project
+// UPDATE project
 exports.updateProject = async (req, res) => {
   const {
     title,
@@ -205,9 +199,43 @@ exports.updateProject = async (req, res) => {
       }, { status: () => ({ json: () => {} }) });
     }
 
+    if (status === "Ongoing" && oldStatus === "Upcoming") {
+      await exports.issueResources({
+        body: {
+          tools: tools ? tools.split(",").map(t => t.trim()) : [],
+          consumables: consumables ? consumables.split(",").map(c => c.trim()) : [],
+          vehicles: vehicles ? vehicles.split(",").map(v => v.trim()) : [],
+          personInCharge,
+          location
+        }
+      }, { status: () => ({ json: () => {} }) });
+    }
+
     res.json({ message: "Project updated successfully." });
   } catch (err) {
     console.error("UPDATE PROJECT ERROR:", err.message);
     res.status(500).json({ error: err.message });
+  }
+};
+
+// GET project stats
+exports.getProjectStats = async (req, res) => {
+  try {
+    const [total] = await db.query("SELECT COUNT(*) AS total FROM projects");
+    const [ongoing] = await db.query("SELECT COUNT(*) AS ongoing FROM projects WHERE status = 'Ongoing'");
+    const [completed] = await db.query("SELECT COUNT(*) AS completed FROM projects WHERE status = 'Completed'");
+    const [upcoming] = await db.query("SELECT COUNT(*) AS upcoming FROM projects WHERE status = 'Upcoming'");
+    const [cancelled] = await db.query("SELECT COUNT(*) AS cancelled FROM projects WHERE status = 'Cancelled'");
+
+    res.json({
+      total: total[0].total,
+      ongoing: ongoing[0].ongoing,
+      completed: completed[0].completed,
+      upcoming: upcoming[0].upcoming,
+      cancelled: cancelled[0].cancelled,
+    });
+  } catch (err) {
+    console.error("PROJECT STATS ERROR:", err.message);
+    res.status(500).json({ error: "Failed to fetch project statistics." });
   }
 };

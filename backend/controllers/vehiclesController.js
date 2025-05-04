@@ -35,8 +35,17 @@ const deleteVehicle = async (req, res) => {
 // Controller for UPDATE
 const updateVehicle = async (req, res) => {
   const vehicleId = req.params.id;
-  const vehicleData = req.body;
-  vehicleData.id = vehicleId;
+  const file = req.file;
+
+  const picture = file
+    ? file.filename
+    : req.body.existing_picture || null;
+
+  const vehicleData = {
+    ...req.body,
+    id: vehicleId,
+    picture,
+  };
 
   try {
     const result = await Vehicle.updateVehicle(vehicleData);

@@ -39,6 +39,47 @@ export default function ConsumablesLogsTable() {
 
   if (loading) return <p>Loading...</p>;
 
+  const handleDelete = async (id: number) => {
+    if (window.confirm("Are you sure you want to delete this category?")) {
+      await fetch(`http://localhost:5000/api/categories/${id}`, {
+        method: "DELETE",
+      });
+      setConsumables(prev => prev.filter(item => item.id !== id));
+    }
+  };
+
+  const handleEdit = async (id: number) => {
+    const item = consumables.find(c => c.id === id);
+    const newName = prompt("New Category Name", item?.category_name);
+    const newType = prompt("New Category Type", item?.category_type);
+    if (newName && newType) {
+      await fetch(`http://localhost:5000/api/categories/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ category_name: newName, category_type: newType }),
+      });
+      setConsumables(prev =>
+        prev.map(c =>
+          c.id === id ? { ...c, category_name: newName, category_type: newType } : c
+        )
+      );
+    }
+  };
+
+  const handleAdd = async () => {
+    const newName = prompt("Category Name");
+    const newType = prompt("Category Type");
+    if (newName && newType) {
+      const res = await fetch("http://localhost:5000/api/categories", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ category_name: newName, category_type: newType }),
+      });
+      const data = await res.json();
+      setConsumables(prev => [...prev, { id: data.id, category_name: newName, category_type: newType }]);
+    }
+  };
+
   // Filtered data based on search and status
   const filteredConsumables = consumables.filter((item) => {
     const matchesSearch =
@@ -57,13 +98,7 @@ export default function ConsumablesLogsTable() {
     currentPage * dataLimit
   );
 
-  const handleEdit = (toolId: number) => {
-    console.log("Edit user with ID:", toolId);
-  };
 
-  const handleDelete = (toolId: number) => {
-    console.log("Delete user with ID:", toolId);
-  };
 
   return (
     <div className="overflow-hidden rounded-xl border w-[62rem] border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
@@ -88,12 +123,14 @@ export default function ConsumablesLogsTable() {
             <option value="Vehicles">Vehicles</option>
           </select>
           <button
-          type="button"
-          className="flex items-center gap-2 px-2 text-xs rounded-md bg-white dark:bg-blue-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
-        >
-          New
-          <Plus className="w-4 h-4" />
-        </button>
+  onClick={handleAdd}
+  type="button"
+  className="flex items-center gap-2 px-2 text-xs rounded-md bg-white dark:bg-blue-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
+>
+  New
+  <Plus className="w-4 h-4" />
+</button>
+
         </div>
 
         {/* Table */}
