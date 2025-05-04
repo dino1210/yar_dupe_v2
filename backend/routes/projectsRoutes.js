@@ -1,25 +1,23 @@
 const express = require("express");
 const router = express.Router();
 const projectController = require("../controllers/projectsController");
-const { getProjectStats } = require("../controllers/projectsController");
-
 
 // GET all
 router.get("/", projectController.getAllProjects);
 
+// GET project stats
+router.get("/stats", projectController.getProjectStats);
 
-// POST new 
+// POST new project
 router.post("/", projectController.createProject);
 
-// PUT issue resources
+// PUT to issue resources
 router.put("/issue-resources", projectController.issueResources);
 
-// PUT return resources
+// PUT to return resources
 router.put("/return-resources", projectController.returnResources);
 
-// PUT update
+// PUT to update project by ID
 router.put("/:id", projectController.updateProject);
-router.get("/stats", getProjectStats);
-
 
 module.exports = router;

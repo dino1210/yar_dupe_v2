@@ -39,14 +39,13 @@ exports.createProject = async (req, res) => {
     if (status === "Ongoing") {
       await exports.issueResources({
         body: {
-          tools: tools ? tools.split(",").map(t => t.trim()) : [],
           consumables: consumables ? consumables.split(",").map(c => c.trim()) : [],
-          vehicles: vehicles ? vehicles.split(",").map(v => v.trim()) : [],
           personInCharge,
           location
         }
       }, { status: () => ({ json: () => {} }) });
     }
+    
 
     res.status(201).json({
       id: result.insertId,
@@ -90,7 +89,7 @@ exports.issueResources = async (req, res) => {
 
     for (const name of consumables) {
       const [[consumable]] = await db.query(`SELECT * FROM consumables WHERE name = ? LIMIT 1`, [name]);
-      if (consumable) {
+      if (consumable.quantity > 0) {
         await db.query(`UPDATE consumables SET quantity = quantity - 1 WHERE id = ?`, [consumable.id]);
         await db.query(
           `INSERT INTO consumables_logs (consumable_name, performed_by, issued_date, status)
@@ -98,6 +97,7 @@ exports.issueResources = async (req, res) => {
           [consumable.name, performedBy]
         );
       }
+      
     }
 
     if (res.status) {

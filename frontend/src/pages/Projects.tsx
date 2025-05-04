@@ -325,6 +325,12 @@ export default function Projects() {
           updatedEndDate = today;
         }
 
+        await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/projects/return-resources`, {
+          tools: formData.tools.split(",").filter(Boolean),
+          consumables: formData.consumables.split(",").filter(Boolean),
+          vehicles: formData.vehicles.split(",").filter(Boolean),
+        });
+        
         const updatedData = {
           ...formData,
           endDate: updatedEndDate,

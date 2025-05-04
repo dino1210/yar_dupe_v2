@@ -72,6 +72,35 @@ router.get("/lowstock", getLowStockConsumables);
 //  Get ALL consumables
 router.get("/", getAllConsumables);
 
+// 
+router.post("/issue", async (req, res) => {
+  const { id, issuedQuantity } = req.body;
+  try {
+    await db.query(
+      `UPDATE consumables SET quantity = quantity - ? WHERE id = ? AND quantity >= ?`,
+      [issuedQuantity, id, issuedQuantity]
+    );
+    res.status(200).json({ message: "Consumable issued successfully" });
+  } catch (err) {
+    res.status(500).json({ message: "Error issuing consumable", error: err.message });
+  }
+});
+
+// 
+router.post("/return", async (req, res) => {
+  const { id, returnedQuantity } = req.body;
+  try {
+    await db.query(
+      `UPDATE consumables SET quantity = quantity + ? WHERE id = ?`,
+      [returnedQuantity, id]
+    );
+    res.status(200).json({ message: "Consumable returned successfully" });
+  } catch (err) {
+    res.status(500).json({ message: "Error returning consumable", error: err.message });
+  }
+});
+
+
 // Get single consumable by ID — must be LAST
 router.get("/:id", getConsumableById);
 
