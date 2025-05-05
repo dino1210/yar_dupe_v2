@@ -5,16 +5,19 @@ const projectController = require("../controllers/projectsController");
 // GET all
 router.get("/", projectController.getAllProjects);
 
-// POST new 
+// GET project stats
+router.get("/stats", projectController.getProjectStats);
+
+// POST new project
 router.post("/", projectController.createProject);
 
-// PUT issue resources
+// PUT to issue resources
 router.put("/issue-resources", projectController.issueResources);
 
-// PUT return resources
+// PUT to return resources
 router.put("/return-resources", projectController.returnResources);
 
-// PUT update
+// PUT to update project by ID
 router.put("/:id", projectController.updateProject);
 
 module.exports = router;

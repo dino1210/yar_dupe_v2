@@ -1,16 +1,18 @@
 const Tool = require("../models/toolsModel");
 
-// ✅ Add New Tool
+//  Add New Tool
 const addTool = async (req, res) => {
   try {
     const file = req.file;
+
     if (!file) {
-      return res.status(400).json({ message: "Image file is required" });
+      return res.status(400).json({ message: "Image file is required for new tools" });
     }
 
     const toolData = {
       ...req.body,
-      picture: file.filename,
+      added_by: req.body.added_by || "Unknown",
+      picture: file.filename, // no fallback here, add always requires a new image
     };
 
     const result = await Tool.addTool(toolData);
@@ -21,7 +23,8 @@ const addTool = async (req, res) => {
   }
 };
 
-// ✅ Delete Tool
+
+//  Delete Tool
 const deleteTool = async (req, res) => {
   const toolId = req.params.id;
   try {
@@ -33,13 +36,17 @@ const deleteTool = async (req, res) => {
   }
 };
 
-// ✅ Update Tool
+//  Update Tool
 const updateTool = async (req, res) => {
   const toolId = req.params.id;
+  const picture = req.file
+    ? req.file.filename
+    : req.body.existing_picture || null;
+
   const toolData = {
     ...req.body,
     id: toolId,
-    picture: req.file ? req.file.filename : req.body.picture,
+    picture,
   };
 
   try {
@@ -51,7 +58,8 @@ const updateTool = async (req, res) => {
   }
 };
 
-// ✅ Get All Tools
+
+//  Get All Tools
 const getAllTools = async (req, res) => {
   try {
     const tools = await Tool.getAllTools();
@@ -62,7 +70,7 @@ const getAllTools = async (req, res) => {
   }
 };
 
-// ✅ Get Tool by ID
+//  Get Tool by ID
 const getToolById = async (req, res) => {
   const toolId = req.params.id;
   try {
@@ -77,7 +85,7 @@ const getToolById = async (req, res) => {
   }
 };
 
-// ✅ Get Available Tools for Project Modal
+//  Get Available Tools for Project Modal
 const getAvailableTools = async (req, res) => {
   try {
     const tools = await Tool.getAllTools();

@@ -17,6 +17,7 @@ const addTool = async (toolData) => {
     warranty,
     status = "Available",
     remarks,
+    added_by,
   } = toolData;
 
   // Generate unique QR code ID
@@ -45,8 +46,9 @@ const addTool = async (toolData) => {
       warranty,
       status,
       remarks,
-      qr_code_id
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      qr_code_id,
+      added_by
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)
   `;
 
   
@@ -63,6 +65,7 @@ const addTool = async (toolData) => {
       status,
       remarks,
       qrCodeId,
+      added_by
     ]);
 
     const toolId = result.insertId;
@@ -101,14 +104,22 @@ const updateTool = async (toolData) => {
   } = toolData;
 
   const query = `
-        UPDATE tools SET picture = ?, name = ?, brand = ?, category = ?, tag = ?,
-        description = ?, purchase_date = ?, warranty = ?, status = ?, remarks = ?
-        WHERE id = ?
-    `;
+    UPDATE tools SET 
+      name = ?, 
+      brand = ?, 
+      category = ?, 
+      tag = ?, 
+      description = ?, 
+      purchase_date = ?, 
+      warranty = ?, 
+      status = ?, 
+      remarks = ?, 
+      picture = ?
+    WHERE id = ?
+  `;
 
   try {
     const [result] = await db.query(query, [
-      picture,
       name,
       brand,
       category,
@@ -118,6 +129,7 @@ const updateTool = async (toolData) => {
       warranty,
       status,
       remarks,
+      picture,
       id,
     ]);
 

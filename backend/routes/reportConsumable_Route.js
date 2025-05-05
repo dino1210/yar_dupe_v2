@@ -4,7 +4,7 @@ const reportConsumableController = require("../controllers/reportConsumable_Cont
 
 router.get(
   "/consumables-report",
-  reportConsumableController.getAllConsumablesReport
+  reportConsumableController.getAllConsumablesReport  
 );
 
 module.exports = router;

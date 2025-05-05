@@ -8,7 +8,6 @@ import {
 } from "../../components/ui/table";
 import Badge from "../../components/ui/badge/Badge";
 import {
-  CircleOff,
   Pencil,
   Trash2,
   RotateCcw,
@@ -57,6 +56,7 @@ export default function ConsumablesTable() {
   const [isAscending, setIsAscending] = useState(true);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [consumableToEdit, setConsumableToEdit] = useState<Consumable | null>(null); 
 
   //delete
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -64,11 +64,20 @@ export default function ConsumablesTable() {
   const [selectedName, setSelectedName] = useState<string>("");
 
   const handleOpenModal = () => {
+    setConsumableToEdit(null); 
     setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+  };
+
+  const handleEdit = (id: number) => {
+    const selected = consumables.find((c) => c.id === id);
+    if (selected) {
+      setConsumableToEdit(selected); // ✅ set item to edit
+      setIsModalOpen(true);
+    }
   };
 
   const handleOpenDeleteModal = (id: number, name: string) => {
@@ -124,6 +133,9 @@ export default function ConsumablesTable() {
       });
   }, []);
 
+  const currentUser = localStorage.getItem("username") || "Unknown";
+
+
   if (loading) return <p>Loading...</p>;
 
   const handleAddSuccess = () => {
@@ -154,13 +166,8 @@ export default function ConsumablesTable() {
     currentPage * dataLimit
   );
 
-  const handleEdit = (toolId: number) => {
-    console.log("Edit tool with ID:", toolId);
-  };
 
-  const handleDelete = (toolId: number) => {
-    console.log("Delete tool with ID:", toolId);
-  };
+  
 
   return (
     <div className="overflow-y-hidden rounded-xl border w-full border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
@@ -239,6 +246,8 @@ export default function ConsumablesTable() {
           onClose={handleCloseModal}
           onAddSuccess={handleAddSuccess}
           resourceType="Consumable"
+          addedBy={currentUser}
+          consumableToEdit={consumableToEdit}
         />
       </div>
       <div className="max-w-full overflow-x-auto">
@@ -279,15 +288,13 @@ export default function ConsumablesTable() {
                   <TableRow key={consumable.id}>
                     <TableCell className="px-5 py-4 sm:px-6 text-center">
                       <img
-                        src={`${
-                          import.meta.env.VITE_API_BASE_URL
-                        }/assets/images/consumables/${consumable.picture}`}
+                        src={`${import.meta.env.VITE_API_BASE_URL
+                          }/assets/images/consumables/${consumable.picture}`}
                         alt={`${consumable.name}'s Profile`}
                         className="w-16 h-16 rounded-lg object-cover cursor-pointer border border-gray-300  "
                         onClick={() =>
                           setSelectedImage(
-                            `${
-                              import.meta.env.VITE_API_BASE_URL
+                            `${import.meta.env.VITE_API_BASE_URL
                             }/assets/images/consumables/${consumable.picture}`
                           )
                         }
@@ -323,12 +330,21 @@ export default function ConsumablesTable() {
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                       <Badge
                         size="sm"
+                        variant="solid"
                         color={
-                          consumable.status === "In Stock" ? "success" : "error"
+                          consumable.status === "In Stock"
+                            ? "success"
+                            : consumable.status === "Low Stock"
+                              ? "warning"
+                              : "error"
                         }
                       >
                         {consumable.status}
                       </Badge>
+
+
+
+
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                       {new Date(consumable.date).toLocaleDateString("en-US", {
@@ -408,11 +424,10 @@ export default function ConsumablesTable() {
             <button
               key={index}
               onClick={() => setCurrentPage(index + 1)}
-              className={`px-3 py-2 text-xs font-medium ${
-                currentPage === index + 1
-                  ? "bg-blue-700 text-white"
-                  : "bg-white text-blue-700"
-              } border px-3 py-2 text-xs rounded-md bg-white dark:bg-gray-900 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 dark:hover:bg-gray-800`}
+              className={`px-3 py-2 text-xs font-medium ${currentPage === index + 1
+                ? "bg-blue-700 text-white"
+                : "bg-white text-blue-700"
+                } border px-3 py-2 text-xs rounded-md bg-white dark:bg-gray-900 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 dark:hover:bg-gray-800`}
             >
               {index + 1}
             </button>

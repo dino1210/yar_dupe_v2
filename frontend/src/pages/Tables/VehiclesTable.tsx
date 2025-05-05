@@ -8,13 +8,13 @@ import {
 } from "../../components/ui/table";
 import Badge from "../../components/ui/badge/Badge";
 import {
-  CircleOff,
+
   Pencil,
   Trash2,
   RotateCcw,
   ArrowDownAZ,
   ArrowUpAZ,
-  Plus,
+  Plus, 
   Funnel,
 } from "lucide-react";
 import axios from "axios";
@@ -64,6 +64,7 @@ export default function VehiclesTable() {
   const [isAscending, setIsAscending] = useState(true);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [vehicleToEdit, setVehicleToEdit] = useState<Vehicles | null>(null);
 
   //delete
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -130,6 +131,8 @@ export default function VehiclesTable() {
         console.error("Error fetching categories", error);
       });
   }, []);
+  const currentUser = localStorage.getItem("username") || "Unknown";
+
 
   if (loading) return <p>Loading...</p>;
 
@@ -137,6 +140,8 @@ export default function VehiclesTable() {
     fetchVehicles();
     setIsModalOpen(false);
   };
+
+
 
   // Filter tools based on search, category, and status
   const filteredTools = vehicles.filter((vehicle) => {
@@ -158,11 +163,14 @@ export default function VehiclesTable() {
     (currentPage - 1) * dataLimit,
     currentPage * dataLimit
   );
-
-  const handleEdit = (toolId: number) => {
-    console.log("Edit tool with ID:", toolId);
+  const handleEdit = (vehicleId: number) => {
+    const selectedVehicle = vehicles.find((v) => v.id === vehicleId);
+    if (selectedVehicle) {
+      setVehicleToEdit(selectedVehicle);
+      setIsModalOpen(true);
+    }
   };
-
+  
   return (
     <div className="overflow-y-hidden rounded-xl border w-full border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
       {/* Filter Controls */}
@@ -240,6 +248,8 @@ export default function VehiclesTable() {
           onClose={handleCloseModal}
           onAddSuccess={handleAddSuccess}
           resourceType="Vehicle"
+          addedBy={currentUser}
+          vehicleToEdit={vehicleToEdit} 
         />
       </div>
       <div className="max-w-full overflow-x-auto">

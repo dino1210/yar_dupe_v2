@@ -13,7 +13,7 @@ import {
   ArrowUpAZ,
   RotateCcw,
   Funnel,
-  Plus,
+  
 } from "lucide-react";
 import axios from "axios";
 
@@ -25,6 +25,7 @@ interface ConsumableLog {
   performed_by: string;
   category?: string;
   brand?: string;
+  
 }
 
 export default function ConsumablesLogsTable() {
