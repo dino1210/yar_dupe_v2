@@ -43,6 +43,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ onClose, onAddSuccess, vehicl
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
 
     const form = new FormData();
     form.append("name", formData.name);
@@ -54,6 +55,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ onClose, onAddSuccess, vehicl
     form.append("remarks", formData.remarks);
     form.append("assigned_driver", formData.assigned_driver);
     form.append("status", formData.status);
+    form.append("added_by", user.name);
 
     if (formData.acquisition_date) {
       form.append("acquisition_date", formData.acquisition_date.toISOString().split("T")[0]);

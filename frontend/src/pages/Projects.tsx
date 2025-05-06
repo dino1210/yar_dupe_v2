@@ -28,14 +28,6 @@ interface Tool {
   remarks: string;
 }
 
-interface Consumables {
-  name: string;
-  tag: string;
-  category: string;
-  quantity: string;
-  unit: string;
-}
-
 interface ProjectType {
   id: number;
   title: string;
@@ -301,13 +293,48 @@ export default function Projects() {
     setIsModalOpen(true);
   };
   const handleSave = async () => {
-    if (
-      !formData.title ||
-      !formData.manager ||
-      !formData.startDate ||
-      !formData.endDate
-    ) {
-      toast.error("Please fill out all required fields correctly.");
+    if (!formData.title.trim()) {
+      toast.error("Title is required.");
+      return;
+    }
+
+    if (!formData.manager.trim()) {
+      toast.error("Manager is required.");
+      return;
+    }
+
+    if (!formData.personInCharge?.trim()) {
+      toast.error("Person In Charge is required.");
+      return;
+    }
+
+    if (!formData.location.trim()) {
+      toast.error("Location is required.");
+      return;
+    }
+
+    if (!formData.startDate) {
+      toast.error("Start date is required.");
+      return;
+    }
+
+    if (!formData.endDate) {
+      toast.error("End date is required.");
+      return;
+    }
+
+    if (!formData.tools.trim()) {
+      toast.error("Please select at least one tool.");
+      return;
+    }
+
+    if (!formData.consumables.trim()) {
+      toast.error("Please select at least one consumable.");
+      return;
+    }
+
+    if (!formData.vehicles.trim()) {
+      toast.error("Please select at least one vehicle.");
       return;
     }
 
@@ -325,12 +352,15 @@ export default function Projects() {
           updatedEndDate = today;
         }
 
-        await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/projects/return-resources`, {
-          tools: formData.tools.split(",").filter(Boolean),
-          consumables: formData.consumables.split(",").filter(Boolean),
-          vehicles: formData.vehicles.split(",").filter(Boolean),
-        });
-        
+        await axios.put(
+          `${import.meta.env.VITE_API_BASE_URL}/api/projects/return-resources`,
+          {
+            tools: formData.tools.split(",").filter(Boolean),
+            consumables: formData.consumables.split(",").filter(Boolean),
+            vehicles: formData.vehicles.split(",").filter(Boolean),
+          }
+        );
+
         const updatedData = {
           ...formData,
           endDate: updatedEndDate,
@@ -389,7 +419,7 @@ export default function Projects() {
           );
         }
 
-        toast.success("Project added successfully!");
+        toast.success(" Project added successfully!");
 
         // Reset form
         setFormData({
@@ -677,6 +707,7 @@ export default function Projects() {
                   <label className="text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
                     Start Date
                   </label>
+
                   <DatePicker
                     selected={
                       formData.startDate ? new Date(formData.startDate) : null
@@ -693,6 +724,7 @@ export default function Projects() {
                         ),
                       })
                     }
+                    minDate={new Date()} // Prevent past dates
                     className="w-full p-2 rounded border bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600"
                     placeholderText="Start Date"
                     dateFormat="yyyy-MM-dd"
@@ -720,6 +752,13 @@ export default function Projects() {
                         ),
                       })
                     }
+                    minDate={
+                      formData.startDate
+                        ? new Date(
+                            new Date(formData.startDate).getTime() + 86400000
+                          )
+                        : new Date()
+                    } // Prevent same or earlier than start date
                     className="w-full p-2 rounded border bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600"
                     placeholderText="Expected End Date"
                     dateFormat="yyyy-MM-dd"
@@ -851,23 +890,24 @@ export default function Projects() {
                         </span>
                         <button
                           onClick={() => {
-                            const updatedCount = { ...selectedConsumablesCount };
+                            const updatedCount = {
+                              ...selectedConsumablesCount,
+                            };
                             if (updatedCount[name] > 1) {
                               updatedCount[name] -= 1;
                             } else {
                               delete updatedCount[name];
                             }
-                          
+
                             setSelectedConsumablesCount(updatedCount);
-                          
+
                             const allNames = Object.entries(updatedCount)
                               .flatMap(([n, c]) => Array(c).fill(n))
                               .join(",");
-                          
+
                             setFormData({ ...formData, consumables: allNames });
                             toast.success(`${name} removed`);
                           }}
-                          
                           className="ml-1 text-red-600 dark:text-red-300 hover:underline"
                         >
                           ×

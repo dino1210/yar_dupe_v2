@@ -11,8 +11,7 @@ const addTool = async (req, res) => {
 
     const toolData = {
       ...req.body,
-      added_by: req.body.added_by || "Unknown",
-      picture: file.filename, // no fallback here, add always requires a new image
+      picture: file.filename, 
     };
 
     const result = await Tool.addTool(toolData);
