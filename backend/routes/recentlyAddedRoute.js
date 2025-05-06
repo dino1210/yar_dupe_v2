@@ -8,7 +8,7 @@ router.get("/", async (req, res) => {
       SELECT name AS item, tag AS tag, added_by AS added_by, created_at AS date
       FROM tools
       ORDER BY created_at DESC
-      LIMIT 8
+      LIMIT 8 
     `);
 
     const [consumables] = await db.query(`
@@ -22,7 +22,8 @@ router.get("/", async (req, res) => {
       SELECT name AS item, tag AS tag, added_by AS added_by, created_at AS date
       FROM vehicles
       ORDER BY created_at DESC
-      LIMIT 8
+      LIMIT 1
+
     `);
 
     const combined = [...tools, ...consumables, ...vehicles].sort(

@@ -14,7 +14,6 @@ import {
   ArrowDownAZ,
   ArrowUpAZ,
   Plus,
-  Funnel,
 } from "lucide-react";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -36,27 +35,23 @@ interface Consumable {
   status: string;
 }
 
-interface Category {
-  id: number;
-  category_name: string;
-  category_type: string;
-}
-
 export default function ConsumablesTable() {
   const [consumables, setConsumables] = useState<Consumable[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("");
-  const [statusFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+
   const [dataLimit, setDataLimit] = useState<number>(5); // State for data limit
   const [currentPage, setCurrentPage] = useState(1); // State for current page
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [categories, setCategories] = useState<Category[]>([]);
 
   const [isAscending, setIsAscending] = useState(true);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [consumableToEdit, setConsumableToEdit] = useState<Consumable | null>(null); 
+  const [consumableToEdit, setConsumableToEdit] = useState<Consumable | null>(
+    null
+  );
 
   //delete
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -64,7 +59,7 @@ export default function ConsumablesTable() {
   const [selectedName, setSelectedName] = useState<string>("");
 
   const handleOpenModal = () => {
-    setConsumableToEdit(null); 
+    setConsumableToEdit(null);
     setIsModalOpen(true);
   };
 
@@ -75,7 +70,7 @@ export default function ConsumablesTable() {
   const handleEdit = (id: number) => {
     const selected = consumables.find((c) => c.id === id);
     if (selected) {
-      setConsumableToEdit(selected); // ✅ set item to edit
+      setConsumableToEdit(selected); //  set item to edit
       setIsModalOpen(true);
     }
   };
@@ -122,19 +117,9 @@ export default function ConsumablesTable() {
 
   useEffect(() => {
     fetchConsumables();
-
-    axios
-      .get(`${import.meta.env.VITE_API_BASE_URL}/api/categories`)
-      .then((response) => {
-        setCategories(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching categories", error);
-      });
   }, []);
 
   const currentUser = localStorage.getItem("username") || "Unknown";
-
 
   if (loading) return <p>Loading...</p>;
 
@@ -144,30 +129,32 @@ export default function ConsumablesTable() {
   };
 
   // Filter tools based on search, category, and status
-  const filteredConsumables = consumables.filter((consumable) => {
-    const matchesSearch = consumable.name
-      .toLowerCase()
-      .includes(search.toLowerCase());
+  // Combined: filter, sort, and paginate
+  const sortedConsumables = [...consumables]
+    .filter((consumable) => {
+      const matchesSearch =
+        consumable.name.toLowerCase().includes(search.toLowerCase()) ||
+        consumable.tag.toLowerCase().includes(search.toLowerCase());
 
-    const matchesCategory = categoryFilter
-      ? consumable.category === categoryFilter
-      : true;
-    const matchesStatus = statusFilter
-      ? consumable.status === statusFilter
-      : true;
+      const matchesCategory = categoryFilter
+        ? consumable.category.toLowerCase() === categoryFilter.toLowerCase()
+        : true;
 
-    return matchesSearch && matchesCategory && matchesStatus;
-  });
+      const matchesStatus = statusFilter
+        ? consumable.status.toLowerCase() === statusFilter.toLowerCase()
+        : true;
 
-  // Pagination Logic
-  const totalPages = Math.ceil(filteredConsumables.length / dataLimit);
-  const currentConsumables = filteredConsumables.slice(
+      return matchesSearch && matchesCategory && matchesStatus;
+    })
+    .sort((a, b) =>
+      isAscending ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name)
+    );
+
+  const totalPages = Math.ceil(sortedConsumables.length / dataLimit);
+  const currentConsumables = sortedConsumables.slice(
     (currentPage - 1) * dataLimit,
     currentPage * dataLimit
   );
-
-
-  
 
   return (
     <div className="overflow-y-hidden rounded-xl border w-full border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
@@ -180,39 +167,32 @@ export default function ConsumablesTable() {
           onChange={(e) => setSearch(e.target.value)}
           className="border p-2 text-xs rounded-md w-full sm:w-1/3 bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
         />
-        <select
-          value={categoryFilter}
-          onChange={(e) => setCategoryFilter(e.target.value)}
-          className="border p-2 text-xs rounded-md w-full sm:w-1/4 bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
-        >
-          <option value="">Brand</option>
-          <option value="Tools">Tools</option>
-          <option value="Equipments">Equipments</option>
-        </select>
+        {/* Fixed Category Dropdown with 1 Option */}
         <select
           value={categoryFilter}
           onChange={(e) => setCategoryFilter(e.target.value)}
           className="border p-2 text-xs rounded-md w-full sm:w-1/4 bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
         >
           <option value="">Category</option>
-          {categories.map((category) => (
-            <option key={category.id} value={category.category_name}>
-              {category.category_name}
-            </option>
-          ))}
+          <option value="Yard Drainage Tool">Yard Drainage Tool</option>
         </select>
+
+        {/* Fixed Status Dropdown with Correct Values */}
         <select
-          value={categoryFilter}
-          onChange={(e) => setCategoryFilter(e.target.value)}
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
           className="border p-2 text-xs rounded-md w-full sm:w-1/4 bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
         >
           <option value="">Status</option>
-          <option value="Tools">Tools</option>
-          <option value="Equipments">Equipments</option>
+          <option value="In Stock">In Stock</option>
+          <option value="Low Stock">Low Stock</option>
+          <option value="No Stock">No Stock</option>
         </select>
+
         <button
           type="button"
           onClick={() => setIsAscending(!isAscending)}
+          title="Sort A-Z"
           className="border p-2 text-xs rounded-md bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
         >
           {isAscending ? (
@@ -221,18 +201,22 @@ export default function ConsumablesTable() {
             <ArrowUpAZ className="w-auto h-5" />
           )}
         </button>
+
         <button
           type="button"
+          onClick={() => {
+            setSearch("");
+            setCategoryFilter("");
+            setStatusFilter(""); // ← make sure you declare this with useState
+            setCurrentPage(1);
+            fetchConsumables(); // ← refresh from API
+          }}
+          title="Reset Filters"
           className="border p-2 text-xs rounded-md bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
         >
           <RotateCcw className="w-auto h-5" />
         </button>
-        <button
-          type="button"
-          className="border p-2 text-xs rounded-md bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
-        >
-          <Funnel className="w-auto h-5" />
-        </button>
+
         <button
           onClick={handleOpenModal}
           type="button"
@@ -288,13 +272,15 @@ export default function ConsumablesTable() {
                   <TableRow key={consumable.id}>
                     <TableCell className="px-5 py-4 sm:px-6 text-center">
                       <img
-                        src={`${import.meta.env.VITE_API_BASE_URL
-                          }/assets/images/consumables/${consumable.picture}`}
+                        src={`${
+                          import.meta.env.VITE_API_BASE_URL
+                        }/assets/images/consumables/${consumable.picture}`}
                         alt={`${consumable.name}'s Profile`}
                         className="w-16 h-16 rounded-lg object-cover cursor-pointer border border-gray-300  "
                         onClick={() =>
                           setSelectedImage(
-                            `${import.meta.env.VITE_API_BASE_URL
+                            `${
+                              import.meta.env.VITE_API_BASE_URL
                             }/assets/images/consumables/${consumable.picture}`
                           )
                         }
@@ -335,16 +321,12 @@ export default function ConsumablesTable() {
                           consumable.status === "In Stock"
                             ? "success"
                             : consumable.status === "Low Stock"
-                              ? "warning"
-                              : "error"
+                            ? "warning"
+                            : "error"
                         }
                       >
                         {consumable.status}
                       </Badge>
-
-
-
-
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                       {new Date(consumable.date).toLocaleDateString("en-US", {
@@ -424,10 +406,11 @@ export default function ConsumablesTable() {
             <button
               key={index}
               onClick={() => setCurrentPage(index + 1)}
-              className={`px-3 py-2 text-xs font-medium ${currentPage === index + 1
-                ? "bg-blue-700 text-white"
-                : "bg-white text-blue-700"
-                } border px-3 py-2 text-xs rounded-md bg-white dark:bg-gray-900 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 dark:hover:bg-gray-800`}
+              className={`px-3 py-2 text-xs font-medium ${
+                currentPage === index + 1
+                  ? "bg-blue-700 text-white"
+                  : "bg-white text-blue-700"
+              } border px-3 py-2 text-xs rounded-md bg-white dark:bg-gray-900 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 dark:hover:bg-gray-800`}
             >
               {index + 1}
             </button>

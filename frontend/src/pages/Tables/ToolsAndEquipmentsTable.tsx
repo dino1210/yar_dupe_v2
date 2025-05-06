@@ -8,7 +8,6 @@ import {
 } from "../../components/ui/table";
 import Badge from "../../components/ui/badge/Badge";
 import {
-
   Pencil,
   Trash2,
   RotateCcw,
@@ -61,10 +60,6 @@ export default function ToolsAndEquipmentsTable() {
     }
   }, []);
 
-
-
-
-
   const [tools, setTools] = useState<Tool[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -81,12 +76,10 @@ export default function ToolsAndEquipmentsTable() {
   const [selectedName, setSelectedName] = useState<string>("");
   const [toolToEdit, setToolToEdit] = useState<Tool | null>(null);
 
-
   const handleOpenModal = (tool?: Tool) => {
     setToolToEdit(tool || null);
     setIsModalOpen(true);
   };
-
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
@@ -122,6 +115,7 @@ export default function ToolsAndEquipmentsTable() {
     axios
       .get(`${import.meta.env.VITE_API_BASE_URL}/api/tools`)
       .then((response) => {
+        console.log("Fetched tools data:", response.data.tools);
         setTools(response.data.tools);
         setLoading(false);
       })
@@ -143,12 +137,7 @@ export default function ToolsAndEquipmentsTable() {
       });
   }, []);
 
-
-
-
   if (loading) return <p>Loading...</p>;
-
-
 
   const handleAddSuccess = () => {
     fetchTools();
@@ -156,14 +145,21 @@ export default function ToolsAndEquipmentsTable() {
   };
 
   // Filter tools based on search, category, and status
-  const filteredTools = tools.filter((tool) => {
+  // Sorting tools alphabetically by name
+  const sortedTools = [...tools].sort((a, b) =>
+    isAscending ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name)
+  );
+
+  // Filter tools after sorting
+  const filteredTools = sortedTools.filter((tool) => {
     const matchesSearch =
       tool.name.toLowerCase().includes(search.toLowerCase()) ||
       tool.tag.toLowerCase().includes(search.toLowerCase());
 
     const matchesCategory = categoryFilter
-      ? tool.category === categoryFilter
+      ? tool.category.toLowerCase().includes(categoryFilter.toLowerCase())
       : true;
+
     const matchesStatus = statusFilter ? tool.status === statusFilter : true;
 
     return matchesSearch && matchesCategory && matchesStatus;
@@ -194,12 +190,11 @@ export default function ToolsAndEquipmentsTable() {
           className="border p-2 text-xs rounded-md w-full sm:w-1/4 bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
         >
           <option value="">Category</option>
-          {categories.map((category) => (
-            <option key={category.id} value={category.category_name}>
-              {category.category_name}
-            </option>
-          ))}
+          <option value="Yard Drainage Tool">Yard Drainage Tool</option>
+          <option value="Drainage Pipe">Drainage Pipe</option>
+          <option value="Digging Machine">Digging Machine</option>
         </select>
+
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
@@ -210,8 +205,10 @@ export default function ToolsAndEquipmentsTable() {
           <option value="Issued-Out">Issued-Out</option>
           <option value="Disabled">Disabled</option>
         </select>
+        {/* A-Z Sort Button */}
         <button
           type="button"
+          title="Toggle A-Z sorting"
           onClick={() => setIsAscending(!isAscending)}
           className="border p-2 text-xs rounded-md bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
         >
@@ -221,21 +218,26 @@ export default function ToolsAndEquipmentsTable() {
             <ArrowUpAZ className="w-auto h-5" />
           )}
         </button>
+
+        {/* Refresh Button */}
         <button
           type="button"
+          title="Refresh and Clear Filters"
+          onClick={() => {
+            fetchTools();
+            setSearch("");
+            setCategoryFilter("");
+            setStatusFilter("");
+            setCurrentPage(1);
+            toast.info("Refreshed.");
+          }}
           className="border p-2 text-xs rounded-md bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
         >
           <RotateCcw className="w-auto h-5" />
         </button>
-        <button
-          type="button"
-          className="border p-2 text-xs rounded-md bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
-        >
-          <Funnel className="w-auto h-5" />
-        </button>
+
         <button
           onClick={() => handleOpenModal(undefined)} // ✅ Call with undefined for "New" mode
-
           type="button"
           className="flex items-center gap-2 px-2 text-xs rounded-md bg-white dark:bg-blue-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
         >
@@ -292,13 +294,15 @@ export default function ToolsAndEquipmentsTable() {
                   <TableRow key={tool.id}>
                     <TableCell className="px-5 py-4 sm:px-6 text-center">
                       <img
-                        src={`${import.meta.env.VITE_API_BASE_URL
-                          }/assets/images/tools/${tool.picture}`}
+                        src={`${
+                          import.meta.env.VITE_API_BASE_URL
+                        }/assets/images/tools/${tool.picture}`}
                         alt={`${tool.name}' Image`}
                         className="w-16 h-16 rounded-lg object-cover cursor-pointer border border-gray-300"
                         onClick={() =>
                           setSelectedImage(
-                            `${import.meta.env.VITE_API_BASE_URL
+                            `${
+                              import.meta.env.VITE_API_BASE_URL
                             }/assets/images/tools/${tool.picture}`
                           )
                         }
@@ -320,6 +324,7 @@ export default function ToolsAndEquipmentsTable() {
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                       {tool.category}
                     </TableCell>
+
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                       <Badge
                         size="sm"
@@ -336,22 +341,22 @@ export default function ToolsAndEquipmentsTable() {
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                       {tool.warranty
                         ? new Date(tool.purchase_date).toLocaleDateString(
-                          "en-US",
-                          {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                          }
-                        )
+                            "en-US",
+                            {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            }
+                          )
                         : "-"}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                       {tool.warranty
                         ? new Date(tool.warranty).toLocaleDateString("en-US", {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        })
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          })
                         : "-"}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
@@ -373,13 +378,15 @@ export default function ToolsAndEquipmentsTable() {
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                       <img
-                        src={`${import.meta.env.VITE_API_BASE_URL
-                          }/assets/qr/tools/${tool.qr}`}
+                        src={`${
+                          import.meta.env.VITE_API_BASE_URL
+                        }/assets/qr/tools/${tool.qr}`}
                         alt={`${tool.name}' Image`}
                         className="w-auto h-15 mx-auto rounded-lg object-cover cursor-pointer"
                         onClick={() =>
                           setSelectedImage(
-                            `${import.meta.env.VITE_API_BASE_URL
+                            `${
+                              import.meta.env.VITE_API_BASE_URL
                             }/assets/qr/tools/${tool.qr}`
                           )
                         }
@@ -388,7 +395,7 @@ export default function ToolsAndEquipmentsTable() {
                     <TableCell className="px-8 py-3 text-xs text-gray-500 dark:text-gray-400 text-center">
                       <div className="flex items-center justify-center space-x-2 w-full h-full">
                         <button
-                          onClick={() => handleOpenModal(tool)} 
+                          onClick={() => handleOpenModal(tool)}
                           className="px-3 py-1 text-xs font-medium text-white bg-blue-800 rounded-lg hover:bg-blue-900"
                           title="Edit"
                         >
@@ -453,10 +460,11 @@ export default function ToolsAndEquipmentsTable() {
             <button
               key={index}
               onClick={() => setCurrentPage(index + 1)}
-              className={`px-3 py-2 text-xs font-medium ${currentPage === index + 1
+              className={`px-3 py-2 text-xs font-medium ${
+                currentPage === index + 1
                   ? "bg-blue-700 text-white"
                   : "bg-white text-blue-700"
-                } border px-3 py-2 text-xs rounded-md bg-white dark:bg-gray-900 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 dark:hover:bg-gray-800`}
+              } border px-3 py-2 text-xs rounded-md bg-white dark:bg-gray-900 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 dark:hover:bg-gray-800`}
             >
               {index + 1}
             </button>

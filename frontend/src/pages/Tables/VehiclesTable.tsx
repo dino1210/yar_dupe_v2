@@ -8,14 +8,12 @@ import {
 } from "../../components/ui/table";
 import Badge from "../../components/ui/badge/Badge";
 import {
-
   Pencil,
   Trash2,
   RotateCcw,
   ArrowDownAZ,
   ArrowUpAZ,
-  Plus, 
-  Funnel,
+  Plus,
 } from "lucide-react";
 import axios from "axios";
 import AddResourceModal from "../../components/ui/modal/AddResourceModal/AddResourceModal";
@@ -55,7 +53,8 @@ export default function VehiclesTable() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("");
-  const [statusFilter] = useState("");
+  const [brandFilter, setBrandFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
   const [dataLimit, setDataLimit] = useState<number>(5); // State for data limit
   const [currentPage, setCurrentPage] = useState(1); // State for current page
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -133,7 +132,6 @@ export default function VehiclesTable() {
   }, []);
   const currentUser = localStorage.getItem("username") || "Unknown";
 
-
   if (loading) return <p>Loading...</p>;
 
   const handleAddSuccess = () => {
@@ -141,21 +139,26 @@ export default function VehiclesTable() {
     setIsModalOpen(false);
   };
 
-
-
   // Filter tools based on search, category, and status
-  const filteredTools = vehicles.filter((vehicle) => {
-    const matchesSearch = vehicle.name
-      .toLowerCase()
-      .includes(search.toLowerCase());
+  const filteredTools = [...vehicles]
+    .filter((vehicle) => {
+      const matchesSearch = vehicle.name
+        .toLowerCase()
+        .includes(search.toLowerCase());
 
-    const matchesCategory = categoryFilter
-      ? vehicle.category === categoryFilter
-      : true;
-    const matchesStatus = statusFilter ? vehicle.status === statusFilter : true;
+      const matchesBrand = brandFilter ? vehicle.brand === brandFilter : true;
+      const matchesCategory = categoryFilter
+        ? vehicle.category === categoryFilter
+        : true;
+      const matchesStatus = statusFilter
+        ? vehicle.status === statusFilter
+        : true;
 
-    return matchesSearch && matchesCategory && matchesStatus;
-  });
+      return matchesSearch && matchesBrand && matchesCategory && matchesStatus;
+    })
+    .sort((a, b) =>
+      isAscending ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name)
+    );
 
   // Pagination Logic
   const totalPages = Math.ceil(filteredTools.length / dataLimit);
@@ -170,7 +173,7 @@ export default function VehiclesTable() {
       setIsModalOpen(true);
     }
   };
-  
+
   return (
     <div className="overflow-y-hidden rounded-xl border w-full border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
       {/* Filter Controls */}
@@ -183,13 +186,18 @@ export default function VehiclesTable() {
           className="border p-2 text-xs rounded-md w-full sm:w-1/3 bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
         />
         <select
-          value={categoryFilter}
-          onChange={(e) => setCategoryFilter(e.target.value)}
+          value={brandFilter}
+          onChange={(e) => setBrandFilter(e.target.value)}
           className="border p-2 text-xs rounded-md w-full sm:w-1/4 bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
         >
           <option value="">Brand</option>
-          <option value="Tools">Tools</option>
-          <option value="Equipments">Equipments</option>
+          {Array.from(new Set(vehicles.map((v) => v.brand))).map(
+            (brand, index) => (
+              <option key={index} value={brand}>
+                {brand}
+              </option>
+            )
+          )}
         </select>
         <select
           value={categoryFilter}
@@ -197,21 +205,28 @@ export default function VehiclesTable() {
           className="border p-2 text-xs rounded-md w-full sm:w-1/4 bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
         >
           <option value="">Category</option>
-          {categories.map((category) => (
-            <option key={category.id} value={category.category_name}>
-              {category.category_name}
+          {Array.from(
+            new Set(
+              vehicles.map((v) => v.category).filter((c) => c && c !== "")
+            )
+          ).map((category, index) => (
+            <option key={index} value={category}>
+              {category}
             </option>
           ))}
         </select>
+
         <select
-          value={categoryFilter}
-          onChange={(e) => setCategoryFilter(e.target.value)}
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
           className="border p-2 text-xs rounded-md w-full sm:w-1/4 bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
         >
           <option value="">Status</option>
-          <option value="Tools">Tools</option>
-          <option value="Equipments">Equipments</option>
+          <option value="Available">Available</option>
+          <option value="Issued Out">Issued Out</option>
+          <option value="Not Available">Not Available</option>
         </select>
+
         <button
           type="button"
           onClick={() => setIsAscending(!isAscending)}
@@ -223,18 +238,24 @@ export default function VehiclesTable() {
             <ArrowUpAZ className="w-auto h-5" />
           )}
         </button>
+
+        {/* Refresh Button */}
         <button
           type="button"
+          onClick={() => {
+            setSearch("");
+            setBrandFilter("");
+            setCategoryFilter("");
+            setStatusFilter("");
+            setCurrentPage(1);
+            fetchVehicles(); // refresh from API
+          }}
+          title="Reset Filters"
           className="border p-2 text-xs rounded-md bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
         >
           <RotateCcw className="w-auto h-5" />
         </button>
-        <button
-          type="button"
-          className="border p-2 text-xs rounded-md bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
-        >
-          <Funnel className="w-auto h-5" />
-        </button>
+
         <button
           onClick={handleOpenModal}
           type="button"
@@ -249,7 +270,7 @@ export default function VehiclesTable() {
           onAddSuccess={handleAddSuccess}
           resourceType="Vehicle"
           addedBy={currentUser}
-          vehicleToEdit={vehicleToEdit} 
+          vehicleToEdit={vehicleToEdit}
         />
       </div>
       <div className="max-w-full overflow-x-auto">
