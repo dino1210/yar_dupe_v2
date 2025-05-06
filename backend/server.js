@@ -40,6 +40,8 @@
 
   app.use("/api/metrics/recent-additions", recentlyAddedRoute);
 
+  
+
 
   // Authentication
   app.use("/auth", authRoutes);
@@ -48,6 +50,8 @@
   app.use("/api/users", userRoutes);
 
   app.use("/api/projects", require("./routes/projectsRoutes"));
+
+
 
 
   // Resource Management

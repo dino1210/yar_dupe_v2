@@ -239,3 +239,19 @@ exports.getProjectStats = async (req, res) => {
     res.status(500).json({ error: "Failed to fetch project statistics." });
   }
 };
+
+// GET project history for dashboard (lightweight only needed columns)
+exports.getProjectHistory = async (req, res) => {
+  try {
+    const [rows] = await db.query(`
+      SELECT id, title, manager, status, start_date, end_date
+      FROM projects
+      ORDER BY id DESC
+    `);
+    res.status(200).json(rows);
+  } catch (err) {
+    console.error("GET PROJECT HISTORY ERROR:", err.message);
+    res.status(500).json({ error: "Failed to fetch project history." });
+  }
+};
+

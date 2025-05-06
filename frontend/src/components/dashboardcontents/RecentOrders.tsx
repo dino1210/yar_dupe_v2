@@ -33,30 +33,35 @@ export default function RecentOrders() {
             Recently Added
           </h3>
         </div>
-        <div className="flex items-center gap-3">
-          <button className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-2 text-xs font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200">
-            Filter
-          </button>
-          <button className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-2 text-xs font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200">
-            See all
-          </button>
-        </div>
+        <div className="flex items-center gap-3"></div>
       </div>
 
       <div className="max-w-full overflow-x-auto">
         <Table>
           <TableHeader className="border-gray-100 dark:border-gray-800 border-y">
             <TableRow>
-              <TableCell isHeader className="py-2 text-xs font-medium text-gray-500 text-start dark:text-gray-400">
+              <TableCell
+                isHeader
+                className="py-2 text-xs font-medium text-gray-500 text-start dark:text-gray-400"
+              >
                 Item
               </TableCell>
-              <TableCell isHeader className="py-2 text-xs font-medium text-gray-500 text-start dark:text-gray-400">
+              <TableCell
+                isHeader
+                className="py-2 text-xs font-medium text-gray-500 text-start dark:text-gray-400"
+              >
                 Tag
               </TableCell>
-              <TableCell isHeader className="py-2 text-xs font-medium text-gray-500 text-start dark:text-gray-400">
+              <TableCell
+                isHeader
+                className="py-2 text-xs font-medium text-gray-500 text-start dark:text-gray-400"
+              >
                 Added By
               </TableCell>
-              <TableCell isHeader className="py-2 text-xs font-medium text-gray-500 text-start dark:text-gray-400">
+              <TableCell
+                isHeader
+                className="py-2 text-xs font-medium text-gray-500 text-start dark:text-gray-400"
+              >
                 Date
               </TableCell>
             </TableRow>
@@ -65,9 +70,15 @@ export default function RecentOrders() {
           <TableBody className="divide-y divide-gray-100 dark:divide-gray-800">
             {recentItems.map((item, index) => (
               <TableRow key={index}>
-                <TableCell className="py-2 text-xs text-gray-700 dark:text-white/80">{item.item}</TableCell>
-                <TableCell className="py-2 text-xs text-gray-700 dark:text-white/80">{item.tag}</TableCell>
-                <TableCell className="py-2 text-xs text-gray-700 dark:text-white/80">{item.added_by}</TableCell>
+                <TableCell className="py-2 text-xs text-gray-700 dark:text-white/80">
+                  {item.item}
+                </TableCell>
+                <TableCell className="py-2 text-xs text-gray-700 dark:text-white/80">
+                  {item.tag}
+                </TableCell>
+                <TableCell className="py-2 text-xs text-gray-700 dark:text-white/80">
+                  {item.added_by}
+                </TableCell>
                 <TableCell className="py-2 text-xs text-gray-700 dark:text-white/80">
                   {new Date(item.date).toLocaleDateString("en-US", {
                     year: "numeric",
