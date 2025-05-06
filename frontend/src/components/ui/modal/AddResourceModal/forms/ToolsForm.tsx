@@ -14,7 +14,7 @@ type ToolFormProps = {
 
 const ToolForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess, toolToEdit }) => {
   useEffect(() => {
-    console.log(" Current USER from localStorage:", localStorage.getItem("username"));
+    console.log(" Current USER from localStorage:", localStorage.getItem("user"));
   }, []);
 
   const [formData, setFormData] = useState({
@@ -45,6 +45,7 @@ const ToolForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess, toolToEdit }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
 
     const form = new FormData();
     form.append("name", formData.name);
@@ -54,9 +55,7 @@ const ToolForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess, toolToEdit }
     form.append("description", formData.description);
     form.append("remarks", formData.remarks);
     form.append("status", formData.status);
-    const actualUser = localStorage.getItem("username") || "Unknown";
-    console.log(" Username from localStorage:", actualUser);
-    form.append("added_by", actualUser);
+    form.append("added_by", user.name);
 
 
 

@@ -14,7 +14,6 @@ type ConsumableFormProps = {
 const ConsumableForm: React.FC<ConsumableFormProps> = ({
   onClose,
   onAddSuccess,
-  addedBy,
   consumableToEdit,
 }) => {
   const [formData, setFormData] = useState({
@@ -47,6 +46,7 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
 
     const form = new FormData();
     form.append("tag", formData.tag);
@@ -56,7 +56,7 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({
     form.append("minStock", formData.minStock);
     form.append("unit", formData.unit);
     form.append("location", formData.location);
-    form.append("added_by", addedBy);
+    form.append("added_by", user.name);
     form.append("existingPicture", formData.existingPicture); 
 
 
