@@ -37,6 +37,9 @@ export default function ToolsAndEquipmentsTable() {
   const [filterCategory, setFilterCategory] = useState("");
   const [filterStatus, setFilterStatus] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [expandedDescriptionId, setExpandedDescriptionId] = useState<
+    number | null
+  >(null);
 
   const fetchTools = () => {
     setLoading(true);
@@ -64,7 +67,6 @@ export default function ToolsAndEquipmentsTable() {
     const matchesCategory =
       filterCategory === "" || tool.category === filterCategory;
     const matchesStatus = filterStatus === "" || tool.status === filterStatus;
-
     return matchesSearch && matchesName && matchesCategory && matchesStatus;
   });
 
@@ -81,11 +83,11 @@ export default function ToolsAndEquipmentsTable() {
   const getStatusStyles = (status: string) => {
     switch (status) {
       case "Available":
-        return "bg-green-100 text-green-600";
+        return "bg-green-100 dark:bg-emerald-900 text-green-700 dark:text-emerald-300";
       case "Issued Out":
-        return "bg-yellow-100 text-yellow-600";
+        return "bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-300";
       default:
-        return "bg-gray-100 text-gray-600";
+        return "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300";
     }
   };
 
@@ -99,10 +101,10 @@ export default function ToolsAndEquipmentsTable() {
 
     const headers = [
       "Tag/Code",
-      "Tools/Equipments",
       "Brand",
       "Category",
       "Status",
+      "Tools/Equipments",
       "Description",
       "Date of Purchase",
       "Warranty",
@@ -111,10 +113,10 @@ export default function ToolsAndEquipmentsTable() {
 
     const rows = filteredTools.map((tool) => [
       tool.tag,
-      tool.name,
       tool.brand,
       tool.category,
       tool.status,
+      tool.name,
       tool.description,
       tool.purchase_date
         ? new Date(tool.purchase_date).toLocaleDateString()
@@ -148,10 +150,8 @@ export default function ToolsAndEquipmentsTable() {
       .replace(":", "-");
 
     const doc = new jsPDF({ orientation: "landscape" });
-
     doc.setFontSize(16);
     doc.text("Tools and Equipments Report", 14, 15);
-
     doc.setFontSize(10);
     doc.text(
       `Generated on: ${now.toLocaleDateString()} ${now.toLocaleTimeString()}`,
@@ -161,21 +161,22 @@ export default function ToolsAndEquipmentsTable() {
 
     const headers = [
       "Tag/Code",
-      "Tools/Equipments",
       "Brand",
       "Category",
       "Status",
+      "Tools/Equipments",
       "Description",
       "Date of Purchase",
       "Warranty",
       "Remarks",
     ];
+
     const rows = filteredTools.map((tool) => [
       tool.tag,
-      tool.name,
       tool.brand,
       tool.category,
       tool.status,
+      tool.name,
       tool.description,
       tool.purchase_date
         ? new Date(tool.purchase_date).toLocaleDateString()
@@ -246,7 +247,6 @@ export default function ToolsAndEquipmentsTable() {
           </select>
         </div>
 
-        {/* Dropdown Button */}
         <div className="relative">
           <button
             onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -287,10 +287,10 @@ export default function ToolsAndEquipmentsTable() {
               <TableRow>
                 {[
                   "Tag/Code",
-                  "Tools/Equipments",
                   "Brand",
                   "Category",
                   "Status",
+                  "Tools/Equipments",
                   "Description",
                   "Date of Purchase",
                   "Warranty",
@@ -317,9 +317,6 @@ export default function ToolsAndEquipmentsTable() {
                     <TableCell className="px-5 py-4 sm:px-6 text-center text-xs dark:text-gray-300">
                       {tool.tag}
                     </TableCell>
-                    <TableCell className="px-5 py-4 sm:px-6 text-center text-xs dark:text-gray-300">
-                      {tool.name}
-                    </TableCell>
                     <TableCell className="px-4 py-3 text-center text-xs dark:text-gray-400">
                       {tool.brand}
                     </TableCell>
@@ -328,12 +325,15 @@ export default function ToolsAndEquipmentsTable() {
                     </TableCell>
                     <TableCell className="px-4 py-3 text-center text-xs">
                       <span
-                        className={`px-3 py-1 rounded-full font-semibold ${getStatusStyles(
+                        className={`inline-flex items-center rounded-full px-4 py-1 text-xs font-semibold ${getStatusStyles(
                           tool.status
                         )}`}
                       >
                         {tool.status}
                       </span>
+                    </TableCell>
+                    <TableCell className="px-5 py-4 sm:px-6 text-center text-xs dark:text-gray-300">
+                      {tool.name}
                     </TableCell>
                     <TableCell className="px-1 py-3 text-center text-xs dark:text-gray-400">
                       {tool.description}

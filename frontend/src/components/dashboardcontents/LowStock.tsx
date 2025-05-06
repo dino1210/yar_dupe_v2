@@ -11,7 +11,11 @@ export default function LowStock() {
   const [data, setData] = useState<Consumable[]>([]);
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/consumables/status/low-and-no-stock`)
+    fetch(
+      `${
+        import.meta.env.VITE_API_BASE_URL
+      }/api/consumables/status/low-and-no-stock`
+    )
       .then((res) => res.json())
       .then((data) => setData(data.consumables || []))
       .catch((err) => console.error("Failed to fetch low stock data:", err));
@@ -26,25 +30,44 @@ export default function LowStock() {
         <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm">
           <thead className="bg-gray-100 dark:bg-gray-800">
             <tr>
-              <th className="px-4 py-2 text-left font-medium text-gray-600 dark:text-gray-300">Item Name</th>
-              <th className="px-4 py-2 text-left font-medium text-gray-600 dark:text-gray-300">Tag/Code</th>
-              <th className="px-4 py-2 text-left font-medium text-gray-600 dark:text-gray-300">Category</th>
-              <th className="px-4 py-2 text-right font-medium text-gray-600 dark:text-gray-300">Quantity</th>
+              <th className="px-4 py-2 text-left font-medium text-gray-600 dark:text-gray-300">
+                Item Name
+              </th>
+              <th className="px-4 py-2 text-left font-medium text-gray-600 dark:text-gray-300">
+                Tag/Code
+              </th>
+              <th className="px-4 py-2 text-left font-medium text-gray-600 dark:text-gray-300">
+                Category
+              </th>
+              <th className="px-4 py-2 text-right font-medium text-gray-600 dark:text-gray-300">
+                Quantity
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
             {data.length > 0 ? (
               data.map((item, index) => (
                 <tr key={index}>
-                  <td className="px-4 py-2 text-gray-800 dark:text-gray-200">{item.name}</td>
-                  <td className="px-4 py-2 text-gray-800 dark:text-gray-200">{item.tag}</td>
-                  <td className="px-4 py-2 text-gray-800 dark:text-gray-200">{item.category}</td>
-                  <td className="px-4 py-2 text-right text-gray-800 dark:text-gray-200">{item.quantity}</td>
+                  <td className="px-4 py-2 text-gray-800 dark:text-gray-200">
+                    {item.name}
+                  </td>
+                  <td className="px-4 py-2 text-gray-800 dark:text-gray-200">
+                    {item.tag}
+                  </td>
+                  <td className="px-4 py-2 text-gray-800 dark:text-gray-200">
+                    {item.category}
+                  </td>
+                  <td className="px-4 py-2 text-right text-gray-800 dark:text-gray-200">
+                    {item.quantity}
+                  </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan={4} className="px-4 py-4 text-center text-gray-500 dark:text-gray-400">
+                <td
+                  colSpan={4}
+                  className="px-4 py-4 text-center text-gray-500 dark:text-gray-400"
+                >
                   No low or out-of-stock consumables.
                 </td>
               </tr>

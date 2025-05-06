@@ -6,7 +6,6 @@ import {
   TableHeader,
   TableRow,
 } from "../../../components/ui/table";
-import Badge from "../../../components/ui/badge/Badge";
 import axios from "axios";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
@@ -55,7 +54,8 @@ export default function ConsumablesTable() {
     fetchConsumables();
   }, []);
 
-  if (loading) return <p className="text-sm">Loading...</p>;
+  if (loading)
+    return <p className="text-center py-4 dark:text-white">Loading...</p>;
 
   const filteredConsumables = consumables.filter((item) => {
     const matchesSearch =
@@ -77,21 +77,6 @@ export default function ConsumablesTable() {
     currentPage * dataLimit
   );
 
-  const getStatusColor = (status: string) => {
-    if (status === "In Stock") return "info";
-    if (status === "Available") return "success";
-    if (status === "Low Stock") return "warning";
-    return "error";
-  };
-
-  const uniqueCategories = Array.from(
-    new Set(consumables.map((c) => c.category))
-  );
-  const uniqueStatuses = Array.from(new Set(consumables.map((c) => c.status)));
-  const uniqueLocations = Array.from(
-    new Set(consumables.map((c) => c.location))
-  );
-
   const exportPDF = () => {
     const doc = new jsPDF({ orientation: "landscape" });
     const now = new Date();
@@ -106,11 +91,11 @@ export default function ConsumablesTable() {
       "Item Name",
       "Tag/Code",
       "Category",
+      "Status",
       "Quantity",
       "Unit",
       "Min. Stock",
       "Location",
-      "Status",
     ];
     const tableRows: any[] = [];
 
@@ -119,11 +104,11 @@ export default function ConsumablesTable() {
         item.name,
         item.tag,
         item.category,
+        item.status,
         item.quantity,
         item.unit,
         item.minStock,
         item.location,
-        item.status,
       ];
       tableRows.push(rowData);
     });
@@ -148,18 +133,18 @@ export default function ConsumablesTable() {
       "",
     ];
     const csvHeader = [
-      "Item Name,Tag/Code,Category,Quantity,Unit,Min. Stock,Location,Status",
+      "Item Name,Tag/Code,Category,Status,Quantity,Unit,Min. Stock,Location",
     ];
     const csvRows = filteredConsumables.map((item) =>
       [
         item.name,
         item.tag,
         item.category,
+        item.status,
         item.quantity,
         item.unit,
         item.minStock,
         item.location,
-        item.status,
       ]
         .map((field) => `"${field}"`)
         .join(",")
@@ -170,192 +155,206 @@ export default function ConsumablesTable() {
     saveAs(blob, "consumables_report.csv");
   };
 
+  const getStatusStyles = (status: string) => {
+    switch (status) {
+      case "In Stock":
+        return "bg-green-100 text-green-600";
+      case "Low Stock":
+        return "bg-yellow-100 text-yellow-600";
+      case "Out of Stock":
+        return "bg-red-100 text-red-600";
+      default:
+        return "bg-red-200 text-red-800";
+    }
+  };
+
+  const uniqueCategories = Array.from(
+    new Set(consumables.map((c) => c.category))
+  );
+  const uniqueStatuses = Array.from(new Set(consumables.map((c) => c.status)));
+  const uniqueLocations = Array.from(
+    new Set(consumables.map((c) => c.location))
+  );
+
   return (
-    <div className="overflow-y-hidden rounded-xl border w-full border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
-      <div className="flex flex-wrap gap-4 p-5 items-center">
-        {/* 🔍 Search bar */}
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={(e) => {
-            setSearchTerm(e.target.value);
-            setCurrentPage(1);
-          }}
-          placeholder="Search Item Name or Tag Code"
-          className="border p-2 text-sm rounded-md min-w-[250px] bg-white dark:bg-gray-900 dark:text-white dark:border-gray-600"
-        />
+    <div className="overflow-y-hidden rounded-xl border w-full border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-sm">
+      <div className="p-4 flex flex-wrap gap-4 items-center justify-between bg-gray-50 dark:bg-gray-800 relative">
+        <div className="flex flex-wrap gap-4 items-center">
+          <input
+            type="text"
+            placeholder="Search Item Name or Tag Code"
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setCurrentPage(1);
+            }}
+            className="border p-2 rounded-md text-xs w-full sm:w-64 bg-white dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
+          />
+          <select
+            value={categoryFilter}
+            onChange={(e) => {
+              setCategoryFilter(e.target.value);
+              setCurrentPage(1);
+            }}
+            className="border p-2 rounded-md text-xs w-48 bg-white dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
+          >
+            <option value="">All Categories</option>
+            {uniqueCategories.map((cat, idx) => (
+              <option key={idx} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
+          <select
+            value={statusFilter}
+            onChange={(e) => {
+              setStatusFilter(e.target.value);
+              setCurrentPage(1);
+            }}
+            className="border p-2 rounded-md text-xs w-48 bg-white dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
+          >
+            <option value="">All Statuses</option>
+            {uniqueStatuses.map((stat, idx) => (
+              <option key={idx} value={stat}>
+                {stat}
+              </option>
+            ))}
+          </select>
+          <select
+            value={locationFilter}
+            onChange={(e) => {
+              setLocationFilter(e.target.value);
+              setCurrentPage(1);
+            }}
+            className="border p-2 rounded-md text-xs w-48 bg-white dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
+          >
+            <option value="">All Locations</option>
+            {uniqueLocations.map((loc, idx) => (
+              <option key={idx} value={loc}>
+                {loc}
+              </option>
+            ))}
+          </select>
+        </div>
 
-        {/* Category filter */}
-        <select
-          value={categoryFilter}
-          onChange={(e) => {
-            setCategoryFilter(e.target.value);
-            setCurrentPage(1);
-          }}
-          className="border p-2 text-sm rounded-md min-w-[200px] bg-white dark:bg-gray-900 dark:text-white dark:border-gray-600"
-        >
-          <option value="">All Categories</option>
-          {uniqueCategories.map((cat, idx) => (
-            <option key={idx} value={cat}>
-              {cat}
-            </option>
-          ))}
-        </select>
-
-        {/* Status filter */}
-        <select
-          value={statusFilter}
-          onChange={(e) => {
-            setStatusFilter(e.target.value);
-            setCurrentPage(1);
-          }}
-          className="border p-2 text-sm rounded-md min-w-[200px] bg-white dark:bg-gray-900 dark:text-white dark:border-gray-600"
-        >
-          <option value="">All Statuses</option>
-          {uniqueStatuses.map((stat, idx) => (
-            <option key={idx} value={stat}>
-              {stat}
-            </option>
-          ))}
-        </select>
-
-        {/* Location filter */}
-        <select
-          value={locationFilter}
-          onChange={(e) => {
-            setLocationFilter(e.target.value);
-            setCurrentPage(1);
-          }}
-          className="border p-2 text-sm rounded-md min-w-[160px] bg-white dark:bg-gray-900 dark:text-white dark:border-gray-600"
-        >
-          <option value="">All Locations</option>
-          {uniqueLocations.map((loc, idx) => (
-            <option key={idx} value={loc}>
-              {loc}
-            </option>
-          ))}
-        </select>
-
-        {/* Export dropdown */}
-        <div className="relative ml-auto">
+        <div className="relative">
           <button
-            onClick={() => setShowExportDropdown((prev) => !prev)}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-xs"
+            onClick={() => setShowExportDropdown(!showExportDropdown)}
+            className="bg-[#4285F4] text-white font-medium text-sm px-5 py-2.5 rounded-md flex items-center gap-1 shadow hover:bg-[#357ae8] transition"
           >
             Download ▼
           </button>
-
           {showExportDropdown && (
-            <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-md shadow-lg z-10 flex flex-col">
-              <button
-                onClick={() => {
-                  exportPDF();
-                  setShowExportDropdown(false);
-                }}
-                className="w-full text-left px-4 py-2 text-sm text-gray-800 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700"
-              >
-                Export PDF
-              </button>
+            <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-700 rounded-md shadow-lg z-10">
               <button
                 onClick={() => {
                   exportCSV();
                   setShowExportDropdown(false);
                 }}
-                className="w-full text-left px-4 py-2 text-sm text-gray-800 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700"
+                className="block w-full text-left px-4 py-2 text-xs hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-white"
               >
                 Export CSV
+              </button>
+              <button
+                onClick={() => {
+                  exportPDF();
+                  setShowExportDropdown(false);
+                }}
+                className="block w-full text-left px-4 py-2 text-xs hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-white"
+              >
+                Export PDF
               </button>
             </div>
           )}
         </div>
       </div>
 
-      {/* Table */}
       <div className="max-w-full overflow-x-auto">
-        <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-800">
-          <Table>
-            <TableHeader className="border-b border-t text-sm font-bold bg-gray-100 dark:bg-gray-800 dark:text-white border-gray-200 dark:border-white/[0.1]">
-              <TableRow>
-                {[
-                  "Item Name",
-                  "Tag/Code",
-                  "Category",
-                  "Quantity",
-                  "Unit",
-                  "Min. Stock",
-                  "Location",
-                  "Status",
-                ].map((header, index) => (
-                  <TableCell
-                    key={index}
-                    isHeader
-                    className="px-6 py-3 text-center font-bold text-sm text-gray-800 dark:text-white"
-                  >
-                    {header}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHeader>
+        <Table>
+          <TableHeader className="border-b border-t text-xs border-gray-200 dark:border-gray-700 bg-gray-200 dark:bg-gray-800">
+            <TableRow>
+              {[
+                "Item Name",
+                "Tag/Code",
+                "Category",
+                "Status",
+                "Quantity",
+                "Unit",
+                "Min. Stock",
+                "Location",
+              ].map((header, index) => (
+                <TableCell
+                  key={index}
+                  isHeader
+                  className="px-10 py-3 font-bold text-gray-800 dark:text-gray-200 text-center text-xs whitespace-nowrap"
+                >
+                  {header}
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHeader>
 
-            <TableBody className="divide-y divide-gray-100 dark:divide-gray-700">
-              {currentConsumables.length > 0 ? (
-                currentConsumables.map((consumable) => (
-                  <TableRow key={consumable.id}>
-                    <TableCell className="px-5 py-3 sm:px-6 text-center font-normal text-sm dark:text-white">
-                      {consumable.name}
-                    </TableCell>
-                    <TableCell className="px-5 py-3 sm:px-6 text-center text-gray-500 text-sm">
-                      {consumable.tag}
-                    </TableCell>
-                    <TableCell className="px-4 py-3 text-center text-gray-500 text-sm">
-                      {consumable.category}
-                    </TableCell>
-                    <TableCell className="px-4 py-3 text-center text-gray-500 text-sm">
-                      {consumable.quantity}
-                    </TableCell>
-                    <TableCell className="px-4 py-3 text-center text-gray-500 text-sm">
-                      {consumable.unit}
-                    </TableCell>
-                    <TableCell className="px-4 py-3 text-center text-gray-500 text-sm">
-                      {consumable.minStock}
-                    </TableCell>
-                    <TableCell className="px-4 py-3 text-center text-gray-500 text-sm">
-                      {consumable.location}
-                    </TableCell>
-                    <TableCell className="px-4 py-3 text-center">
-                      <Badge
-                        size="sm"
-                        color={getStatusColor(consumable.status)}
-                      >
-                        <span className="text-sm">{consumable.status}</span>
-                      </Badge>
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <td
-                    colSpan={8}
-                    className="px-5 py-4 text-center text-gray-500 text-sm dark:text-gray-400"
-                  >
-                    No consumables found
-                  </td>
+          <TableBody className="divide-y divide-gray-200 dark:divide-gray-700">
+            {currentConsumables.length > 0 ? (
+              currentConsumables.map((item) => (
+                <TableRow
+                  key={item.id}
+                  className="hover:bg-gray-50 dark:hover:bg-gray-800"
+                >
+                  <TableCell className="px-5 py-4 text-center text-xs dark:text-gray-300">
+                    {item.name}
+                  </TableCell>
+                  <TableCell className="px-5 py-4 text-center text-xs dark:text-gray-300">
+                    {item.tag}
+                  </TableCell>
+                  <TableCell className="px-4 py-3 text-center text-xs dark:text-gray-400">
+                    {item.category}
+                  </TableCell>
+                  <TableCell className="px-4 py-3 text-center text-xs">
+                    <span
+                      className={`px-3 py-1 rounded-full font-semibold ${getStatusStyles(
+                        item.status
+                      )}`}
+                    >
+                      {item.status}
+                    </span>
+                  </TableCell>
+                  <TableCell className="px-4 py-3 text-center text-xs dark:text-gray-400">
+                    {item.quantity}
+                  </TableCell>
+                  <TableCell className="px-4 py-3 text-center text-xs dark:text-gray-400">
+                    {item.unit}
+                  </TableCell>
+                  <TableCell className="px-4 py-3 text-center text-xs dark:text-gray-400">
+                    {item.minStock}
+                  </TableCell>
+                  <TableCell className="px-4 py-3 text-center text-xs dark:text-gray-400">
+                    {item.location}
+                  </TableCell>
                 </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
+              ))
+            ) : (
+              <TableRow>
+                <td
+                  colSpan={8}
+                  className="px-5 py-4 text-center text-gray-500 text-xs dark:text-gray-400"
+                >
+                  No consumables found
+                </td>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
       </div>
 
-      {/* Pagination */}
-      <div className="px-5 py-3 flex space-x-5 items-center">
+      <div className="px-5 py-4 flex flex-wrap gap-4 items-center justify-between bg-gray-50 dark:bg-gray-800">
         <select
           value={dataLimit}
           onChange={(e) => {
             setDataLimit(Number(e.target.value));
             setCurrentPage(1);
           }}
-          className="border p-1 w-20 text-xs rounded-md bg-white dark:bg-gray-900 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 dark:hover:bg-gray-800"
+          className="border p-2 w-20 text-xs rounded-md bg-white dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
         >
           <option value={10}>10 Items</option>
           <option value={20}>20 Items</option>
@@ -363,11 +362,11 @@ export default function ConsumablesTable() {
           <option value={9999}>All Items</option>
         </select>
 
-        <div className="flex items-center space-x-1">
+        <div className="flex items-center space-x-2">
           <button
             disabled={currentPage === 1}
             onClick={() => setCurrentPage(currentPage - 1)}
-            className="border px-2 py-1 text-xs rounded-md bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 disabled:opacity-50"
+            className="border px-3 py-2 text-xs rounded-md bg-white dark:bg-gray-700 dark:text-white dark:border-gray-600 disabled:opacity-50"
           >
             &lt;
           </button>
@@ -375,11 +374,11 @@ export default function ConsumablesTable() {
             <button
               key={index}
               onClick={() => setCurrentPage(index + 1)}
-              className={`px-2 py-1 text-xs font-medium ${
+              className={`border px-3 py-2 text-xs rounded-md ${
                 currentPage === index + 1
-                  ? "bg-blue-700 text-white"
-                  : "bg-white text-blue-700"
-              } border rounded-md`}
+                  ? "bg-blue-500 text-white"
+                  : "bg-white dark:bg-gray-700 dark:text-white dark:border-gray-600"
+              }`}
             >
               {index + 1}
             </button>
@@ -387,7 +386,7 @@ export default function ConsumablesTable() {
           <button
             disabled={currentPage === totalPages}
             onClick={() => setCurrentPage(currentPage + 1)}
-            className="border px-2 py-1 text-xs rounded-md bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 disabled:opacity-50"
+            className="border px-3 py-2 text-xs rounded-md bg-white dark:bg-gray-700 dark:text-white dark:border-gray-600 disabled:opacity-50"
           >
             &gt;
           </button>

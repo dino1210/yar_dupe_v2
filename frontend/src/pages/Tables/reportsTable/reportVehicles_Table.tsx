@@ -41,7 +41,6 @@ export default function VehiclesTable() {
   const [isDownloadOpen, setIsDownloadOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("");
-  const [fuelTypeFilter, setFuelTypeFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [locationFilter, setLocationFilter] = useState("");
 
@@ -63,7 +62,8 @@ export default function VehiclesTable() {
     fetchVehicles();
   }, []);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading)
+    return <p className="text-center py-4 dark:text-white">Loading...</p>;
 
   const filteredVehicles = vehicles.filter((vehicle) => {
     const matchesSearch =
@@ -72,21 +72,12 @@ export default function VehiclesTable() {
     const matchesCategory = categoryFilter
       ? vehicle.category === categoryFilter
       : true;
-    const matchesFuelType = fuelTypeFilter
-      ? vehicle.fuel_type === fuelTypeFilter
-      : true;
     const matchesStatus = statusFilter ? vehicle.status === statusFilter : true;
     const matchesLocation = locationFilter
       ? vehicle.location === locationFilter
       : true;
 
-    return (
-      matchesSearch &&
-      matchesCategory &&
-      matchesFuelType &&
-      matchesStatus &&
-      matchesLocation
-    );
+    return matchesSearch && matchesCategory && matchesStatus && matchesLocation;
   });
 
   const totalPages = Math.ceil(filteredVehicles.length / dataLimit);
@@ -101,7 +92,6 @@ export default function VehiclesTable() {
   };
 
   const uniqueCategories = Array.from(new Set(vehicles.map((v) => v.category)));
-  const uniqueFuelTypes = Array.from(new Set(vehicles.map((v) => v.fuel_type)));
   const uniqueStatuses = Array.from(new Set(vehicles.map((v) => v.status)));
   const uniqueLocations = Array.from(new Set(vehicles.map((v) => v.location)));
 
@@ -133,11 +123,11 @@ export default function VehiclesTable() {
       "Brand",
       "Plate No.",
       "Category",
+      "Status",
       "Fuel Type",
       "Location",
       "Acquisition Date",
       "Warranty",
-      "Status",
       "Remarks",
       "Maintenance Due",
       "Assigned Driver",
@@ -148,11 +138,11 @@ export default function VehiclesTable() {
       formatValue(vehicle.brand),
       formatValue(vehicle.plate_no),
       formatValue(vehicle.category),
+      formatValue(vehicle.status),
       formatValue(vehicle.fuel_type),
       formatValue(vehicle.location),
       new Date(vehicle.acquisition_date).toLocaleDateString(),
       new Date(vehicle.warranty).toLocaleDateString(),
-      formatValue(vehicle.status),
       formatValue(vehicle.remarks),
       formatValue(vehicle.maintenance_due),
       formatValue(vehicle.assigned_driver),
@@ -175,12 +165,8 @@ export default function VehiclesTable() {
   };
 
   const handleExportPDF = () => {
-    const doc = new jsPDF({
-      orientation: "landscape",
-    });
-
+    const doc = new jsPDF({ orientation: "landscape" });
     const dateTime = getCurrentDateTimeReadable();
-
     doc.setFontSize(16);
     doc.text(`Vehicles Report  ${dateTime}`, 14, 15);
 
@@ -189,11 +175,11 @@ export default function VehiclesTable() {
       "Brand",
       "Plate No.",
       "Category",
+      "Status",
       "Fuel Type",
       "Location",
       "Acquisition Date",
       "Warranty",
-      "Status",
       "Remarks",
       "Maintenance Due",
       "Assigned Driver",
@@ -204,11 +190,11 @@ export default function VehiclesTable() {
       vehicle.brand,
       vehicle.plate_no,
       vehicle.category,
+      vehicle.status,
       vehicle.fuel_type,
       vehicle.location,
       new Date(vehicle.acquisition_date).toLocaleDateString(),
       new Date(vehicle.warranty).toLocaleDateString(),
-      vehicle.status,
       vehicle.remarks,
       vehicle.maintenance_due,
       vehicle.assigned_driver,
@@ -226,110 +212,101 @@ export default function VehiclesTable() {
   };
 
   return (
-    <div className="overflow-y-hidden rounded-xl border w-full border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03] text-gray-500 text-center dark:text-gray-50 whitespace-nowrap text-xs">
-      <div className="px-5 py-3 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center justify-between">
+    <div className="overflow-y-hidden rounded-xl border w-full border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900 shadow-sm">
+      <div className="px-5 py-4 flex flex-wrap gap-4 items-center justify-between bg-gray-50 dark:bg-gray-800">
         <div className="flex flex-wrap gap-2 items-center">
-          {/* Filters */}
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by Name or Plate No."
-            className="border p-2 text-xs rounded-md bg-white dark:bg-gray-900 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
+            className="border p-2 text-xs w-full sm:w-64 rounded-md bg-white dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
           />
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="border p-2 text-xs w-36 rounded-md bg-white dark:bg-gray-900 dark:text-white dark:border-gray-600"
+            className="border p-2 text-xs w-48 rounded-md bg-white dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
           >
             <option value="">All Categories</option>
-            {uniqueCategories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select>
-          <select
-            value={fuelTypeFilter}
-            onChange={(e) => setFuelTypeFilter(e.target.value)}
-            className="border p-2 text-xs w-36 rounded-md bg-white dark:bg-gray-900 dark:text-white dark:border-gray-600"
-          >
-            <option value="">All Fuel Types</option>
-            {uniqueFuelTypes.map((fuel) => (
-              <option key={fuel} value={fuel}>
-                {fuel}
+            {uniqueCategories.map((val, idx) => (
+              <option key={idx} value={val}>
+                {val}
               </option>
             ))}
           </select>
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="border p-2 text-xs w-36 rounded-md bg-white dark:bg-gray-900 dark:text-white dark:border-gray-600"
+            className="border p-2 text-xs w-48 rounded-md bg-white dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
           >
             <option value="">All Status</option>
-            {uniqueStatuses.map((status) => (
-              <option key={status} value={status}>
-                {status}
+            {uniqueStatuses.map((val, idx) => (
+              <option key={idx} value={val}>
+                {val}
               </option>
             ))}
           </select>
           <select
             value={locationFilter}
             onChange={(e) => setLocationFilter(e.target.value)}
-            className="border p-2 text-xs w-36 rounded-md bg-white dark:bg-gray-900 dark:text-white dark:border-gray-600"
+            className="border p-2 text-xs w-48 rounded-md bg-white dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
           >
             <option value="">All Locations</option>
-            {uniqueLocations.map((loc) => (
-              <option key={loc} value={loc}>
-                {loc}
+            {uniqueLocations.map((val, idx) => (
+              <option key={idx} value={val}>
+                {val}
               </option>
             ))}
           </select>
         </div>
 
-        {/* Download Buttons */}
         <div className="relative">
           <button
             onClick={() => setIsDownloadOpen(!isDownloadOpen)}
-            className="flex items-center gap-1 px-3 py-2 border rounded-md text-xs bg-blue-600 text-white dark:bg-blue-500 dark:text-white dark:border-gray-600"
+            className="bg-[#4285F4] text-white font-medium text-sm px-3 py-2 rounded-md flex items-center gap-1 shadow hover:bg-[#357ae8] transition"
           >
-            Download <ChevronDown size={16} />
+            Download <ChevronDown size={10} />
           </button>
 
           {isDownloadOpen && (
-            <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 border rounded-md shadow-md z-10 flex flex-col">
+            <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-700 rounded-md shadow-lg z-10">
               <button
-                onClick={handleExportPDF}
-                className="w-full text-left px-4 py-2 text-xs hover:bg-gray-100 dark:hover:bg-gray-700"
-              >
-                Export PDF
-              </button>
-              <button
-                onClick={handleExportCSV}
-                className="w-full text-left px-4 py-2 text-xs hover:bg-gray-100 dark:hover:bg-gray-700"
+                onClick={() => {
+                  handleExportCSV();
+                  setIsDownloadOpen(false);
+                }}
+                className="block w-full text-left px-4 py-2 text-xs hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-white"
               >
                 Export CSV
+              </button>
+              <button
+                onClick={() => {
+                  handleExportPDF();
+                  setIsDownloadOpen(false);
+                }}
+                className="block w-full text-left px-4 py-2 text-xs hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-white"
+              >
+                Export PDF
               </button>
             </div>
           )}
         </div>
       </div>
 
-      {/* Table */}
       <div className="max-w-full overflow-x-auto">
         <Table>
-          <TableHeader className="border-b border-t text-xs border-gray-100 dark:border-white/[0.05]">
+          <TableHeader className="border-b border-t text-xs border-gray-200 dark:border-gray-700 bg-gray-200 dark:bg-gray-800">
             <TableRow>
               {[
                 "Name",
                 "Brand",
-                "Plate No.",
                 "Category",
+                "Status",
+                "Plate No.",
                 "Fuel Type",
                 "Location",
                 "Acquisition Date",
                 "Warranty",
-                "Status",
                 "Remarks",
                 "Maintenance Due",
                 "Assigned Driver",
@@ -337,7 +314,7 @@ export default function VehiclesTable() {
                 <TableCell
                   key={index}
                   isHeader
-                  className="px-6 py-3 font-medium text-gray-500 text-center text-xs dark:text-gray-50 whitespace-nowrap"
+                  className="px-10 py-3 font-bold text-gray-800 dark:text-gray-200 text-center text-xs whitespace-nowrap"
                 >
                   {header}
                 </TableCell>
@@ -345,53 +322,50 @@ export default function VehiclesTable() {
             </TableRow>
           </TableHeader>
 
-          <TableBody className="divide-y divide-gray-100 dark:divide-gray-700">
+          <TableBody className="divide-y divide-gray-200 dark:divide-gray-700">
             {currentVehicles.length > 0 ? (
               currentVehicles.map((vehicle) => (
-                <TableRow key={vehicle.id}>
-                  <TableCell className="px-4 py-3 text-center">
-                    {vehicle.name}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-center">
-                    {vehicle.brand}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-center">
-                    {vehicle.plate_no}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-center">
-                    {vehicle.category}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-center">
-                    {vehicle.fuel_type}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-center">
-                    {vehicle.location}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-center">
-                    {new Date(vehicle.acquisition_date).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-center">
-                    {new Date(vehicle.warranty).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-center">
-                    <Badge
-                      size="sm"
-                      color={
-                        vehicle.status === "Available" ? "success" : "info"
-                      }
+                <TableRow
+                  key={vehicle.id}
+                  className="hover:bg-gray-50 dark:hover:bg-gray-800"
+                >
+                  {[
+                    vehicle.name,
+                    vehicle.brand,
+                    vehicle.category,
+                    vehicle.status,
+                    vehicle.plate_no, // ⬅️ Now appears after status
+                    vehicle.fuel_type,
+                    vehicle.location,
+                    new Date(vehicle.acquisition_date).toLocaleDateString(),
+                    new Date(vehicle.warranty).toLocaleDateString(),
+                    vehicle.remarks || "-",
+                    vehicle.maintenance_due,
+                    vehicle.assigned_driver || "-",
+                  ].map((value, index) => (
+                    <TableCell
+                      key={index}
+                      className="px-5 py-4 sm:px-6 text-center text-xs dark:text-gray-300"
                     >
-                      {vehicle.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-center">
-                    {vehicle.remarks || "-"}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-center">
-                    {vehicle.maintenance_due}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-center">
-                    {vehicle.assigned_driver || "-"}
-                  </TableCell>
+                      {index === 3 ? (
+                        <Badge
+                          size="sm"
+                          color={
+                            value === "Available"
+                              ? "success"
+                              : value === "Issued Out"
+                              ? "warning"
+                              : "default"
+                          }
+                          className="whitespace-nowrap"
+                        >
+                          {value}
+                        </Badge>
+                      ) : (
+                        value
+                      )}
+                    </TableCell>
+                  ))}
                 </TableRow>
               ))
             ) : (
@@ -408,12 +382,11 @@ export default function VehiclesTable() {
         </Table>
       </div>
 
-      {/* Pagination */}
-      <div className="px-5 py-5 flex space-x-5 items-center text-xs">
+      <div className="px-5 py-4 flex flex-wrap gap-4 items-center justify-between bg-gray-50 dark:bg-gray-800">
         <select
           value={dataLimit}
           onChange={(e) => setDataLimit(Number(e.target.value))}
-          className="border p-2.5 w-20 text-xs rounded-md bg-white dark:bg-gray-900 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
+          className="border p-2 w-20 text-xs rounded-md bg-white dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
         >
           <option value={10}>10 Items</option>
           <option value={20}>20 Items</option>
@@ -425,7 +398,7 @@ export default function VehiclesTable() {
           <button
             disabled={currentPage === 1}
             onClick={() => setCurrentPage(currentPage - 1)}
-            className="border px-3 py-2 text-xs rounded-md bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600"
+            className="border px-3 py-2 text-xs rounded-md bg-white dark:bg-gray-700 dark:text-white dark:border-gray-600 disabled:opacity-50"
           >
             &lt;
           </button>
@@ -433,11 +406,11 @@ export default function VehiclesTable() {
             <button
               key={index}
               onClick={() => setCurrentPage(index + 1)}
-              className={`px-3 py-2 text-xs font-medium ${
+              className={`border px-3 py-2 text-xs rounded-md ${
                 currentPage === index + 1
-                  ? "bg-blue-700 text-white"
-                  : "bg-white text-blue-700"
-              } border rounded-md`}
+                  ? "bg-blue-500 text-white"
+                  : "bg-white dark:bg-gray-700 dark:text-white dark:border-gray-600"
+              }`}
             >
               {index + 1}
             </button>
@@ -445,7 +418,7 @@ export default function VehiclesTable() {
           <button
             disabled={currentPage === totalPages}
             onClick={() => setCurrentPage(currentPage + 1)}
-            className="border px-3 py-2 text-xs rounded-md bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600"
+            className="border px-3 py-2 text-xs rounded-md bg-white dark:bg-gray-700 dark:text-white dark:border-gray-600 disabled:opacity-50"
           >
             &gt;
           </button>
