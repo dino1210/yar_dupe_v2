@@ -59,9 +59,9 @@ const ResourceUsageDistribution = () => {
   ];
 
   return (
-    <div className="p-6 rounded-2xl border border-white-200 dark:border-white-700 bg-white-50 dark:bg-white-800 shadow-md mt-6">
+    <div className="p-4 rounded-2xl border border-white-200 dark:border-white-700 bg-white-50 dark:bg-white-800 shadow-md mt-6">
       <div className="flex flex-col lg:flex-row justify-center items-center gap-10">
-        <ResponsiveContainer width={250} height={250}>
+        <ResponsiveContainer width={250} height={225}>
           <PieChart>
             <Pie
               data={pieData}
@@ -88,7 +88,7 @@ const ResourceUsageDistribution = () => {
           </PieChart>
         </ResponsiveContainer>
 
-        <div className="space-y-3">
+        <div className="space-y-2">
           {pieData.map((entry, index) => (
             <div key={entry.name} className="flex items-center space-x-3">
               <div
