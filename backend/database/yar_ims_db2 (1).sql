@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 04, 2025 at 03:30 PM
+-- Generation Time: May 07, 2025 at 02:25 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `yar_ims_db`
+-- Database: `yar_ims_db2`
 --
 
 -- --------------------------------------------------------
@@ -70,14 +70,21 @@ CREATE TABLE `consumables` (
 --
 
 INSERT INTO `consumables` (`id`, `picture`, `tag`, `name`, `quantity`, `minStock`, `unit`, `location`, `date`, `status`, `qr`, `category`, `added_by`, `created_at`) VALUES
-(1, '1745822603388-364008207.jpg', ' DISC-002', 'Cutting Disc 4\" 2.5mm', 0, 20, 'pcs', ' Rack 3-Drawer 11', '2025-04-28', 'No Stock', '', ' Cutting Disk', NULL, '2025-05-03 22:41:15'),
-(2, '1745822713321-485494957.jpg', ' DBIT-006', ' Drill Bit Steel 1/2', 2, 3, 'pcs', ' Rack 3-Drawer 17', '2025-04-28', 'Low Stock', '', ' Drill Bit', NULL, '2025-05-03 22:41:15'),
-(4, '1745823073022-335597718.jpg', ' CLMP-006', ' Metal Clamp 2\" 2 Holes Fab', 6, 5, 'pcs', 'Rcabinet-Drawer 3', '2025-04-28', 'In Stock', '', ' Metal Clamp', NULL, '2025-05-03 22:41:15'),
-(8, '1745987401853-34847443.png', ' test', ' stest', 0, 6, 'kg', ' manila', '2025-04-30', 'In Stock', '', ' test', NULL, '2025-05-03 22:41:15'),
-(9, '1746088437828-377720996.png', 'SADFASDF', ' SDASD', 12, 12, 'bottles', ' ASDSA', '2025-05-01', 'In Stock', '', 'VDSFDSF', NULL, '2025-05-03 22:41:15'),
-(10, '1746287453230-635894386.jfif', 'ronald', ' Ronald', 12, 12, 'ml', ' ASDSA', '2025-05-03', 'In Stock', '', 'ronald', 'Unknown', '2025-05-03 23:50:53'),
-(11, '1746287764053-492603736.jfif', ' SDASD', ' SADSA', 21, 123, 'ml', ' ASDSA', '2025-05-03', 'In Stock', '', ' SDSA', 'Unknown', '2025-05-03 23:56:04'),
-(12, '1746348303820-780261424.jfif', ' ASD', ' ASD', 121, 121, 'kg', ' ASDSA', '2025-05-04', 'In Stock', '', ' SAD', 'undefined', '2025-05-04 16:45:03');
+(16, '1746518354037-889868581.jpg', 'CONS-PVCSEAL-001  ', 'Pipe Sealant', 12, 34, 'tubes', ' Rack 3-Drawer 11', '2025-05-06', 'In Stock', '', 'Yard Drainage Tool', 'Itchoy', '2025-05-06 15:59:14'),
+(17, '1746518697066-263236673.jpg', 'CONS-PVCPRIME-002', 'PVC PRIMER', 5, 20, 'ml', ' Rack 3-Drawer 12', '2025-05-06', 'In Stock', '', 'Yard Drainage Tool', 'Itchoy', '2025-05-06 16:04:57'),
+(18, '1746518841862-715775024.jpg', 'CONS-TAPE-004', 'PTFE Thread Seal Tape', 12, 30, 'pcs', ' Rack 3-Drawer 13', '2025-05-06', 'In Stock', '', 'Yard Drainage Tool', 'Itchoy', '2025-05-06 16:07:21'),
+(19, '1746518986360-601221493.jpg', 'CONS-ENDCAP-006', 'End Cap', 5, 20, 'pcs', ' Rack 3-Drawer 14', '2025-05-06', 'In Stock', '', 'Yard Drainage Tool', 'Itchoy', '2025-05-06 16:09:46'),
+(20, '1746530809054-372544681.jpg', 'CONS-FABRIC-010', 'Filter Fabric (Geotextile)', 23, 30, 'rolls', ' Rack 3-Drawer 15', '2025-05-06', 'In Stock', '', 'Yard Drainage Tool', 'Admin', '2025-05-06 19:26:49'),
+(21, '1746531319965-918937037.jpg', 'CONS-DRILLBIT-017', 'Drill Bit', 21, 40, 'pcs', ' Rack 3-Drawer 16', '2025-05-06', 'In Stock', '', 'Yard Drainage Tool', 'Admin', '2025-05-06 19:35:19'),
+(22, '1746531464653-44983596.jpg', 'CONS-WELDROD-018', 'Welding Rod', 15, 40, 'pcs', ' Rack 3-Drawer 17', '2025-05-06', 'In Stock', '', 'Yard Drainage Tool', 'Admin', '2025-05-06 19:37:44'),
+(23, '1746531580518-715048116.jpg', 'CONS-CUTDISC-019', 'Cutting Disc ', 10, 20, 'pcs', ' Rack 3-Drawer 18', '2025-05-06', 'In Stock', '', 'Yard Drainage Tool', 'Admin', '2025-05-06 19:39:40'),
+(24, '1746531672776-131499006.jpg', 'CONS-NAIL-020', 'Common nails', 150, 1000, 'kg', ' Rack 3-Drawer 19', '2025-05-06', 'In Stock', '', 'Yard Drainage Tool', 'Admin', '2025-05-06 19:41:12'),
+(25, '1746532171641-703506128.jpg', 'CONS-BINDWIRE-023', 'Binding wire ', 10, 20, 'kg', ' Rack 3-Drawer 20', '2025-05-06', 'In Stock', '', 'Yard Drainage Tool', 'Admin', '2025-05-06 19:49:31'),
+(26, '1746532276281-633182671.jpg', 'CONS-EPOXY-024', 'Epoxy Adhesive', 10, 20, 'tubes', ' Rack 3-Drawer 21', '2025-05-06', 'In Stock', '', 'Yard Drainage Tool', 'Admin', '2025-05-06 19:51:16'),
+(27, '1746532338501-347566403.jpg', 'CONS-ZIPTIE-025', 'Cable Ties (Zip Ties)', 10, 30, 'pcs', ' Rack 3-Drawer 22', '2025-05-06', 'In Stock', '', 'Yard Drainage Tool', 'Admin', '2025-05-06 19:52:18'),
+(28, '1746532409946-459429927.jpg', 'CONS-THINNER-026', 'Paint Thinner', 6, 10, 'pcs', ' Rack 3-Drawer 22', '2025-05-06', 'In Stock', '', 'Yard Drainage Tool', 'Admin', '2025-05-06 19:53:29'),
+(29, '1746532467677-743643472.jpg', 'CONS-CHALK-027', 'Marking Chalk / Chalk Line Refill', 8, 10, 'pcs', ' Rack 3-Drawer 23', '2025-05-06', 'In Stock', '', 'Yard Drainage Tool', 'Admin', '2025-05-06 19:54:27'),
+(30, '1746532538806-8444761.jpg', 'CONS-GLOVES-028', 'Protective Gloves (Disposable)', 10, 20, 'box', ' Rack 3-Drawer 24', '2025-05-06', 'In Stock', '', 'Yard Drainage Tool', 'Admin', '2025-05-06 19:55:38');
 
 -- --------------------------------------------------------
 
@@ -126,7 +133,28 @@ INSERT INTO `consumables_logs` (`id`, `consumable_name`, `performed_by`, `issued
 (72, 'Cutting Disc 4\" 2.5mm', 'RONALD', '2025-05-04 21:03:29', 'Issued Out'),
 (73, ' Drill Bit Steel 1/2', 'RONALD', '2025-05-04 21:03:29', 'Issued Out'),
 (74, 'Cutting Disc 4\" 2.5mm', 'RONALD', '2025-05-04 21:03:45', 'Returned'),
-(75, 'Drill Bit Steel 1/2', 'RONALD', '2025-05-04 21:03:45', 'Returned');
+(75, 'Drill Bit Steel 1/2', 'RONALD', '2025-05-04 21:03:45', 'Returned'),
+(76, ' Drill Bit Steel 1/2', 'System Auto', '2025-05-06 11:39:34', 'Issued Out'),
+(77, ' Drill Bit Steel 1/2', 'System Auto', '2025-05-06 11:44:31', 'Returned'),
+(78, 'Drill Bit Steel 1/2', 'SAMPLE', '2025-05-06 11:44:31', 'Returned'),
+(79, ' Drill Bit Steel 1/2', 'System Auto', '2025-05-06 11:44:36', 'Returned'),
+(80, ' Drill Bit Steel 1/2', 'RONALD', '2025-05-06 11:44:36', 'Issued Out'),
+(81, ' Drill Bit Steel 1/2', 'System Auto', '2025-05-06 11:44:41', 'Returned'),
+(82, 'Drill Bit Steel 1/2', 'RONALD', '2025-05-06 11:44:41', 'Returned'),
+(83, 'Cutting Disc 4\" 2.5mm', 'System Auto', '2025-05-06 11:45:00', 'Returned'),
+(84, 'Cutting Disc 4\" 2.5mm', 'LAST AGAIN ', '2025-05-06 11:45:00', 'Returned'),
+(85, 'Cutting Disc 4\" 2.5mm', 'tite', '2025-05-06 11:50:10', 'Issued Out'),
+(86, 'Cutting Disc 4\" 2.5mm', 'System Auto', '2025-05-06 11:50:10', 'Issued Out'),
+(87, 'Cutting Disc 4\" 2.5mm', 'sample', '2025-05-06 11:53:38', 'Issued Out'),
+(88, 'Cutting Disc 4\" 2.5mm', 'System Auto', '2025-05-06 11:53:38', 'Issued Out'),
+(89, 'Cutting Disc 4\" 2.5mm', 'System Auto', '2025-05-06 11:55:31', 'Returned'),
+(90, 'Cutting Disc 4\" 2.5mm', 'tite', '2025-05-06 11:55:31', 'Returned'),
+(91, 'Cutting Disc 4\" 2.5mm', 'System Auto', '2025-05-06 11:57:49', 'Returned'),
+(92, 'Cutting Disc 4\" 2.5mm', 'sample', '2025-05-06 11:57:49', 'Returned'),
+(93, 'Cutting Disc 4\" 2.5mm', 'System Auto', '2025-05-06 14:08:49', 'Returned'),
+(94, 'Cutting Disc 4\" 2.5mm', 'Ronald', '2025-05-06 14:08:49', 'Returned'),
+(95, 'Cutting Disc 4\" 2.5mm', 'Ronald', '2025-05-06 14:25:25', 'Issued Out'),
+(96, 'Cutting Disc 4\" 2.5mm', 'System Auto', '2025-05-06 14:25:25', 'Issued Out');
 
 -- --------------------------------------------------------
 
@@ -155,11 +183,11 @@ CREATE TABLE `projects` (
 --
 
 INSERT INTO `projects` (`id`, `title`, `manager`, `person_in_charge`, `tools_equipment_used`, `consumables_used`, `vehicles_used`, `start_date`, `end_date`, `status`, `remarks`, `creator`, `location`) VALUES
-(118, 'testing ', 'Itchoy', 'testing ', 'Dartek Angle Grinder', 'Cutting Disc 4\" 2.5mm', 'Hino Dump Truck', '2025-05-03', '2025-05-04', 'Completed', NULL, 'Yard Admin', 'testing '),
-(119, 'testing 2', 'Itchoy', 'testing 2', 'Contender Welding Machine', ' Drill Bit Steel 1/2', 'Hino Dump Truck', '2025-05-03', '2025-05-04', 'Cancelled', NULL, 'Yard Admin', 'testing 2'),
-(121, 'testing', 'Itchoy', 'testing', 'Makita Nail Gun', 'Cutting Disc 4\" 2.5mm,Cutting Disc 4\" 2.5mm,Cutting Disc 4\" 2.5mm,Cutting Disc 4\" 2.5mm', 'Isuzu Giga Crane Truck', '2025-05-03', '2025-05-04', 'Completed', NULL, 'Yard Admin', 'wqe'),
-(122, 'LAST TESTING  ', 'Itchoy', 'RONALD', 'Welding Mask', 'Cutting Disc 4\" 2.5mm, Drill Bit Steel 1/2', 'Hino Dump Truck', '2025-05-03', '2025-05-04', 'Completed', NULL, 'Yard Admin', 'MAKATI'),
-(123, 'LAST AGAIN ', 'Itchoy', 'LAST AGAIN ', '', '', '', '2025-05-04', '2025-05-05', 'Ongoing', NULL, 'Yard Admin', 'LAST ');
+(128, 'sample', 'Admin', 'sample', 'tite', 'Cutting Disc 4\" 2.5mm', 'Isuzu Giga Crane Truck', '2025-05-05', '2025-05-06', 'Completed', NULL, 'Yard Admin', 'sample'),
+(129, 'Renovation', 'Itchoy', 'Ronald', 'Dartek Angle Grinder', 'Cutting Disc 4\" 2.5mm', 'Hino Dump Truck', '2025-05-06', '2025-05-06', 'Cancelled', NULL, 'Yard Admin', 'Makati'),
+(130, 'Testing 2', 'Itchoy', 'Ronald', 'try nga ', 'TITE, ASD', 'Hyundai HD320 Flatbed Truck', '2025-05-08', '2025-05-15', 'Upcoming', NULL, 'Yard Admin', 'Makati'),
+(131, 'Mcdo Renovation ', 'Itchoy', 'Ronald', 'try nga ', 'Cutting Disc 4\" 2.5mm', 'TITE', '2025-05-06', '2025-05-09', 'Ongoing', NULL, 'Yard Admin', 'Makati'),
+(132, 'Drainage Cleaning ', 'Itchoy', 'Gwapo', 'Makita Angle Grinder ', ' Ronald', 'testvec', '2025-05-10', '2025-05-20', 'Upcoming', NULL, 'Yard Admin', 'Manila');
 
 -- --------------------------------------------------------
 
@@ -190,10 +218,24 @@ CREATE TABLE `tools` (
 --
 
 INSERT INTO `tools` (`id`, `picture`, `name`, `brand`, `category`, `tag`, `description`, `purchase_date`, `warranty`, `status`, `remarks`, `added_by`, `qr`, `qr_code_id`, `created_at`) VALUES
-(2, '1745821628548-538938628.jpg', 'Dartek Angle Grinder', 'Dartek', 'Angle Grinder', 'POWER-ANGLGRNDR_DARTEK-1', 'Rated Input Power, 760W. No-Load Speed, 11500r/min. Max Wheel Diameter, 100mm. Hole Diameter of Wheel, 16mm.', '2025-03-24', '2025-04-17', 'Available', 'repaired done', NULL, 'TOOL-cadb0389-23f2-4702-a5a8-1ece4decfc9c.png', 'TOOL-cadb0389-23f2-4702-a5a8-1ece4decfc9c', '2025-05-03 22:41:15'),
-(4, '1745821991819-726796547.jpg', 'Makita Nail Gun', 'Makita', 'Nail Gun', 'POWER-NAILGUN_MKTA-1', 'Nail size capacity: 10-50mm (19/32\"-2\") Nail type: F15-F50 Gauge: 18 Operating pressure: 60-100psi', '2025-03-31', '2027-04-07', 'Available', 'Brand New', NULL, 'TOOL-344ede88-66df-4571-adca-79450032c487.png', 'TOOL-344ede88-66df-4571-adca-79450032c487', '2025-05-03 22:41:15'),
-(5, '1745822173903-752629888.jpg', 'Welding Mask', 'Generic', 'Welding Mask', 'OTHERS-WLDGMASK-1', 'equipped with #12 Dark Glass for safety', '2025-03-29', '2025-04-06', 'Available', '\"repaired done\"', NULL, 'TOOL-4b262466-e3ba-40b2-ae32-1418627ce760.png', 'TOOL-4b262466-e3ba-40b2-ae32-1418627ce760', '2025-05-03 22:41:15'),
-(14, '1745999669151-570661796.jpg', 'Makita Angle Grinder ', 'makita', 'Grinder', '123456', 'test', '2025-03-29', '2025-05-02', 'Available', 'Brand New', NULL, 'TOOL-5f96b978-7e02-4e8d-aa2e-a050e3d8d55b.png', 'TOOL-5f96b978-7e02-4e8d-aa2e-a050e3d8d55b', '2025-05-03 22:41:15');
+(67, '1746514333117-714900325.jpg', 'Trenching Shovel ', 'Razor-Back', 'Digging Tool', 'TRENCH-SHOVEL-01', ' Heavy-duty trenching shovel with a narrow, curved blade ideal for digging drainage trenches or narrow holes in compact soil. ', '2025-05-05', '2026-05-05', 'Available', 'Brand New', 'Itchoy', 'TOOL-e5ce7be3-0e2f-4a56-8cdf-adbb9c761960.png', 'TOOL-e5ce7be3-0e2f-4a56-8cdf-adbb9c761960', '2025-05-06 14:52:13'),
+(68, '1746514503487-301970842.jpg', 'Trenching Shovel (2)', 'Razor-Back', 'Digging Tool', 'TRENCH-SHOVEL-02', 'Heavy-duty trenching shovel with a narrow, curved blade ideal for digging drainage trenches or narrow holes in compact soil. ', '2025-05-05', '2026-05-05', 'Available', 'Brand new', 'Itchoy', 'TOOL-e1029dc6-6c34-45a5-821a-a696093f34e7.png', 'TOOL-e1029dc6-6c34-45a5-821a-a696093f34e7', '2025-05-06 14:55:03'),
+(69, '1746514619817-978649736.jpg', 'Trenching Shovel (3)', 'Razor-Back', 'Digging Tool', 'TRENCH-SHOVEL-03', ' Heavy-duty trenching shovel with a narrow, curved blade ideal for digging drainage trenches or narrow holes in compact soil.', '2025-05-05', '2026-05-05', 'Available', 'Brand New', 'Itchoy', 'TOOL-7b1c2b7e-ea72-45e9-88cf-affe84193e2b.png', 'TOOL-7b1c2b7e-ea72-45e9-88cf-affe84193e2b', '2025-05-06 14:56:59'),
+(70, '1746515070961-882371227.jpg', 'Power Trencher', 'Ditch Witch', 'Digging Machine', 'PWR-TRENCHER-02', 'Used for fast, deep trenching in large-scale drainage installations', '2025-05-05', '2025-12-23', 'Available', 'Brand New', 'Itchoy', 'TOOL-4aa84fda-56d3-4773-b2b4-8ef847e915ef.png', 'TOOL-4aa84fda-56d3-4773-b2b4-8ef847e915ef', '2025-05-06 15:04:30'),
+(71, '1746515234719-499168324.jpg', 'Power Trencher (2)', 'Ditch Witch', 'Digging Machine', 'PWR-TRENCHER-022', 'Used for fast, deep trenching in large-scale drainage installations', '2025-05-05', '2025-12-23', 'Available', 'Brand new', 'Itchoy', 'TOOL-87e81799-84a4-448e-bcbe-f79e420cd8c4.png', 'TOOL-87e81799-84a4-448e-bcbe-f79e420cd8c4', '2025-05-06 15:07:14'),
+(72, '1746515361334-441857330.jpg', 'Power Trencher (3)', 'Ditch Witch', 'Digging Machine', 'PWR-TRENCHER-029', 'Used for fast, deep trenching in large-scale drainage installations', '2025-05-05', '2025-12-23', 'Available', 'Brand new', 'Itchoy', 'TOOL-732814a3-8ab4-422f-976c-ff036d0ea0f3.png', 'TOOL-732814a3-8ab4-422f-976c-ff036d0ea0f3', '2025-05-06 15:09:21'),
+(73, '1746515792563-301682981.jpg', 'Perforated Drain Pipe', 'Atlanta Industries', 'Drainage Pipe', 'PERF-PIPE-100', 'Allows subsurface water to enter and flow to discharge point', '2025-05-04', '2025-08-30', 'Available', 'Brand new', 'Itchoy', 'TOOL-f25d27ee-cf8b-4bbb-8c2c-9ae373a78196.png', 'TOOL-f25d27ee-cf8b-4bbb-8c2c-9ae373a78196', '2025-05-06 15:16:32'),
+(74, '1746515998788-17543342.jpg', 'Perforated Drain Pipe (2)', 'Atlanta Industries', 'Drainage Pipe', 'PERF-PIPE-110', 'Allows subsurface water to enter and flow to discharge point', '2025-05-04', '2025-08-31', 'Available', 'Brand new', 'Itchoy', 'TOOL-87b17e65-0c6e-4c45-a0f6-63be7dca3842.png', 'TOOL-87b17e65-0c6e-4c45-a0f6-63be7dca3842', '2025-05-06 15:19:58'),
+(75, '1746516199357-647132507.jpg', 'Perforated Drain Pipe (3)', 'Atlanta Industries', 'Drainage Pipe', 'PERF-PIPE-130', 'Allows subsurface water to enter and flow to discharge point', '2025-05-04', '2025-08-31', 'Available', 'Brand new', 'Itchoy', 'TOOL-d78138ee-6aef-4e14-a5ad-7673d067c3de.png', 'TOOL-d78138ee-6aef-4e14-a5ad-7673d067c3de', '2025-05-06 15:23:19'),
+(76, '1746516844870-235180525.jpeg', 'Pickaxe', 'Stanley', 'Yard Drainage Tool', 'TOOL-PICK-001', 'A hand tool with a pointed metal head used for breaking hard soil, rocks, or compacted ground prior to trenching.', '2025-05-04', '2025-12-30', 'Available', 'Brand new', 'Itchoy', 'TOOL-5f7742db-881d-4cb3-a683-f43df00e3cb8.png', 'TOOL-5f7742db-881d-4cb3-a683-f43df00e3cb8', '2025-05-06 15:33:23'),
+(77, '1746516910454-34617494.jpeg', 'Pickaxe (2)', 'Stanley', 'Yard Drainage Tool', 'TOOL-PICK-029', 'A hand tool with a pointed metal head used for breaking hard soil, rocks, or compacted ground prior to trenching.', '2025-05-05', '2025-12-31', 'Available', 'Brand new', 'Itchoy', 'TOOL-01af4488-199d-4e29-a2c8-9a7c177570ff.png', 'TOOL-01af4488-199d-4e29-a2c8-9a7c177570ff', '2025-05-06 15:35:10'),
+(78, '1746517142804-138698112.jpeg', 'Pickaxe (3)', 'Stanley', 'Yard Drainage Tool', 'TOOL-PICK-034', 'A hand tool with a pointed metal head used for breaking hard soil, rocks, or compacted ground prior to trenching.', '2025-05-05', '2025-12-31', 'Available', 'Brand new', 'Itchoy', 'TOOL-7a90efe5-0244-4dca-8155-b9efa4876c4c.png', 'TOOL-7a90efe5-0244-4dca-8155-b9efa4876c4c', '2025-05-06 15:39:02'),
+(79, '1746517296233-951666337.jpeg', 'Pipe Cutter', 'Milwaukee ', 'Yard Drainage Tool', 'TOOL-PIPECUT-002', 'A handheld tool designed to cut through PVC or metal pipes cleanly and accurately during installation or repair.', '2025-05-05', '2025-09-29', 'Available', 'Brand  new', 'Itchoy', 'TOOL-c2d11ffa-02ab-4aec-afe7-87fb5c31634c.png', 'TOOL-c2d11ffa-02ab-4aec-afe7-87fb5c31634c', '2025-05-06 15:41:36'),
+(80, '1746517374103-103007649.jpeg', 'Pipe Cutter (2)', 'Milwaukee ', 'Yard Drainage Tool', 'TOOL-PIPECUT-219', 'A handheld tool designed to cut through PVC or metal pipes cleanly and accurately during installation or repair.', '2025-05-05', '2025-09-28', 'Available', 'Brand new', 'Itchoy', 'TOOL-f4609d5d-f315-4d4d-a0ba-85f64083cd62.png', 'TOOL-f4609d5d-f315-4d4d-a0ba-85f64083cd62', '2025-05-06 15:42:54'),
+(81, '1746517538350-873123075.jpeg', 'Pipe Laser Level', 'Topcon ', 'Yard Drainage Tool', 'TOOL-PLASER-003', 'A precision tool used to project a laser beam down the length of a pipe to ensure correct grade and alignment during drainage installation.', '2025-05-05', '2025-10-28', 'Available', 'Brand new', 'Itchoy', 'TOOL-5ce4ec9c-d63d-43b0-a08d-c2c0c4e104c2.png', 'TOOL-5ce4ec9c-d63d-43b0-a08d-c2c0c4e104c2', '2025-05-06 15:45:38'),
+(82, '1746517602050-649927424.jpeg', 'Pipe Laser Level (2)', 'Topcon ', 'Yard Drainage Tool', 'TOOL-PLASER-034', 'A precision tool used to project a laser beam down the length of a pipe to ensure correct grade and alignment during drainage installation.', '2025-05-05', '2025-09-30', 'Available', 'Brand new', 'Itchoy', 'TOOL-c41a304f-bda6-41c6-bc61-d41cc9945ea3.png', 'TOOL-c41a304f-bda6-41c6-bc61-d41cc9945ea3', '2025-05-06 15:46:42'),
+(83, '1746517856760-695424771.jpg', 'Measuring Tape ', '	Stanley ', 'Yard Drainage Tool', 'TOOL-MTAPE100-004', 'A long measuring tape used for accurately measuring distances over large outdoor areas, such as trench runs and pipe placements.', '2025-05-05', '2025-09-30', 'Available', 'Brand new', 'Itchoy', 'TOOL-172a5262-42af-48ff-aa6e-8f9b63d219d2.png', 'TOOL-172a5262-42af-48ff-aa6e-8f9b63d219d2', '2025-05-06 15:50:56'),
+(84, '1746517910343-885970946.jpg', 'Measuring Tape (2)', 'Stanley', 'Yard Drainage Tool', 'TOOL-MTAPE100-219', 'A long measuring tape used for accurately measuring distances over large outdoor areas, such as trench runs and pipe placements.', '2025-05-05', '2025-10-27', 'Available', 'Brand new', 'Itchoy', 'TOOL-24b591a2-5eea-4c65-bf2d-23476780ffd6.png', 'TOOL-24b591a2-5eea-4c65-bf2d-23476780ffd6', '2025-05-06 15:51:50');
 
 -- --------------------------------------------------------
 
@@ -242,7 +284,26 @@ INSERT INTO `tools_logs` (`id`, `tool_tag`, `tool_name`, `performed_by`, `locati
 (73, NULL, 'Makita Nail Gun', 'testing', 'wqe', '2025-05-04 20:56:41', 'Returned'),
 (74, NULL, 'Welding Mask', 'RONALD', 'MAKATI', '2025-05-04 21:03:29', 'Issued Out'),
 (75, NULL, 'Welding Mask', 'RONALD', NULL, '2025-05-04 21:03:29', 'Issued Out'),
-(76, NULL, 'Welding Mask', 'RONALD', 'MAKATI', '2025-05-04 21:03:45', 'Returned');
+(76, NULL, 'Welding Mask', 'RONALD', 'MAKATI', '2025-05-04 21:03:45', 'Returned'),
+(77, NULL, 'Dartek Angle Grinder', 'System Auto', NULL, '2025-05-06 11:39:34', 'Issued Out'),
+(78, NULL, 'Dartek Angle Grinder', 'System Auto', NULL, '2025-05-06 11:44:31', 'Returned'),
+(79, NULL, 'Dartek Angle Grinder', 'SAMPLE', 'SAMPLE', '2025-05-06 11:44:31', 'Returned'),
+(80, NULL, 'Makita Nail Gun', 'System Auto', NULL, '2025-05-06 11:44:36', 'Returned'),
+(81, NULL, 'Makita Nail Gun', 'RONALD', 'RONALD', '2025-05-06 11:44:36', 'Issued Out'),
+(82, NULL, 'Makita Nail Gun', 'RONALD', NULL, '2025-05-06 11:44:36', 'Issued Out'),
+(83, NULL, 'Makita Nail Gun', 'System Auto', NULL, '2025-05-06 11:44:41', 'Returned'),
+(84, NULL, 'Makita Nail Gun', 'RONALD', 'RONALD', '2025-05-06 11:44:41', 'Returned'),
+(85, NULL, 'Dartek Angle Grinder', 'System Auto', NULL, '2025-05-06 11:45:00', 'Returned'),
+(86, NULL, 'Dartek Angle Grinder', 'LAST AGAIN ', 'LAST ', '2025-05-06 11:45:00', 'Returned'),
+(87, NULL, 'Dartek Angle Grinder', 'System Auto', NULL, '2025-05-06 11:50:10', 'Issued Out'),
+(88, NULL, 'tite', 'System Auto', NULL, '2025-05-06 11:53:38', 'Issued Out'),
+(89, NULL, 'Dartek Angle Grinder', 'System Auto', NULL, '2025-05-06 11:55:31', 'Returned'),
+(90, NULL, 'Dartek Angle Grinder', 'tite', 'tite', '2025-05-06 11:55:31', 'Returned'),
+(91, NULL, 'tite', 'System Auto', NULL, '2025-05-06 11:57:49', 'Returned'),
+(92, NULL, 'tite', 'sample', 'sample', '2025-05-06 11:57:49', 'Returned'),
+(93, NULL, 'Dartek Angle Grinder', 'System Auto', NULL, '2025-05-06 14:08:49', 'Returned'),
+(94, NULL, 'Dartek Angle Grinder', 'Ronald', 'Makati', '2025-05-06 14:08:49', 'Returned'),
+(95, NULL, 'try nga ', 'System Auto', NULL, '2025-05-06 14:25:25', 'Issued Out');
 
 -- --------------------------------------------------------
 
@@ -317,12 +378,7 @@ INSERT INTO `vehicles` (`id`, `picture`, `name`, `brand`, `plate_no`, `category`
 (2, '1745827714814-712914986.jpg', 'Isuzu Giga Crane Truck', 'Isuzu', 'CRN-6789', 'Crane Truck', 'Diesel', 'Yar Main', '2025-04-27', 'Available', 'Brand New', '2025-05-27', 'Angelo Padilla', 'VEHICLE-50ed45fc-4dc9-44d0-8682-a8f523bea291.png', '2026-04-27', 'VEHICLE-50ed45fc-4dc9-44d0-8682-a8f523bea291', NULL, '2025-05-03 22:41:15', NULL),
 (3, '1745827872146-579794368.jpg', 'Mitsubishi Fuso Water Tanker', 'Mitsubishi', 'WTK-1122', 'Tanker Truck', 'Diesel', 'Main Warehouse', '2025-04-07', 'Available', 'Brand New', '2025-08-25', 'Jestro Maverick De Castro', 'VEHICLE-dc79ceea-11ad-49c6-9722-f55416ca149e.png', '2027-04-12', 'VEHICLE-dc79ceea-11ad-49c6-9722-f55416ca149e', NULL, '2025-05-03 22:41:15', NULL),
 (4, '1745827984739-89621926.jpg', 'Hyundai HD320 Flatbed Truck', 'Hyundai', 'FLT-7788', 'Flatbed Truck', 'Diesel', 'Main Warehouse', '2023-04-11', 'Available', 'Brand New', '2025-09-04', 'Edan Raymunmo', 'VEHICLE-a3ff6853-4af3-4dc9-aceb-9a8470790dc2.png', '2028-04-27', 'VEHICLE-a3ff6853-4af3-4dc9-aceb-9a8470790dc2', NULL, '2025-05-03 22:41:15', NULL),
-(5, '1745828075830-924813918.jpg', 'Foton Tornado Tipper Truck', 'Foton', 'TPR-3344', 'Tipper Truck', 'Diesel', 'Main Warehouse', '2025-04-14', 'Available', 'repaired done', '2025-09-26', 'Ronald Labrado', 'VEHICLE-f56a2adf-3b71-4820-b9ab-e0d5bef22288.png', '2026-04-13', 'VEHICLE-f56a2adf-3b71-4820-b9ab-e0d5bef22288', NULL, '2025-05-03 22:41:15', NULL),
-(11, '1745987469099-997815354.jpg', 'testvec', 'testt', '123456789', 'qwertyui', 'Diesel', ' manila', '2025-04-10', 'Available', 'Brand New', '2025-04-21', 'wertyuiop', 'VEHICLE-784f508b-f14e-4922-b01c-7efd6fb44a0a.png', '2025-04-30', 'VEHICLE-784f508b-f14e-4922-b01c-7efd6fb44a0a', NULL, '2025-05-03 22:41:15', NULL),
-(12, '1746088473513-123280844.png', 'ronadl', 'ronald', 'ronald', 'ronald', 'Gasoline', ' ASDSA', '2025-04-30', 'Available', 'Brand New', '2025-05-01', 'wertyuiop', 'VEHICLE-bcab0f21-0972-4c48-bcbc-626a6b070968.png', '2025-05-01', 'VEHICLE-bcab0f21-0972-4c48-bcbc-626a6b070968', NULL, '2025-05-03 22:41:15', NULL),
-(13, '1746287830849-427568642.jfif', 'WEW', 'WQEWQE', 'WQEQW', 'WQEWQ', 'Gasoline', 'WEQW', '2025-05-02', 'Available', 'Brand New', '2025-05-02', 'wertyuiop', 'VEHICLE-0345eb39-6c86-4923-9c64-41e2f3c1f6e0.png', '2025-05-02', 'VEHICLE-0345eb39-6c86-4923-9c64-41e2f3c1f6e0', 'Unknown', '2025-05-03 23:57:10', NULL),
-(14, '1746292329259-248788565.jfif', 'TITE', 'TITE', 'TITE', 'TITE', 'Gasoline', ' manila', '2025-05-03', 'Available', 'Brand New', '2025-05-04', 'wertyuiop', 'VEHICLE-fe72b287-7199-4afd-b539-9b6bcd7b7bf2.png', '2025-05-04', 'VEHICLE-fe72b287-7199-4afd-b539-9b6bcd7b7bf2', 'Unknown', '2025-05-04 01:12:09', NULL),
-(15, '1746348261743-821276720.jfif', 'AD', 'SAD', 'ASDA', 'SADSA', 'Gasoline', 'SADSA', '2025-05-03', 'Available', 'Brand New', '2025-05-04', 'SAD', 'VEHICLE-ae4ee572-7273-4c94-8ec9-a196b4d439b2.png', '2025-05-04', 'VEHICLE-ae4ee572-7273-4c94-8ec9-a196b4d439b2', 'undefined', '2025-05-04 16:44:21', NULL);
+(5, '1745828075830-924813918.jpg', 'Foton Tornado Tipper Truck', 'Foton', 'TPR-3344', 'Tipper Truck', 'Diesel', 'Main Warehouse', '2025-04-13', 'Not Available', 'need maintenance', '2025-09-25', 'Ronald Labrado', 'VEHICLE-f56a2adf-3b71-4820-b9ab-e0d5bef22288.png', '2026-04-13', 'VEHICLE-f56a2adf-3b71-4820-b9ab-e0d5bef22288', NULL, '2025-05-03 22:41:15', NULL);
 
 -- --------------------------------------------------------
 
@@ -369,7 +425,26 @@ INSERT INTO `vehicles_logs` (`id`, `vehicle_name`, `performed_by`, `issued_date`
 (63, 'Isuzu Giga Crane Truck', 'testing', '2025-05-04 20:56:41', 'Returned'),
 (64, 'Hino Dump Truck', 'RONALD', '2025-05-04 21:03:29', 'Issued Out'),
 (65, 'Hino Dump Truck', 'RONALD', '2025-05-04 21:03:29', 'Issued Out'),
-(66, 'Hino Dump Truck', 'RONALD', '2025-05-04 21:03:45', 'Returned');
+(66, 'Hino Dump Truck', 'RONALD', '2025-05-04 21:03:45', 'Returned'),
+(67, 'Hino Dump Truck', 'System Auto', '2025-05-06 11:39:34', 'Issued Out'),
+(68, 'Hino Dump Truck', 'System Auto', '2025-05-06 11:44:31', 'Returned'),
+(69, 'Hino Dump Truck', 'SAMPLE', '2025-05-06 11:44:31', 'Returned'),
+(70, 'Isuzu Giga Crane Truck', 'System Auto', '2025-05-06 11:44:36', 'Returned'),
+(71, 'Isuzu Giga Crane Truck', 'RONALD', '2025-05-06 11:44:36', 'Issued Out'),
+(72, 'Isuzu Giga Crane Truck', 'RONALD', '2025-05-06 11:44:36', 'Issued Out'),
+(73, 'Isuzu Giga Crane Truck', 'System Auto', '2025-05-06 11:44:41', 'Returned'),
+(74, 'Isuzu Giga Crane Truck', 'RONALD', '2025-05-06 11:44:41', 'Returned'),
+(75, 'Isuzu Giga Crane Truck', 'System Auto', '2025-05-06 11:45:00', 'Returned'),
+(76, 'Isuzu Giga Crane Truck', 'LAST AGAIN ', '2025-05-06 11:45:00', 'Returned'),
+(77, 'Hino Dump Truck', 'System Auto', '2025-05-06 11:50:10', 'Issued Out'),
+(78, 'Isuzu Giga Crane Truck', 'System Auto', '2025-05-06 11:53:38', 'Issued Out'),
+(79, 'Hino Dump Truck', 'System Auto', '2025-05-06 11:55:31', 'Returned'),
+(80, 'Hino Dump Truck', 'tite', '2025-05-06 11:55:31', 'Returned'),
+(81, 'Isuzu Giga Crane Truck', 'System Auto', '2025-05-06 11:57:49', 'Returned'),
+(82, 'Isuzu Giga Crane Truck', 'sample', '2025-05-06 11:57:49', 'Returned'),
+(83, 'Hino Dump Truck', 'System Auto', '2025-05-06 14:08:49', 'Returned'),
+(84, 'Hino Dump Truck', 'Ronald', '2025-05-06 14:08:49', 'Returned'),
+(85, 'TITE', 'System Auto', '2025-05-06 14:25:25', 'Issued Out');
 
 --
 -- Indexes for dumped tables
@@ -443,31 +518,31 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `consumables`
 --
 ALTER TABLE `consumables`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `consumables_logs`
 --
 ALTER TABLE `consumables_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=97;
 
 --
 -- AUTO_INCREMENT for table `projects`
 --
 ALTER TABLE `projects`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=124;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=133;
 
 --
 -- AUTO_INCREMENT for table `tools`
 --
 ALTER TABLE `tools`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=85;
 
 --
 -- AUTO_INCREMENT for table `tools_logs`
 --
 ALTER TABLE `tools_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=77;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=96;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -479,13 +554,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `vehicles`
 --
 ALTER TABLE `vehicles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `vehicles_logs`
 --
 ALTER TABLE `vehicles_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

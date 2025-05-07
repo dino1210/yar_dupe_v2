@@ -10,6 +10,7 @@ import axios from "axios";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { saveAs } from "file-saver";
+import { Download } from "lucide-react";
 
 interface Consumable {
   id: number;
@@ -240,9 +241,9 @@ export default function ConsumablesTable() {
         <div className="relative">
           <button
             onClick={() => setShowExportDropdown(!showExportDropdown)}
-            className="bg-[#4285F4] text-white font-medium text-sm px-5 py-2.5 rounded-md flex items-center gap-1 shadow hover:bg-[#357ae8] transition"
+            className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200 transition"
           >
-            Download ▼
+            <Download className="w-5 h-5" />
           </button>
           {showExportDropdown && (
             <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-700 rounded-md shadow-lg z-10">

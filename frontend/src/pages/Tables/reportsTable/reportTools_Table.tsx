@@ -9,6 +9,7 @@ import {
 import axios from "axios";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { Download } from "lucide-react";
 
 interface Tool {
   id: number;
@@ -250,12 +251,13 @@ export default function ToolsAndEquipmentsTable() {
         <div className="relative">
           <button
             onClick={() => setDropdownOpen(!dropdownOpen)}
-            className="border p-2 px-4 text-xs rounded-md bg-blue-500 text-white focus:ring-2 focus:ring-blue-400"
+            className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200 transition"
+            title="Download"
           >
-            Download ▼
+            <Download className="w-6 h-6" />
           </button>
           {dropdownOpen && (
-            <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-700 rounded-md shadow-lg z-10">
+            <div className="absolute right-0 mt-2 w-30 bg-white dark:bg-gray-700 rounded-md shadow-lg z-10">
               <button
                 onClick={() => {
                   exportCSV();

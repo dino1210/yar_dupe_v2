@@ -80,22 +80,6 @@ export default function Reports() {
               </p>
             </div>
           </div>
-
-          <div
-            onClick={() => setActiveSection("mostUsed")}
-            className="cursor-pointer rounded-xl border border-blue-500 bg-white dark:bg-black px-6 py-4 shadow-md flex items-center gap-4 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all"
-          >
-            <Flame className="text-blue-600" size={26} />
-            <div>
-              <h2 className="text-lg font-semibold text-black dark:text-white">
-                Most Used
-              </h2>
-              <p className="text-sm text-gray-600 dark:text-gray-300">
-                Frequently used or low stock items.
-              </p>
-            </div>
-          </div>
-
           <div
             onClick={() => setActiveSection("projects")}
             className="cursor-pointer rounded-xl border border-blue-500 bg-white dark:bg-black px-6 py-4 shadow-md flex items-center gap-4 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all"
@@ -110,7 +94,20 @@ export default function Reports() {
               </p>
             </div>
           </div>
-
+          <div
+            onClick={() => setActiveSection("mostUsed")}
+            className="cursor-pointer rounded-xl border border-blue-500 bg-white dark:bg-black px-6 py-4 shadow-md flex items-center gap-4 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all"
+          >
+            <Flame className="text-blue-600" size={26} />
+            <div>
+              <h2 className="text-lg font-semibold text-black dark:text-white">
+                Most Used
+              </h2>
+              <p className="text-sm text-gray-600 dark:text-gray-300">
+                Frequently used or low stock items.
+              </p>
+            </div>
+          </div>
           <div className="rounded-xl border border-gray-300 bg-white dark:bg-gray-900/70 p-6 shadow-md mt-6">
             <FileBarChart2
               size={24}

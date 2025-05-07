@@ -9,7 +9,7 @@ import {
 import Badge from "../../../components/ui/badge/Badge";
 import axios from "axios";
 import AddResourceModal from "../../../components/ui/modal/AddResourceModal/AddResourceModal";
-import { ChevronDown } from "lucide-react";
+import { Download } from "lucide-react";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
@@ -263,9 +263,10 @@ export default function VehiclesTable() {
         <div className="relative">
           <button
             onClick={() => setIsDownloadOpen(!isDownloadOpen)}
-            className="bg-[#4285F4] text-white font-medium text-sm px-3 py-2 rounded-md flex items-center gap-1 shadow hover:bg-[#357ae8] transition"
+            className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200 transition"
+            title="Download"
           >
-            Download <ChevronDown size={10} />
+            <Download className="w-6 h-6" />
           </button>
 
           {isDownloadOpen && (
