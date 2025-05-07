@@ -4,6 +4,8 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { CSVLink } from "react-csv";
 import { LayoutDashboard, Download } from "lucide-react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 interface ProjectType {
   id: number;
@@ -24,6 +26,10 @@ const ProjectTableView = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [startDateFilter, setStartDateFilter] = useState<Date | null>(null);
+  const [endDateFilter, setEndDateFilter] = useState<Date | null>(null);
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -78,6 +84,15 @@ const ProjectTableView = () => {
     { label: "Vehicles", key: "vehicles" },
   ];
 
+  const filteredProjects = projects.filter((project) => {
+    return (
+      project.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      (statusFilter === "" || project.status === statusFilter) &&
+      (!startDateFilter || new Date(project.startDate) >= startDateFilter) &&
+      (!endDateFilter || new Date(project.endDate) <= endDateFilter)
+    );
+  });
+
   const generateCSVData = () => {
     const dateTime = getDateTimeString().replace(/_/g, " ").replace(/-/g, ":");
     const generatedRow = {
@@ -92,7 +107,7 @@ const ProjectTableView = () => {
       consumables: "",
       vehicles: "",
     };
-    return [generatedRow, ...projects];
+    return [generatedRow, ...filteredProjects];
   };
 
   const generatePDF = () => {
@@ -113,7 +128,7 @@ const ProjectTableView = () => {
     autoTable(doc, {
       startY: 60,
       head: [csvHeaders.map((h) => h.label)],
-      body: projects.map((p) => [
+      body: filteredProjects.map((p) => [
         p.title,
         p.manager,
         p.personInCharge,
@@ -134,11 +149,11 @@ const ProjectTableView = () => {
       tableWidth: "auto",
     });
 
-    doc.save("Project_Report.pdf");
+    doc.save("Filtered_Project_Report.pdf");
   };
 
-  const totalPages = Math.ceil(projects.length / itemsPerPage);
-  const paginatedProjects = projects.slice(
+  const totalPages = Math.ceil(filteredProjects.length / itemsPerPage);
+  const paginatedProjects = filteredProjects.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
@@ -169,7 +184,7 @@ const ProjectTableView = () => {
                 <CSVLink
                   data={generateCSVData()}
                   headers={csvHeaders}
-                  filename={`Project_Report_${getDateTimeString()}.csv`}
+                  filename={`Filtered_Project_Report_${getDateTimeString()}.csv`}
                   className="block px-4 py-2 text-sm text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
                   onClick={() => setDropdownOpen(false)}
                 >
@@ -189,6 +204,41 @@ const ProjectTableView = () => {
           </div>
         </div>
 
+        <div className="mb-4 flex flex-wrap gap-4 items-center justify-between">
+          <div className="flex flex-wrap gap-3 items-center">
+            <input
+              type="text"
+              placeholder="Search Title..."
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="px-3 py-2 w-60 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm text-gray-800 dark:text-gray-200"
+            />
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="px-3 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm text-gray-800 dark:text-gray-200"
+            >
+              <option value="">All Status</option>
+              <option value="Ongoing">Ongoing</option>
+              <option value="Completed">Completed</option>
+            </select>
+            <DatePicker
+              selected={startDateFilter}
+              onChange={(date: Date | null) => setStartDateFilter(date)}
+              placeholderText="Start Date"
+              className="px-3 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm text-gray-800 dark:text-gray-200"
+            />
+            <DatePicker
+              selected={endDateFilter}
+              onChange={(date: Date | null) => setEndDateFilter(date)}
+              placeholderText="End Date"
+              className="px-3 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm text-gray-800 dark:text-gray-200"
+            />
+          </div>
+        </div>
         <div className="overflow-x-auto">
           <table className="w-full min-w-[1200px] table-auto text-sm text-left border border-gray-200 dark:border-gray-700">
             <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200">
@@ -235,6 +285,10 @@ const ProjectTableView = () => {
                             ? "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300"
                             : project.status === "Ongoing"
                             ? "bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300"
+                            : project.status === "Upcoming"
+                            ? "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300"
+                            : project.status === "Cancelled"
+                            ? "bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300"
                             : "bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
                         }`}
                       >
@@ -275,9 +329,9 @@ const ProjectTableView = () => {
             }}
             className="px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-sm text-gray-800 dark:text-gray-200"
           >
-            {[10, 25, 50, projects.length].map((num) => (
+            {[10, 25, 50, filteredProjects.length].map((num) => (
               <option key={num} value={num}>
-                {num === projects.length ? "All" : `${num} Items`}
+                {num === filteredProjects.length ? "All" : `${num} Items`}
               </option>
             ))}
           </select>

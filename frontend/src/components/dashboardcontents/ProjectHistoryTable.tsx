@@ -46,47 +46,49 @@ export default function ProjectHistoryTable() {
           Project History
         </h2>
         <div className="overflow-x-auto">
-          <table className="min-w-full text-sm">
-            <thead className="bg-gray-100 dark:bg-gray-800">
-              <tr className="text-left font-medium text-gray-700 dark:text-gray-300 border-b border-gray-300 dark:border-gray-700">
-                <th className="px-4 py-2">Title</th>
-                <th className="px-4 py-2">Manager</th>
-                <th className="px-4 py-2">Status</th>
-                <th className="px-4 py-2">Start Date</th>
-                <th className="px-4 py-2">Expected End Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              {projects.map((proj) => (
-                <tr
-                  key={proj.id}
-                  className="text-gray-800 dark:text-gray-100 border-b border-gray-200 dark:border-gray-800"
-                >
-                  <td className="px-4 py-2">{proj.title}</td>
-                  <td className="px-4 py-2">{proj.manager}</td>
-                  <td className="px-4 py-2">
-                    <span className={getStatusClass(proj.status)}>
-                      {proj.status}
-                    </span>
-                  </td>
-                  <td className="px-4 py-2">
-                    {new Date(proj.start_date).toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
-                  </td>
-                  <td className="px-4 py-2">
-                    {new Date(proj.end_date).toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
-                  </td>
+          <div className="max-h-80 overflow-y-auto">
+            <table className="min-w-full text-sm">
+              <thead className="bg-gray-100 dark:bg-gray-800 sticky top-0 z-10">
+                <tr className="text-left font-medium text-gray-700 dark:text-gray-300 border-b border-gray-300 dark:border-gray-700">
+                  <th className="px-4 py-2">Title</th>
+                  <th className="px-4 py-2">Manager</th>
+                  <th className="px-4 py-2">Status</th>
+                  <th className="px-4 py-2">Start Date</th>
+                  <th className="px-4 py-2">Expected End Date</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {projects.map((proj) => (
+                  <tr
+                    key={proj.id}
+                    className="text-gray-800 dark:text-gray-100 border-b border-gray-200 dark:border-gray-800"
+                  >
+                    <td className="px-4 py-2">{proj.title}</td>
+                    <td className="px-4 py-2">{proj.manager}</td>
+                    <td className="px-4 py-2">
+                      <span className={getStatusClass(proj.status)}>
+                        {proj.status}
+                      </span>
+                    </td>
+                    <td className="px-4 py-2">
+                      {new Date(proj.start_date).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
+                    </td>
+                    <td className="px-4 py-2">
+                      {new Date(proj.end_date).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>

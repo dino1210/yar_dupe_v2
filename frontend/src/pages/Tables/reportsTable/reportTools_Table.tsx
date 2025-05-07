@@ -257,7 +257,7 @@ export default function ToolsAndEquipmentsTable() {
             <Download className="w-6 h-6" />
           </button>
           {dropdownOpen && (
-            <div className="absolute right-0 mt-2 w-30 bg-white dark:bg-gray-700 rounded-md shadow-lg z-10">
+            <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-700 rounded-md shadow-lg z-10">
               <button
                 onClick={() => {
                   exportCSV();
