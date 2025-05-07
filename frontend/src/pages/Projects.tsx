@@ -21,6 +21,8 @@ import { Dialog } from "@headlessui/react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
+
+
 interface Tool {
   name: string;
   tag: string;
@@ -128,6 +130,7 @@ export default function Projects() {
   const filteredVehicles = vehiclesListDetails.filter((vehicle) =>
     vehicle.name.toLowerCase().includes(searchVehicle.toLowerCase())
   );
+  
 
   const [formData, setFormData] = useState<ProjectType>({
     id: 0,
@@ -805,9 +808,20 @@ export default function Projects() {
                     value={searchText}
                     onChange={(e) => setSearchText(e.target.value)}
                     onFocus={() => setShowToolSearchTable(true)}
-                    onBlur={() => {
-                      setTimeout(() => setShowToolSearchTable(false), 200);
+                    onBlur={(e) => {
+                      setTimeout(() => {
+                        const related = document.activeElement;
+                        const table = document.querySelector(".tool-table");
+                        if (
+                          related !== e.currentTarget &&
+                          table &&
+                          !table.contains(related)
+                        ) {
+                          setShowToolSearchTable(false);
+                        }
+                      }, 200);
                     }}
+                    
                     placeholder="Search tool name..."
                     className="mt-1 w-full p-2 rounded border bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600"
                   />
@@ -815,7 +829,8 @@ export default function Projects() {
 
                 {/* Tool Table */}
                 {showToolSearchTable && (
-                  <div className="mt-3 overflow-x-auto rounded-md border border-gray-200 dark:border-gray-700 max-h-60 overflow-y-auto">
+                <div className="mt-3 overflow-x-auto rounded-md border border-gray-200 dark:border-gray-700 max-h-60 overflow-y-auto tool-table">
+
                     <table className="min-w-full text-sm text-left">
                       <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-white">
                         <tr>
@@ -907,6 +922,8 @@ export default function Projects() {
 
                             setFormData({ ...formData, consumables: allNames });
                             toast.success(`${name} removed`);
+
+                            setShowConsumableSearchTable(false);
                           }}
                           className="ml-1 text-red-600 dark:text-red-300 hover:underline"
                         >
@@ -927,12 +944,20 @@ export default function Projects() {
                     value={searchConsumable}
                     onChange={(e) => setSearchConsumable(e.target.value)}
                     onFocus={() => setShowConsumableSearchTable(true)}
-                    onBlur={() => {
-                      setTimeout(
-                        () => setShowConsumableSearchTable(false),
-                        200
-                      );
+                    onBlur={(e) => {
+                      setTimeout(() => {
+                        const related = document.activeElement;
+                        const table = document.querySelector(".consumable-table");
+                        if (
+                          related !== e.currentTarget && // not the input
+                          table && !table.contains(related) // not clicking inside the table
+                        ) {
+                          setShowConsumableSearchTable(false);
+                        }
+                      }, 200);
                     }}
+                    
+                    
                     placeholder="Search consumable name..."
                     className="mt-1 w-full p-2 rounded border bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600"
                   />
@@ -940,7 +965,7 @@ export default function Projects() {
 
                 {/* Consumable Table */}
                 {showConsumableSearchTable && (
-                  <div className="mt-3 overflow-x-auto rounded-md border border-gray-200 dark:border-gray-700 max-h-60 overflow-y-auto">
+                  <div className="mt-3 overflow-x-auto rounded-md border border-gray-200 dark:border-gray-700 max-h-60 overflow-y-auto consumable-table">
                     <table className="min-w-full text-sm text-left">
                       <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-white">
                         <tr>
@@ -1070,9 +1095,20 @@ export default function Projects() {
                     value={searchVehicle}
                     onChange={(e) => setSearchVehicle(e.target.value)}
                     onFocus={() => setShowVehicleSearchTable(true)}
-                    onBlur={() => {
-                      setTimeout(() => setShowVehicleSearchTable(false), 200);
+                    onBlur={(e) => {
+                      setTimeout(() => {
+                        const related = document.activeElement;
+                        const table = document.querySelector(".vehicle-table");
+                        if (
+                          related !== e.currentTarget &&
+                          table &&
+                          !table.contains(related)
+                        ) {
+                          setShowVehicleSearchTable(false);
+                        }
+                      }, 200);
                     }}
+                    
                     placeholder="Search vehicle name..."
                     className="mt-1 w-full p-2 rounded border bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600"
                   />
@@ -1080,7 +1116,8 @@ export default function Projects() {
 
                 {/* Vehicle Table */}
                 {showVehicleSearchTable && (
-                  <div className="mt-3 overflow-x-auto rounded-md border border-gray-200 dark:border-gray-700 max-h-60 overflow-y-auto">
+                  <div className="mt-3 overflow-x-auto rounded-md border border-gray-200 dark:border-gray-700 max-h-60 overflow-y-auto vehicle-table">
+
                     <table className="min-w-full text-sm text-left">
                       <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-white">
                         <tr>
