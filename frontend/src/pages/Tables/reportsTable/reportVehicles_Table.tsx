@@ -335,7 +335,7 @@ export default function VehiclesTable() {
                     vehicle.brand,
                     vehicle.category,
                     vehicle.status,
-                    vehicle.plate_no, // ⬅️ Now appears after status
+                    vehicle.plate_no,
                     vehicle.fuel_type,
                     vehicle.location,
                     new Date(vehicle.acquisition_date).toLocaleDateString(),
@@ -356,6 +356,8 @@ export default function VehiclesTable() {
                               ? "success"
                               : value === "Issued Out"
                               ? "warning"
+                              : value === "Not Available"
+                              ? "error"
                               : "default"
                           }
                           className="whitespace-nowrap"
