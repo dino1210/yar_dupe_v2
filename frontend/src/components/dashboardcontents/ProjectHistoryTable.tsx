@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { CheckCircle, XCircle, Clock, Hourglass } from "lucide-react";
 
 interface Project {
   id: number;
@@ -17,7 +16,6 @@ export default function ProjectHistoryTable() {
   useEffect(() => {
     axios
       .get(`${import.meta.env.VITE_API_BASE_URL}/api/projects/history`)
-
       .then((res) => {
         setProjects(res.data);
       })
@@ -26,18 +24,18 @@ export default function ProjectHistoryTable() {
       });
   }, []);
 
-  const getStatusIcon = (status: string) => {
+  const getStatusClass = (status: string) => {
     switch (status) {
       case "Completed":
-        return <CheckCircle className="text-green-500" size={16} />;
+        return "text-green-600 font-medium";
       case "Cancelled":
-        return <XCircle className="text-red-500" size={16} />;
+        return "text-red-500 font-medium";
       case "Ongoing":
-        return <Clock className="text-yellow-500" size={16} />;
+        return "text-yellow-500 font-medium";
       case "Upcoming":
-        return <Hourglass className="text-blue-500" size={16} />;
+        return "text-blue-500 font-medium";
       default:
-        return null;
+        return "text-gray-500";
     }
   };
 
@@ -58,7 +56,6 @@ export default function ProjectHistoryTable() {
                 <th className="px-4 py-2">Expected End Date</th>
               </tr>
             </thead>
-
             <tbody>
               {projects.map((proj) => (
                 <tr
@@ -67,9 +64,10 @@ export default function ProjectHistoryTable() {
                 >
                   <td className="px-4 py-2">{proj.title}</td>
                   <td className="px-4 py-2">{proj.manager}</td>
-                  <td className="px-4 py-2 flex items-center gap-2">
-                    {proj.status}
-                    {getStatusIcon(proj.status)}
+                  <td className="px-4 py-2">
+                    <span className={getStatusClass(proj.status)}>
+                      {proj.status}
+                    </span>
                   </td>
                   <td className="px-4 py-2">
                     {new Date(proj.start_date).toLocaleDateString("en-US", {

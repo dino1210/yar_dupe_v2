@@ -13,6 +13,7 @@ import PageMeta from "../components/common/PageMeta";
 import ReportConsumableTable from "../pages/Tables/reportsTable/reportConsumable_Table";
 import ReportToolTable from "../pages/Tables/reportsTable/reportTools_Table";
 import ReportVehicleTable from "../pages/Tables/reportsTable/reportVehicles_Table";
+import ProjectTableView from "../pages/Tables/reportsTable/ProjectTableView";
 
 interface Consumable {
   name: string;
@@ -29,6 +30,7 @@ export default function Reports() {
   const [activeSection, setActiveSection] = useState<
     "none" | "inventory" | "mostUsed" | "projects"
   >("none");
+
   const [lowStock, setLowStock] = useState<Consumable[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -64,7 +66,6 @@ export default function Reports() {
 
       {activeSection === "none" && (
         <div className="max-w-6xl mx-auto mt-6 mb-6 space-y-4">
-          {/* Inventory Report */}
           <div
             onClick={() => setActiveSection("inventory")}
             className="cursor-pointer rounded-xl border border-blue-500 bg-white dark:bg-black px-6 py-4 shadow-md flex items-center gap-4 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all"
@@ -80,7 +81,6 @@ export default function Reports() {
             </div>
           </div>
 
-          {/* Most Used */}
           <div
             onClick={() => setActiveSection("mostUsed")}
             className="cursor-pointer rounded-xl border border-blue-500 bg-white dark:bg-black px-6 py-4 shadow-md flex items-center gap-4 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all"
@@ -96,7 +96,6 @@ export default function Reports() {
             </div>
           </div>
 
-          {/* Projects Report */}
           <div
             onClick={() => setActiveSection("projects")}
             className="cursor-pointer rounded-xl border border-blue-500 bg-white dark:bg-black px-6 py-4 shadow-md flex items-center gap-4 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all"
@@ -112,7 +111,6 @@ export default function Reports() {
             </div>
           </div>
 
-          {/* Low Stock Consumables Section */}
           <div className="rounded-xl border border-gray-300 bg-white dark:bg-gray-900/70 p-6 shadow-md mt-6">
             <FileBarChart2
               size={24}
@@ -187,7 +185,6 @@ export default function Reports() {
         </div>
       )}
 
-      {/* Inventory Section */}
       {activeSection === "inventory" && (
         <>
           <div className="w-full max-w-6xl mx-auto mt-4 px-4 flex justify-start">
@@ -265,7 +262,6 @@ export default function Reports() {
         </>
       )}
 
-      {/* Most Used Section */}
       {activeSection === "mostUsed" && (
         <div className="w-full max-w-6xl mx-auto mt-6 px-4 pb-20">
           <button
@@ -292,7 +288,6 @@ export default function Reports() {
         </div>
       )}
 
-      {/* Projects Section */}
       {activeSection === "projects" && (
         <div className="w-full max-w-6xl mx-auto mt-6 px-4 pb-20">
           <button
@@ -302,21 +297,8 @@ export default function Reports() {
             <ArrowLeft size={20} />
             Back to Projects Report
           </button>
-
-          <div className="rounded-3xl border border-blue-300 bg-white/80 dark:bg-gray-900/70 p-10 shadow-2xl text-center">
-            <LayoutDashboard
-              size={36}
-              className="mx-auto text-blue-600 dark:text-blue-400 mb-4"
-            />
-            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">
-              Projects Report
-            </h2>
-            <p className="text-md text-gray-600 dark:text-gray-300">
-              This section will show reports related to project-based resource
-              usage, active vs. completed projects, and equipment distribution
-              per project.
-            </p>
-          </div>
+          {/* Projects Table View Integration */}
+          <ProjectTableView />
         </div>
       )}
     </div>

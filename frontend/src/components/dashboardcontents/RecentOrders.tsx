@@ -42,25 +42,25 @@ export default function RecentOrders() {
             <TableRow>
               <TableCell
                 isHeader
-                className="py-2 text-xs font-medium text-gray-500 text-start dark:text-gray-400"
+                className="py-2 text-xs font-bold text-gray-700 text-start dark:text-white"
               >
                 Item
               </TableCell>
               <TableCell
                 isHeader
-                className="py-2 text-xs font-medium text-gray-500 text-start dark:text-gray-400"
+                className="py-2 text-xs font-bold text-gray-700 text-start dark:text-white"
               >
                 Tag
               </TableCell>
               <TableCell
                 isHeader
-                className="py-2 text-xs font-medium text-gray-500 text-start dark:text-gray-400"
+                className="py-2 text-xs font-bold text-gray-700 text-start dark:text-white"
               >
                 Added By
               </TableCell>
               <TableCell
                 isHeader
-                className="py-2 text-xs font-medium text-gray-500 text-start dark:text-gray-400"
+                className="py-2 text-xs font-bold text-gray-700 text-start dark:text-white"
               >
                 Date
               </TableCell>
