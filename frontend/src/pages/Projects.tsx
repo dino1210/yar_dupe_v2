@@ -772,6 +772,7 @@ export default function Projects() {
                         startDate: formatDateToYYYYMMDD(date),
                       })
                     }
+                    disabled={isEditing}
                     minDate={new Date()} // Prevent past dates
                     className="w-full p-2 rounded border bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600"
                     placeholderText="Start Date"
@@ -800,6 +801,7 @@ export default function Projects() {
                         ),
                       })
                     }
+                    disabled={isEditing}
                     minDate={
                       formData.startDate
                         ? new Date(
