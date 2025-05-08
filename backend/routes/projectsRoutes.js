@@ -5,7 +5,7 @@ const projectController = require("../controllers/projectsController");
 // GET all
 router.get("/", projectController.getAllProjects);
 
-//Project History
+//Project Historys
 router.get("/history", projectController.getProjectHistory);
 
 // GET project stats
