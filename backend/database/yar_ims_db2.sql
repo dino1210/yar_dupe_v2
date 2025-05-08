@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 07, 2025 at 06:03 PM
+-- Generation Time: May 07, 2025 at 02:25 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -183,11 +183,12 @@ CREATE TABLE `projects` (
 --
 
 INSERT INTO `projects` (`id`, `title`, `manager`, `person_in_charge`, `tools_equipment_used`, `consumables_used`, `vehicles_used`, `start_date`, `end_date`, `status`, `remarks`, `creator`, `location`) VALUES
-(128, 'sample', 'Admin', 'sample', 'tite', 'Cutting Disc 4\" 2.5mm', 'Isuzu Giga Crane Truck', '2025-05-05', '2025-05-06', 'Completed', NULL, 'Yard Admin', 'sample'),
-(129, 'Renovation', 'Itchoy', 'Ronald', 'Dartek Angle Grinder', 'Cutting Disc 4\" 2.5mm', 'Hino Dump Truck', '2025-05-06', '2025-05-06', 'Cancelled', NULL, 'Yard Admin', 'Makati'),
-(130, 'Testing 2', 'Itchoy', 'Ronald', 'try nga ', 'TITE, ASD', 'Hyundai HD320 Flatbed Truck', '2025-05-08', '2025-05-15', 'Upcoming', NULL, 'Yard Admin', 'Makati'),
-(131, 'Mcdo Renovation ', 'Itchoy', 'Ronald', 'try nga ', 'Cutting Disc 4\" 2.5mm', 'TITE', '2025-05-06', '2025-05-09', 'Ongoing', NULL, 'Yard Admin', 'Makati'),
-(132, 'Drainage Cleaning ', 'Itchoy', 'Gwapo', 'Makita Angle Grinder ', ' Ronald', 'testvec', '2025-05-10', '2025-05-20', 'Upcoming', NULL, 'Yard Admin', 'Manila');
+(133, 'Epson Philippines', 'Yard Admin', 'Crew Team A', 'Roofing Tools', 'Sealant, Brushes', 'Truck 1', '2025-05-01', '2025-05-03', 'Completed', 'Cleaning of Roofing', 'Yard Admin', 'Epson Plant'),
+(134, 'Teletech Lipa', 'Yard Admin', 'Crew Team B', 'Tiling Tools', 'Tile Adhesive', 'Van 2', '2025-04-26', '2025-04-28', 'Completed', 'Retiling and Urinal', 'Yard Admin', 'Lipa, Batangas'),
+(135, 'Shakeys', 'Yard Admin', 'Crew Team C', 'Piping Kit', 'PVC, Epoxy', 'Truck 2', '2025-04-15', '2025-04-17', 'Completed', 'Repiping', 'Yard Admin', 'Shakeys Branch'),
+(136, 'Mang Inasal', 'Yard Admin', 'Crew Team D', 'Ceiling Tools', 'Paint, Screws', 'Truck 3', '2025-03-10', '2025-03-12', 'Completed', 'Ceiling Rework', 'Yard Admin', 'Mang Inasal'),
+(137, 'Sohbi Kohgie', 'Yard Admin', 'Crew Team E', 'Painting Tools', 'Paints, Rollers', 'Van 3', '2025-02-20', '2025-02-22', 'Completed', 'Repainting and Electrical', 'Yard Admin', 'Laguna'),
+(138, 'Precision', 'Yard Admin', 'Crew Team F', 'Drain Tools', 'Sealant, Drain Hose', 'Truck 5', '2025-01-15', '2025-01-17', 'Completed', 'Drainage Work', 'Yard Admin', 'Calamba');
 
 -- --------------------------------------------------------
 
@@ -235,31 +236,7 @@ INSERT INTO `tools` (`id`, `picture`, `name`, `brand`, `category`, `tag`, `descr
 (81, '1746517538350-873123075.jpeg', 'Pipe Laser Level', 'Topcon ', 'Yard Drainage Tool', 'TOOL-PLASER-003', 'A precision tool used to project a laser beam down the length of a pipe to ensure correct grade and alignment during drainage installation.', '2025-05-05', '2025-10-28', 'Available', 'Brand new', 'Itchoy', 'TOOL-5ce4ec9c-d63d-43b0-a08d-c2c0c4e104c2.png', 'TOOL-5ce4ec9c-d63d-43b0-a08d-c2c0c4e104c2', '2025-05-06 15:45:38'),
 (82, '1746517602050-649927424.jpeg', 'Pipe Laser Level (2)', 'Topcon ', 'Yard Drainage Tool', 'TOOL-PLASER-034', 'A precision tool used to project a laser beam down the length of a pipe to ensure correct grade and alignment during drainage installation.', '2025-05-05', '2025-09-30', 'Available', 'Brand new', 'Itchoy', 'TOOL-c41a304f-bda6-41c6-bc61-d41cc9945ea3.png', 'TOOL-c41a304f-bda6-41c6-bc61-d41cc9945ea3', '2025-05-06 15:46:42'),
 (83, '1746517856760-695424771.jpg', 'Measuring Tape ', '	Stanley ', 'Yard Drainage Tool', 'TOOL-MTAPE100-004', 'A long measuring tape used for accurately measuring distances over large outdoor areas, such as trench runs and pipe placements.', '2025-05-05', '2025-09-30', 'Available', 'Brand new', 'Itchoy', 'TOOL-172a5262-42af-48ff-aa6e-8f9b63d219d2.png', 'TOOL-172a5262-42af-48ff-aa6e-8f9b63d219d2', '2025-05-06 15:50:56'),
-(84, '1746517910343-885970946.jpg', 'Measuring Tape (2)', 'Stanley', 'Yard Drainage Tool', 'TOOL-MTAPE100-219', 'A long measuring tape used for accurately measuring distances over large outdoor areas, such as trench runs and pipe placements.', '2025-05-05', '2025-10-27', 'Available', 'Brand new', 'Itchoy', 'TOOL-24b591a2-5eea-4c65-bf2d-23476780ffd6.png', 'TOOL-24b591a2-5eea-4c65-bf2d-23476780ffd6', '2025-05-06 15:51:50'),
-(85, '1746629348084-198981558.jpg', 'Genset Victor (Sky Blue)', 'Genset', 'Generator Set', 'POWER-GENSET_VICTOR-1', '3.5kVA portable generator, gasoline powered', '2023-08-14', '2024-08-14', 'Available', '1 defective', 'Admin', 'TOOL-eda16cce-dec4-493a-aada-a5d4b5b6a72a.png', 'TOOL-eda16cce-dec4-493a-aada-a5d4b5b6a72a', '2025-05-07 22:49:08'),
-(86, '1746629456648-712912185.jpg', 'Genset Victor (Sky Blue)', 'Genset', 'Generator Set', 'POWER-GENSET_VICTOR-2', '3.5kVA portable generator, gasoline powered', '2023-08-15', '2024-08-15', 'Available', 'Brand New', 'Admin', 'TOOL-284f51f8-3223-4cf4-b9e2-9db1dc974610.png', 'TOOL-284f51f8-3223-4cf4-b9e2-9db1dc974610', '2025-05-07 22:50:56'),
-(87, '1746629557217-172390063.jpg', 'Genset Daiden (Green)', 'Genset', 'Generator Set', 'POWER-GENSET_DAIDEN-1', 'Heavy-duty 5kVA diesel generator', '2022-11-30', '2024-11-30', 'Available', '', 'Admin', 'TOOL-4484e16a-fe9b-468c-a253-de3fcd608b4d.png', 'TOOL-4484e16a-fe9b-468c-a253-de3fcd608b4d', '2025-05-07 22:52:37'),
-(88, '1746629628188-94278516.jpg', 'Genset Silent (Red)', 'Genset', 'Generator Set', 'POWER-GENSET_SILENT-1', '6.5kVA silent diesel generator with AVR', '2023-03-09', '2024-03-09', 'Available', '', 'Admin', 'TOOL-cb3da547-3c35-40c4-a1bc-f7755f9f2e50.png', 'TOOL-cb3da547-3c35-40c4-a1bc-f7755f9f2e50', '2025-05-07 22:53:48'),
-(89, '1746629704299-12781169.png', 'Genset Italy (Orange)', 'Genset', 'Generator Set', 'POWER-GENSET_ITALY-1', 'European-built 4kVA industrial generator', '2024-01-19', '2025-01-19', 'Available', 'Brand New', 'Admin', 'TOOL-533a3d24-406c-4d27-b119-227ccf2ad2c9.png', 'TOOL-533a3d24-406c-4d27-b119-227ccf2ad2c9', '2025-05-07 22:55:04'),
-(90, '1746629777694-156453276.jpg', 'Genset Anmax (New)', 'Genset', 'Generator Set', 'POWER-GENSET_ANMAX-1	', '7kVA high-efficiency generator for site use', '2024-06-05', '2025-06-05', 'Available', 'Brand New', 'Admin', 'TOOL-b248a212-309b-4488-81e2-9b4c5973754c.png', 'TOOL-b248a212-309b-4488-81e2-9b4c5973754c', '2025-05-07 22:56:17'),
-(91, '1746630000542-352708869.jpg', 'Cement Mixer	', 'BuildMaster', 'Mixer', 'POWER-CMNTMXR-1', 'Heavy-duty 400L electric drum-type cement mixer', '2023-09-30', '2024-09-30', 'Available', '', 'Admin', 'TOOL-b4fbc84e-492e-4fb4-a723-4af54c41f464.png', 'TOOL-b4fbc84e-492e-4fb4-a723-4af54c41f464', '2025-05-07 23:00:00'),
-(92, '1746630231582-458039764.jpg', 'Drain Cam Unit', 'CamInspect', 'Drain Cam', 'POWER-DRAINCAM-1', 'High-resolution industrial drain inspection camera unit	', '2023-09-09', '2024-09-09', 'Available', 'Brand New', 'Admin', 'TOOL-ff81124e-d8e1-4303-ab44-93daade1416c.png', 'TOOL-ff81124e-d8e1-4303-ab44-93daade1416c', '2025-05-07 23:03:51'),
-(93, '1746630288572-819067358.jpg', 'Drain Cam Monitor	', 'CamInspect', 'Drain Cam', 'POWER-DRAINCAMMNTR-1	', '7\" waterproof monitor for drain cam system	', '2023-09-09', '2024-09-09', 'Available', '', 'Admin', 'TOOL-03c1bf3f-e9f3-41fa-9777-7726f92fb9f6.png', 'TOOL-03c1bf3f-e9f3-41fa-9777-7726f92fb9f6', '2025-05-07 23:04:48'),
-(94, '1746630361399-621560482.jpg', 'Drain Cam Cable	', 'CamInspect', 'Drain Cam', 'POWER-DRAINCAMCBLE-1	', '30-meter flexible fiber-optic drain cam cable (1st roll)	', '2023-09-09', '2024-09-09', 'Available', '', 'Admin', 'TOOL-194d9391-440f-4774-ae6a-29a59c6bc57c.png', 'TOOL-194d9391-440f-4774-ae6a-29a59c6bc57c', '2025-05-07 23:06:01'),
-(95, '1746630420308-330662263.jpg', 'Drain Cam Cable	', 'CamInspect', 'Drain Cam', 'POWER-DRAINCAMCBLE-1	', '30-meter flexible fiber-optic drain cam cable (2nd roll)	', '2023-09-09', '2024-09-09', 'Available', '', 'Admin', 'TOOL-67e82145-a6a6-42c6-ad11-9c31329917e7.png', 'TOOL-67e82145-a6a6-42c6-ad11-9c31329917e7', '2025-05-07 23:07:00'),
-(96, '1746630582079-351043054.jpg', 'Ingco Multifunction Tool	', 'Ingco', 'Ingco Multifunction Tool	', 'POWER-MULTITOOLS_I	', '300W oscillating multi-tool for sanding, cutting, and scraping	', '2024-02-01', '2025-02-01', 'Available', 'Brand New', 'Admin', 'TOOL-274a92bb-42b0-4382-a0fa-084a81a6a3ff.png', 'TOOL-274a92bb-42b0-4382-a0fa-084a81a6a3ff', '2025-05-07 23:09:42'),
-(97, '1746630644112-861816027.jpg', 'Ingco Multifunction Tool	', 'Ingco', 'Ingco Multifunction Tool	', 'POWER-MULTITOOLS_I	', '300W oscillating multi-tool for sanding, cutting, and scraping	', '2024-02-01', '2025-02-01', 'Available', 'Brand New', 'Admin', 'TOOL-83c86504-23df-4ecc-b5f4-c32a7d5e53cb.png', 'TOOL-83c86504-23df-4ecc-b5f4-c32a7d5e53cb', '2025-05-07 23:10:44'),
-(98, '1746630701298-425231566.jpg', 'Ingco Multifunction Tool	', 'Ingco', 'Ingco Multifunction Tool	', 'POWER-MULTITOOLS_I	', '300W oscillating multi-tool for sanding, cutting, and scraping	', '2024-02-01', '2025-02-01', 'Available', 'Brand New', 'Admin', 'TOOL-96e08fbf-b86d-4aa3-941d-4755a6f768c3.png', 'TOOL-96e08fbf-b86d-4aa3-941d-4755a6f768c3', '2025-05-07 23:11:41'),
-(99, '1746630942301-847591449.jpg', 'Electric Power Sprayer	', 'Agrijet', 'Power Sprayer', 'POWER-ELCTRCSPRYR-1	', '12V high-pressure electric sprayer, 16L capacity	', '2023-06-05', '2024-06-05', 'Available', '', 'Admin', 'TOOL-afee63d1-e6cd-4bc7-840b-323e8f2e941d.png', 'TOOL-afee63d1-e6cd-4bc7-840b-323e8f2e941d', '2025-05-07 23:15:42'),
-(100, '1746631021351-55274812.jpg', 'Electric Power Sprayer', 'Agrijet', 'Power Sprayer', 'POWER-ELCTRCSPRYR-2	', '12V high-pressure electric sprayer, 16L capacity	', '2023-06-05', '2024-06-05', 'Available', '', 'Admin', 'TOOL-f15c9bb6-a4bb-4420-958c-bdb1f8dc1eb7.png', 'TOOL-f15c9bb6-a4bb-4420-958c-bdb1f8dc1eb7', '2025-05-07 23:17:01'),
-(101, '1746631068388-14704565.jpg', 'Electric Power Sprayer', 'Agrijet', 'Power Sprayer', 'POWER-ELCTRCSPRYR-3', '12V high-pressure electric sprayer, 16L capacity	', '2023-06-05', '2024-06-05', 'Available', 'Brand New', 'Admin', 'TOOL-ca1482e6-8923-40b7-ab9d-63e503eb0658.png', 'TOOL-ca1482e6-8923-40b7-ab9d-63e503eb0658', '2025-05-07 23:17:48'),
-(102, '1746631112418-863346912.jpg', 'Electric Power Sprayer', 'Agrijet', 'Power Sprayer', 'POWER-ELCTRCSPRYR-4', '12V high-pressure electric sprayer, 16L capacity	', '2023-06-05', '2024-06-05', 'Available', 'Brand New', 'Admin', 'TOOL-8dae965a-f479-421d-8bfe-d780082d70f0.png', 'TOOL-8dae965a-f479-421d-8bfe-d780082d70f0', '2025-05-07 23:18:32'),
-(103, '1746631236455-201815716.jpg', 'Power Sprayer Motor Type', 'Jetforce', 'Power Sprayer', 'POWER-MTRTYPESPRYR-1', 'Gasoline-powered motor pump for sprayer unit', '2023-05-31', '2024-05-31', 'Available', 'Brand New', 'Admin', 'TOOL-cea8de22-08d1-4a4d-8c4f-6423e25828ab.png', 'TOOL-cea8de22-08d1-4a4d-8c4f-6423e25828ab', '2025-05-07 23:20:36'),
-(104, '1746631302615-975461971.jpg', 'Power Sprayer Motor Type', 'Jetforce', 'Power Sprayer', 'POWER-MTRTYPESPRYR-2	', 'Gasoline-powered motor pump for sprayer unit', '2023-05-31', '2024-05-31', 'Available', 'Brand New', 'Admin', 'TOOL-71c24bad-45ff-4844-aff1-5e0a58972201.png', 'TOOL-71c24bad-45ff-4844-aff1-5e0a58972201', '2025-05-07 23:21:42'),
-(105, '1746631351546-892645619.jpg', 'Power Sprayer Motor Type', 'Jetforce', 'Power Sprayer', 'POWER-MTRTYPESPRYR-3', 'Gasoline-powered motor pump for sprayer unit', '2023-05-31', '2024-05-31', 'Available', 'Brand New', 'Admin', 'TOOL-4845571a-c0b6-4153-ade5-a412630247d0.png', 'TOOL-4845571a-c0b6-4153-ade5-a412630247d0', '2025-05-07 23:22:31'),
-(106, '1746631556096-26459230.jpg', 'Riveter', 'Worksite', 'Riveter', 'HAND-RIVETER-1', 'Manual hand riveter with adjustable grip', '2023-01-01', '2024-01-01', 'Available', '', 'Admin', 'TOOL-e066ec4d-ab4b-4499-8005-4eafd1f599dd.png', 'TOOL-e066ec4d-ab4b-4499-8005-4eafd1f599dd', '2025-05-07 23:25:56'),
-(107, '1746631602385-714093486.jpg', 'Riveter', 'Worksite', 'Riveter', 'HAND-RIVETER-2', 'Manual hand riveter with adjustable grip', '2023-01-01', '2024-01-01', 'Available', '', 'Admin', 'TOOL-8cdaa905-c387-4f72-a877-fd4bbd787d8d.png', 'TOOL-8cdaa905-c387-4f72-a877-fd4bbd787d8d', '2025-05-07 23:26:42'),
-(108, '1746631644353-760974461.jpg', 'Riveter', 'Worksite', 'Riveter', 'HAND-RIVETER-3', 'Manual hand riveter with adjustable grip', '2023-01-01', '2024-01-01', 'Available', '', 'Admin', 'TOOL-f2c62f3a-e2df-4827-8a94-3902d65e9d79.png', 'TOOL-f2c62f3a-e2df-4827-8a94-3902d65e9d79', '2025-05-07 23:27:24');
+(84, '1746517910343-885970946.jpg', 'Measuring Tape (2)', 'Stanley', 'Yard Drainage Tool', 'TOOL-MTAPE100-219', 'A long measuring tape used for accurately measuring distances over large outdoor areas, such as trench runs and pipe placements.', '2025-05-05', '2025-10-27', 'Available', 'Brand new', 'Itchoy', 'TOOL-24b591a2-5eea-4c65-bf2d-23476780ffd6.png', 'TOOL-24b591a2-5eea-4c65-bf2d-23476780ffd6', '2025-05-06 15:51:50');
 
 -- --------------------------------------------------------
 
@@ -554,13 +531,13 @@ ALTER TABLE `consumables_logs`
 -- AUTO_INCREMENT for table `projects`
 --
 ALTER TABLE `projects`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=133;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=139;
 
 --
 -- AUTO_INCREMENT for table `tools`
 --
 ALTER TABLE `tools`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=109;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=85;
 
 --
 -- AUTO_INCREMENT for table `tools_logs`
