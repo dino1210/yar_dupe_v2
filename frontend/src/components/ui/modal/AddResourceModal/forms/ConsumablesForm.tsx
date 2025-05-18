@@ -57,8 +57,7 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({
     form.append("unit", formData.unit);
     form.append("location", formData.location);
     form.append("added_by", user.name);
-    form.append("existingPicture", formData.existingPicture); 
-
+    form.append("existingPicture", formData.existingPicture);
 
     if (formData.picture) {
       form.append("picture", formData.picture);
@@ -147,14 +146,28 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({
         <label className="mb-1 font-medium text-xs text-gray-700 dark:text-gray-300">
           Category
         </label>
-        <input
-          type="text"
+        <select
           name="category"
-          value={formData.category || ""}
+          value={formData.category}
           onChange={handleInputChange}
           required
-          className="border rounded-md p-2 text-xs bg-white text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
-        />
+          className="border rounded-md p-2 bg-white text-xs text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 w-full"
+        >
+          <option value="">Select Category</option>
+          <option value="Fasteners & Cutting Tools">
+            Fasteners & Cutting Tools
+          </option>
+          <option value="Pipe & Fitting Accessories">
+            Pipe & Fitting Accessories
+          </option>
+          <option value="Adhesives & Coatings">Adhesives & Coatings</option>
+          <option value="Filtration & Drainage">Filtration & Drainage</option>
+          <option value="Safety Equipment">Safety Equipment</option>
+          <option value="Measuring & Marking Tools">
+            Measuring & Marking Tools
+          </option>
+          <option value="Welding Supplies">Welding Supplies</option>
+        </select>
       </div>
 
       {/* Quantity */}
@@ -245,12 +258,12 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({
 
       {/* Submit Button */}
       <div className="col-span-3 text-right mt-4 ">
-      <button
-  type="submit"
-  className="px-5 py-2 mr-2 bg-blue-800 text-white text-xs rounded-md hover:bg-blue-700 transition"
->
-  {consumableToEdit ? "Update" : "Add"}
-</button>
+        <button
+          type="submit"
+          className="px-5 py-2 mr-2 bg-blue-800 text-white text-xs rounded-md hover:bg-blue-700 transition"
+        >
+          {consumableToEdit ? "Update" : "Add"}
+        </button>
         <button
           type="button"
           onClick={onClose}

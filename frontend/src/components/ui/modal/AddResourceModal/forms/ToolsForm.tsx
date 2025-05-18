@@ -12,9 +12,34 @@ type ToolFormProps = {
   toolToEdit?: any;
 };
 
-const ToolForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess, toolToEdit }) => {
+const ToolForm: React.FC<ToolFormProps> = ({
+  onClose,
+  onAddSuccess,
+  toolToEdit,
+}) => {
   useEffect(() => {
-    console.log(" Current USER from localStorage:", localStorage.getItem("user"));
+    console.log(
+      " Current USER from localStorage:",
+      localStorage.getItem("user")
+    );
+  }, []);
+
+  const [categories, setCategories] = useState<
+    { id: number; category_name: string }[]
+  >([]);
+
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/categories`)
+      .then((res) => res.json())
+      .then((data) => {
+        const toolCategories = data.filter(
+          (cat: any) => cat.category_type === "Tool"
+        );
+        setCategories(toolCategories);
+      })
+      .catch((error) => {
+        console.error("Failed to fetch categories", error);
+      });
   }, []);
 
   const [formData, setFormData] = useState({
@@ -26,6 +51,7 @@ const ToolForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess, toolToEdit }
     description: "",
     purchase_date: null as Date | null,
     warranty: null as Date | null,
+    warrantyDuration: "",
     remarks: "",
     status: "Available",
   });
@@ -35,13 +61,13 @@ const ToolForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess, toolToEdit }
       setFormData({
         ...toolToEdit,
         picture: null,
-        purchase_date: toolToEdit.purchase_date ? new Date(toolToEdit.purchase_date) : null,
+        purchase_date: toolToEdit.purchase_date
+          ? new Date(toolToEdit.purchase_date)
+          : null,
         warranty: toolToEdit.warranty ? new Date(toolToEdit.warranty) : null,
       });
     }
   }, [toolToEdit]);
-
-
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,10 +83,6 @@ const ToolForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess, toolToEdit }
     form.append("status", formData.status);
     form.append("added_by", user.name);
 
-
-
-
-
     if (formData.purchase_date) {
       form.append(
         "purchase_date",
@@ -68,17 +90,26 @@ const ToolForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess, toolToEdit }
       );
     }
 
-    if (formData.warranty) {
-      form.append("warranty", formData.warranty.toISOString().split("T")[0]);
+    // Compute warranty based on duration at the time of submit
+    let warrantyDate = formData.warranty;
+
+    if (formData.warrantyDuration && formData.purchase_date) {
+      const months = parseInt(formData.warrantyDuration);
+      const newWarranty = new Date(formData.purchase_date);
+      newWarranty.setMonth(newWarranty.getMonth() + months);
+      warrantyDate = newWarranty;
     }
 
+    if (warrantyDate) {
+      form.append("warranty", warrantyDate.toISOString().split("T")[0]);
+    }
 
     if (formData.picture) {
       form.append("picture", formData.picture);
     } else if (toolToEdit?.picture) {
       form.append("existing_picture", toolToEdit.picture);
     }
-    
+
     try {
       const apiUrl = toolToEdit
         ? `${import.meta.env.VITE_API_BASE_URL}/api/tools/${toolToEdit.id}`
@@ -128,7 +159,6 @@ const ToolForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess, toolToEdit }
     });
   };
 
-
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setFormData((prevData) => ({
@@ -172,14 +202,18 @@ const ToolForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess, toolToEdit }
         <label className="mb-1 font-medium text-xs text-gray-700 dark:text-gray-300">
           Category
         </label>
-        <input
-          type="text"
+        <select
           name="category"
-          value={formData.category || ""}
+          value={formData.category}
           onChange={handleInputChange}
           required
           className="border rounded-md p-2 text-xs bg-white text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
-        />
+        >
+          <option value="">Select Category</option>
+          <option value="Yard Drainage Tool">Yard Drainage Tool</option>
+          <option value="Drainage Pipe">Drainage Pipe</option>
+          <option value="Digging Machine">Digging Machine</option>
+        </select>
       </div>
 
       <div className="flex flex-col">
@@ -231,27 +265,23 @@ const ToolForm: React.FC<ToolFormProps> = ({ onClose, onAddSuccess, toolToEdit }
           maxDate={new Date()}
         />
       </div>
-
       <div className="flex flex-col">
         <label className="mb-1 font-medium text-xs text-gray-700 dark:text-gray-300">
           Warranty
         </label>
-        <DatePicker
-          selected={formData.warranty}
-          onChange={(date: Date | null) =>
-            setFormData((prev) => ({
-              ...prev,
-              warranty: date,
-            }))
-          }
-          dateFormat="yyyy-MM-dd"
-          placeholderText="Select a date"
-          className="border rounded-md p-2 bg-white text-xs text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 w-full"
-          calendarClassName="dark:bg-gray-700 dark:text-black"
-          showMonthDropdown
-          showYearDropdown
-          dropdownMode="select"
-        />
+        <select
+          name="warrantyDuration"
+          value={formData.warrantyDuration}
+          onChange={handleInputChange}
+          required
+          className="border rounded-md p-2 text-xs bg-white text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
+        >
+          <option value="">Select Warranty Duration</option>
+          <option value="3">3 Months</option>
+          <option value="6">6 Months</option>
+          <option value="9">9 Months</option>
+          <option value="12">12 Months</option>
+        </select>
       </div>
 
       <div className="flex flex-col">

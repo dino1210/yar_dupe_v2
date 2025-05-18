@@ -616,7 +616,7 @@ export default function Projects() {
       <Dialog
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        className="fixed z-50 inset-0 overflow-y-auto"
+        className="fixed z-999999 inset-0 overflow-y-auto"
       >
         <div className="flex items-center justify-center min-h-screen px-4">
           <Dialog.Panel className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-lg max-w-4xl w-full space-y-6">

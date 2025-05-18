@@ -174,7 +174,19 @@ export default function ConsumablesTable() {
           className="border p-2 text-xs rounded-md w-full sm:w-1/4 bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
         >
           <option value="">Category</option>
-          <option value="Yard Drainage Tool">Yard Drainage Tool</option>
+          <option value="Fasteners & Cutting Tools">
+            Fasteners & Cutting Tools
+          </option>
+          <option value="Pipe & Fitting Accessories">
+            Pipe & Fitting Accessories
+          </option>
+          <option value="Adhesives & Coatings">Adhesives & Coatings</option>
+          <option value="Filtration & Drainage">Filtration & Drainage</option>
+          <option value="Safety Equipment">Safety Equipment</option>
+          <option value="Measuring & Marking Tools">
+            Measuring & Marking Tools
+          </option>
+          <option value="Welding Supplies">Welding Supplies</option>
         </select>
 
         {/* Fixed Status Dropdown with Correct Values */}

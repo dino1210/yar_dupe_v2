@@ -294,8 +294,8 @@ export default function VehiclesTable() {
                   "Remarks",
                   "Maintenance Due",
                   "Asigned Driver",
-                  "Attachment",
-                  "History",
+                  // "Attachment",
+                  // "History",
                   "QR",
                   "Actions",
                 ].map((header, index) => (
@@ -392,7 +392,7 @@ export default function VehiclesTable() {
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                       {vehicle.assigned_driver}
                     </TableCell>
-                    <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
+                    {/* <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                       <button className="flex flex-row gap-1 border  border-gray-600 bg-white hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 m-auto rounded-lg px-7 py-2">
                         <File className="w-auto h-4 m-auto" />
                         <p className="m-auto">File</p>
@@ -405,7 +405,7 @@ export default function VehiclesTable() {
                         <p className="m-auto">View</p>
                       </button>
                       {vehicle.history}
-                    </TableCell>
+                    </TableCell> */}
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                       <img
                         src={`${

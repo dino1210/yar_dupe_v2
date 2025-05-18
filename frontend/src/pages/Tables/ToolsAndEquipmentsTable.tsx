@@ -160,7 +160,9 @@ export default function ToolsAndEquipmentsTable() {
       ? tool.category.toLowerCase().includes(categoryFilter.toLowerCase())
       : true;
 
-    const matchesStatus = statusFilter ? tool.status === statusFilter : true;
+    const matchesStatus = statusFilter
+      ? tool.status.toLowerCase() === statusFilter.toLowerCase()
+      : true;
 
     return matchesSearch && matchesCategory && matchesStatus;
   });
@@ -202,8 +204,8 @@ export default function ToolsAndEquipmentsTable() {
         >
           <option value="">Status</option>
           <option value="Available">Available</option>
-          <option value="Issued-Out">Issued-Out</option>
-          <option value="Disabled">Disabled</option>
+          <option value="Issued Out">Issued Out</option>
+          <option value="Not Available">Not Available</option>
         </select>
         {/* A-Z Sort Button */}
         <button
@@ -271,8 +273,8 @@ export default function ToolsAndEquipmentsTable() {
                   "Date of Purchase",
                   "Warranty",
                   "Remarks",
-                  "Attachment",
-                  "History",
+                  // "Attachment",
+                  // "History",
                   "QR",
                   "Actions",
                 ].map((header, index) => (
@@ -329,7 +331,13 @@ export default function ToolsAndEquipmentsTable() {
                       <Badge
                         size="sm"
                         color={
-                          tool.status === "Available" ? "success" : "warning"
+                          tool.status === "Available"
+                            ? "success"
+                            : tool.status === "Issued Out"
+                            ? "warning"
+                            : tool.status === "Not Available"
+                            ? "secondary"
+                            : "secondary"
                         }
                       >
                         {tool.status}
@@ -340,18 +348,6 @@ export default function ToolsAndEquipmentsTable() {
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                       {tool.warranty
-                        ? new Date(tool.purchase_date).toLocaleDateString(
-                            "en-US",
-                            {
-                              year: "numeric",
-                              month: "long",
-                              day: "numeric",
-                            }
-                          )
-                        : "-"}
-                    </TableCell>
-                    <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
-                      {tool.warranty
                         ? new Date(tool.warranty).toLocaleDateString("en-US", {
                             year: "numeric",
                             month: "long",
@@ -359,10 +355,26 @@ export default function ToolsAndEquipmentsTable() {
                           })
                         : "-"}
                     </TableCell>
+
+                    <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
+                      {tool.warranty && tool.purchase_date
+                        ? (() => {
+                            const purchase = new Date(tool.purchase_date);
+                            const warranty = new Date(tool.warranty);
+                            const months =
+                              (warranty.getFullYear() -
+                                purchase.getFullYear()) *
+                                12 +
+                              (warranty.getMonth() - purchase.getMonth());
+                            return `${months} MONTHS`;
+                          })()
+                        : "-"}
+                    </TableCell>
+
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                       {tool.remarks}
                     </TableCell>
-                    <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
+                    {/* <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                       <button className="flex flex-row gap-1 border border-gray-600 bg-white hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 m-auto rounded-lg px-7 py-2">
                         <Paperclip className="w-auto h-4 m-auto" />
                         <p className="m-auto">File</p>
@@ -375,7 +387,7 @@ export default function ToolsAndEquipmentsTable() {
                         <p className="m-auto">View</p>
                       </button>
                       {tool.history}
-                    </TableCell>
+                    </TableCell> */}
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-xs text-center dark:text-gray-400">
                       <img
                         src={`${

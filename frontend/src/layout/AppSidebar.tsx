@@ -39,11 +39,11 @@ const navItems: NavItem[] = [
       { name: "Vehicles Logs", path: "/vehicles-logs", pro: false },
     ],
   },
-  {
-    icon: <Boxes />,
-    name: "Categories",
-    path: "/categories",
-  },
+  // {
+  //   icon: <Boxes />,
+  //   name: "Categories",
+  //   path: "/categories",
+  // },
   {
     icon: <DocsIcon />,
     name: "Reports",

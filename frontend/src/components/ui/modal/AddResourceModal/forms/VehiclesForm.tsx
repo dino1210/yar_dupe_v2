@@ -11,7 +11,11 @@ type VehicleFormProps = {
   vehicleToEdit?: any;
 };
 
-const VehicleForm: React.FC<VehicleFormProps> = ({ onClose, onAddSuccess, vehicleToEdit }) => {
+const VehicleForm: React.FC<VehicleFormProps> = ({
+  onClose,
+  onAddSuccess,
+  vehicleToEdit,
+}) => {
   const [formData, setFormData] = useState({
     picture: null as File | null,
     name: "",
@@ -28,15 +32,20 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ onClose, onAddSuccess, vehicl
     status: "Available",
   });
 
- 
   useEffect(() => {
     if (vehicleToEdit) {
       setFormData({
         ...vehicleToEdit,
         picture: null,
-        acquisition_date: vehicleToEdit.acquisition_date ? new Date(vehicleToEdit.acquisition_date) : null,
-        warranty: vehicleToEdit.warranty ? new Date(vehicleToEdit.warranty) : null,
-        maintenance_due: vehicleToEdit.maintenance_due ? new Date(vehicleToEdit.maintenance_due) : null,
+        acquisition_date: vehicleToEdit.acquisition_date
+          ? new Date(vehicleToEdit.acquisition_date)
+          : null,
+        warranty: vehicleToEdit.warranty
+          ? new Date(vehicleToEdit.warranty)
+          : null,
+        maintenance_due: vehicleToEdit.maintenance_due
+          ? new Date(vehicleToEdit.maintenance_due)
+          : null,
       });
     }
   }, [vehicleToEdit]);
@@ -58,7 +67,10 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ onClose, onAddSuccess, vehicl
     form.append("added_by", user.name);
 
     if (formData.acquisition_date) {
-      form.append("acquisition_date", formData.acquisition_date.toISOString().split("T")[0]);
+      form.append(
+        "acquisition_date",
+        formData.acquisition_date.toISOString().split("T")[0]
+      );
     }
 
     if (formData.warranty) {
@@ -66,7 +78,10 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ onClose, onAddSuccess, vehicl
     }
 
     if (formData.maintenance_due) {
-      form.append("maintenance_due", formData.maintenance_due.toISOString().split("T")[0]);
+      form.append(
+        "maintenance_due",
+        formData.maintenance_due.toISOString().split("T")[0]
+      );
     }
 
     if (formData.picture) {
@@ -77,7 +92,9 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ onClose, onAddSuccess, vehicl
 
     try {
       const apiUrl = vehicleToEdit
-        ? `${import.meta.env.VITE_API_BASE_URL}/api/vehicles/${vehicleToEdit.id}`
+        ? `${import.meta.env.VITE_API_BASE_URL}/api/vehicles/${
+            vehicleToEdit.id
+          }`
         : `${import.meta.env.VITE_API_BASE_URL}/api/vehicles`;
       const method = vehicleToEdit ? "PUT" : "POST";
 
@@ -87,7 +104,11 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ onClose, onAddSuccess, vehicl
       });
 
       if (response.ok) {
-        toast.success(vehicleToEdit ? "Vehicle updated successfully!" : "Vehicle added successfully!");
+        toast.success(
+          vehicleToEdit
+            ? "Vehicle updated successfully!"
+            : "Vehicle added successfully!"
+        );
         onAddSuccess();
         onClose();
       } else {
@@ -99,7 +120,9 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ onClose, onAddSuccess, vehicl
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
 
     setFormData((prevData) => {
@@ -129,7 +152,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ onClose, onAddSuccess, vehicl
         picture: e.target.files![0],
       }));
     }
-  }
+  };
   return (
     <form onSubmit={handleSubmit} className="grid grid-cols-3 gap-4">
       {/* Name */}
@@ -182,14 +205,20 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ onClose, onAddSuccess, vehicl
         <label className="mb-1 font-medium text-xs text-gray-700 dark:text-gray-300">
           Category
         </label>
-        <input
-          type="text"
+        <select
           name="category"
-          value={formData.category || ""}
+          value={formData.category}
           onChange={handleInputChange}
           required
           className="border rounded-md p-2 text-xs bg-white text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
-        />
+        >
+          <option value="">Select Category</option>
+          <option value="Dump Truck">Dump Truck</option>
+          <option value="Crane Truck">Crane Truck</option>
+          <option value="Tanker Truck">Tanker Truck</option>
+          <option value="Flatbed Truck">Flatbed Truck</option>
+          <option value="Tipper Truck">Tipper Truck</option>
+        </select>
       </div>
 
       {/* Fuel Type */}
@@ -346,8 +375,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ onClose, onAddSuccess, vehicl
           type="submit"
           className="px-5 py-2 mr-2 bg-blue-800 text-white text-xs rounded-md hover:bg-blue-700 transition"
         >
-       {vehicleToEdit ? "Update" : "Add"}
-
+          {vehicleToEdit ? "Update" : "Add"}
         </button>
         <button
           type="button"

@@ -180,17 +180,15 @@ export default function UserManagementTable() {
         <Table>
           <TableHeader className="border-b text-sm border-gray-100 dark:border-gray-700">
             <TableRow>
-              {["Name", "Email", "Role", "Status", "Actions"].map(
-                (header, index) => (
-                  <TableCell
-                    key={index}
-                    isHeader
-                    className="px-5 py-3 font-semibold text-theme-xs text-gray-500 dark:text-gray-400 text-start"
-                  >
-                    {header}
-                  </TableCell>
-                )
-              )}
+              {["Name", "Email", "Role", "Actions"].map((header, index) => (
+                <TableCell
+                  key={index}
+                  isHeader
+                  className="px-5 py-3 font-semibold text-theme-xs text-gray-500 dark:text-gray-400 text-start"
+                >
+                  {header}
+                </TableCell>
+              ))}
             </TableRow>
           </TableHeader>
 
@@ -207,11 +205,7 @@ export default function UserManagementTable() {
                   <TableCell className="px-4 py-3 text-xs text-gray-500 dark:text-gray-400 text-start">
                     {user.role}
                   </TableCell>
-                  <TableCell className="px-4 py-3 text-xs text-gray-500 dark:text-gray-400 text-start">
-                    <Badge size="sm" color={getBadgeColor(user.status)}>
-                      {user.status}
-                    </Badge>
-                  </TableCell>
+
                   <TableCell className="px-4 py-3 text-xs text-gray-500 dark:text-gray-400 text-start">
                     <button
                       onClick={() => handleEdit(user)}
