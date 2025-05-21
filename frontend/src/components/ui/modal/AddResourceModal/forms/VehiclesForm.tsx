@@ -145,6 +145,52 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
     });
   };
 
+ const [suggestionsBrand, setSuggestionsBrand] = useState<string[]>([]);
+  const [showSuggestionsBrand, setShowSuggestionsBrand] = useState(false);
+
+  const handleInputChangeBrand = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setFormData({ ...formData, brand: value });
+
+    if (value.trim().length === 0) {
+      setSuggestionsBrand([]);
+      setShowSuggestionsBrand(false);
+      return;
+    }
+
+    const filtered = brandList
+      .filter((item) => item.toLowerCase().includes(value.toLowerCase()))
+      .slice(0, 5);
+
+    setSuggestionsBrand(filtered);
+    setShowSuggestionsBrand(true);
+  };
+
+  const handleSuggestionClickBrand = (value: string) => {
+    setFormData({ ...formData, brand: value });
+    setSuggestionsBrand([]);
+    setShowSuggestionsBrand(false);
+  };
+
+const brandList = [
+  "Isuzu",
+  "Mitsubishi Fuso",
+  "Hino",
+  "Toyota Dyna",
+  "Hyundai",
+  "Nissan",
+  "UD Trucks",
+  "Tata",
+  "Foton",
+  "FAW",
+  "Dongfeng",
+  "Others",
+  "MAN",
+  "Volvo",
+  "Scania",
+];
+
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setFormData((prevData) => ({
@@ -171,19 +217,37 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
       </div>
 
       {/* Brand */}
-      <div className="flex flex-col">
+<div className="flex flex-col">
         <label className="mb-1 font-medium text-xs text-gray-700 dark:text-gray-300">
           Brand
         </label>
-        <input
-          type="text"
-          name="brand"
-          value={formData.brand || ""}
-          onChange={handleInputChange}
-          required
-          className="border rounded-md p-2 text-xs bg-white text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
-        />
+        <div className="relative">
+          <input
+            type="text"
+            name="brand"
+            value={formData.brand}
+            onChange={handleInputChangeBrand}
+            autoComplete="off"
+            required
+            className="border rounded-md p-2 text-xs bg-white text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 w-full"
+          />
+
+          {showSuggestionsBrand && suggestionsBrand.length > 0 && (
+            <ul className="absolute left-0 top-full mt-1 max-h-40 w-full overflow-y-auto rounded-md border border-gray-300 bg-white text-xs shadow-md dark:bg-gray-800 dark:text-white dark:border-gray-700 z-10">
+              {suggestionsBrand.slice(0, 2).map((suggestionsBrand, index) => (
+                <li
+                  key={index}
+                  onClick={() => handleSuggestionClickBrand(suggestionsBrand)}
+                  className="cursor-pointer px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  {suggestionsBrand}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </div>
+
 
       {/* Plate No. */}
       <div className="flex flex-col">
@@ -221,7 +285,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
         </select>
       </div>
 
-      {/* Fuel Type */}
+      {/* Fuel Type
       <div className="flex flex-col">
         <label className="mb-1 font-medium text-xs text-gray-700 dark:text-gray-300">
           Fuel Type
@@ -236,7 +300,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
           <option value="Gasoline">Gasoline</option>
           <option value="Diesel">Diesel</option>
         </select>
-      </div>
+      </div> */}
 
       {/* Location */}
       <div className="flex flex-col">
@@ -277,7 +341,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
         />
       </div>
 
-      {/* Warranty */}
+      {/* Warranty
       <div className="flex flex-col">
         <label className="mb-1 font-medium text-xs text-gray-700 dark:text-gray-300">
           Warranty
@@ -298,7 +362,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
           showYearDropdown
           dropdownMode="select"
         />
-      </div>
+      </div> */}
 
       {/* Maintenance Due */}
       <div className="flex flex-col">

@@ -24,24 +24,6 @@ const ToolForm: React.FC<ToolFormProps> = ({
     );
   }, []);
 
-  const [categories, setCategories] = useState<
-    { id: number; category_name: string }[]
-  >([]);
-
-  useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/categories`)
-      .then((res) => res.json())
-      .then((data) => {
-        const toolCategories = data.filter(
-          (cat: any) => cat.category_type === "Tool"
-        );
-        setCategories(toolCategories);
-      })
-      .catch((error) => {
-        console.error("Failed to fetch categories", error);
-      });
-  }, []);
-
   const [formData, setFormData] = useState({
     picture: null as File | null,
     name: "",
@@ -159,6 +141,109 @@ const ToolForm: React.FC<ToolFormProps> = ({
     });
   };
 
+  const [suggestionsCategory, setSuggestionsCategory] = useState<string[]>([]);
+  const [showSuggestionsCategory, setShowSuggestionsCategory] = useState(false);
+
+  const handleInputChangeCategory = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = e.target.value;
+    setFormData({ ...formData, category: value });
+
+    if (value.trim().length === 0) {
+      setSuggestionsCategory([]);
+      setShowSuggestionsCategory(false);
+      return;
+    }
+
+    const filtered = categoryList
+      .filter((item) => item.toLowerCase().includes(value.toLowerCase()))
+      .slice(0, 5);
+
+    setSuggestionsCategory(filtered);
+    setShowSuggestionsCategory(true);
+  };
+
+  const handleSuggestionClick = (value: string) => {
+    setFormData({ ...formData, category: value });
+    setSuggestionsCategory([]);
+    setShowSuggestionsCategory(false);
+  };
+
+  const categoryList = [
+    "Angle Grinder",
+    "Drill Machine",
+    "Vertical Grinder",
+    "Pencil Grinder",
+    "Circular Saw",
+    "Chainsaw",
+    "Grass Cutter",
+    "Electric Drill",
+    "Portable Drill",
+    "Sanding Machine",
+    "Jackhammer",
+    "Vibrator",
+    "Pumps",
+    "Vacuum",
+    "Electric Blower",
+    "Light",
+    "Charger",
+    "Radio",
+    "Cement Mixer",
+    "Nail Gun",
+    "Heat Gun",
+    "Compressor",
+    "Ladder",
+    "Shovel",
+    "Body Harness",
+    "Traffic Cone",
+    "Hose",
+  ];
+
+  const [suggestionsBrand, setSuggestionsBrand] = useState<string[]>([]);
+  const [showSuggestionsBrand, setShowSuggestionsBrand] = useState(false);
+
+  const handleInputChangeBrand = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setFormData({ ...formData, brand: value });
+
+    if (value.trim().length === 0) {
+      setSuggestionsBrand([]);
+      setShowSuggestionsBrand(false);
+      return;
+    }
+
+    const filtered = brandList
+      .filter((item) => item.toLowerCase().includes(value.toLowerCase()))
+      .slice(0, 5);
+
+    setSuggestionsBrand(filtered);
+    setShowSuggestionsBrand(true);
+  };
+
+  const handleSuggestionClickBrand = (value: string) => {
+    setFormData({ ...formData, brand: value });
+    setSuggestionsBrand([]);
+    setShowSuggestionsBrand(false);
+  };
+
+  const brandList = [
+    "Contender",
+    "XamaPro",
+    "Yamato",
+    "Power Craft",
+    "Mail Tank",
+    "Realm",
+    "Makita",
+    "Dartek",
+    "Bosch",
+    "DeWalt",
+    "Others",
+    "Kress",
+    "Megaman",
+    "Wurth",
+  ];
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setFormData((prevData) => ({
@@ -188,32 +273,64 @@ const ToolForm: React.FC<ToolFormProps> = ({
         <label className="mb-1 font-medium text-xs text-gray-700 dark:text-gray-300">
           Brand
         </label>
-        <input
-          type="text"
-          name="brand"
-          value={formData.brand || ""}
-          onChange={handleInputChange}
-          required
-          className="border rounded-md p-2 text-xs bg-white text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
-        />
+        <div className="relative">
+          <input
+            type="text"
+            name="brand"
+            value={formData.brand}
+            onChange={handleInputChangeBrand}
+            autoComplete="off"
+            required
+            className="border rounded-md p-2 text-xs bg-white text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 w-full"
+          />
+
+          {showSuggestionsBrand && suggestionsBrand.length > 0 && (
+            <ul className="absolute left-0 top-full mt-1 max-h-40 w-full overflow-y-auto rounded-md border border-gray-300 bg-white text-xs shadow-md dark:bg-gray-800 dark:text-white dark:border-gray-700 z-10">
+              {suggestionsBrand.slice(0, 2).map((suggestionsBrand, index) => (
+                <li
+                  key={index}
+                  onClick={() => handleSuggestionClickBrand(suggestionsBrand)}
+                  className="cursor-pointer px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  {suggestionsBrand}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </div>
 
       <div className="flex flex-col">
         <label className="mb-1 font-medium text-xs text-gray-700 dark:text-gray-300">
           Category
         </label>
-        <select
-          name="category"
-          value={formData.category}
-          onChange={handleInputChange}
-          required
-          className="border rounded-md p-2 text-xs bg-white text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400"
-        >
-          <option value="">Select Category</option>
-          <option value="Yard Drainage Tool">Yard Drainage Tool</option>
-          <option value="Drainage Pipe">Drainage Pipe</option>
-          <option value="Digging Machine">Digging Machine</option>
-        </select>
+        <div className="relative">
+          <input
+            type="text"
+            name="category"
+            value={formData.category}
+            onChange={handleInputChangeCategory}
+            autoComplete="off"
+            required
+            className="border rounded-md p-2 text-xs bg-white text-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-blue-400 w-full"
+          />
+
+          {showSuggestionsCategory && suggestionsCategory.length > 0 && (
+            <ul className="absolute left-0 top-full mt-1 max-h-40 w-full overflow-y-auto rounded-md border border-gray-300 bg-white text-xs shadow-md dark:bg-gray-800 dark:text-white dark:border-gray-700 z-10">
+              {suggestionsCategory
+                .slice(0, 2)
+                .map((suggestionsCategory, index) => (
+                  <li
+                    key={index}
+                    onClick={() => handleSuggestionClick(suggestionsCategory)}
+                    className="cursor-pointer px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    {suggestionsCategory}
+                  </li>
+                ))}
+            </ul>
+          )}
+        </div>
       </div>
 
       <div className="flex flex-col">

@@ -564,7 +564,7 @@ export default function Projects() {
       </div>
 
       {/* PROJECTS GRID */}
-      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-2">
+      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-1">
         {filteredProjects.map((proj) => (
           <div
             key={proj.id}
@@ -1271,7 +1271,7 @@ export default function Projects() {
                 Project Information
               </Dialog.Title>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Detailed overview of the project
+                Overview of the project
               </p>
             </div>
 
@@ -1302,12 +1302,10 @@ export default function Projects() {
                       <CheckCircle2 className="w-5 h-5" />{" "}
                       <strong>Status:</strong> {selectedProject.status}
                     </p>
-
                     <p className="flex items-center gap-2">
                       <CheckCircle2 className="w-5 h-5" />{" "}
                       <strong>Location:</strong> {selectedProject.location}
                     </p>
-
                     <p className="flex items-center gap-2">
                       <CalendarDays className="w-5 h-5" />{" "}
                       <strong>Expected Date:</strong>{" "}
@@ -1317,80 +1315,105 @@ export default function Projects() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg shadow text-center">
-                    <p className="font-semibold text-blue-600 dark:text-blue-400 mb-2 flex items-center justify-center gap-2">
+                  {/* Tools Table */}
+                  {/* Tools Table */}
+                  <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg shadow">
+                    <p className="font-semibold text-blue-600 dark:text-blue-400 mb-2 flex items-center gap-2">
                       <Construction className="w-5 h-5" /> Tools Table
                     </p>
-                    <div className="space-y-1">
-                      {selectedProject.tools ? (
-                        selectedProject.tools.split(",").map((item, idx) => (
-                          <p
-                            key={idx}
-                            className="text-gray-700 dark:text-gray-300"
-                          >
-                            {item.trim()}
-                          </p>
-                        ))
-                      ) : (
-                        <p className="text-gray-400 italic">
-                          No data available
-                        </p>
-                      )}
-                    </div>
+                    {selectedProject.tools ? (
+                      <div className="max-h-[100px] overflow-y-auto scrollbar-thin dark:scrollbar-thumb-gray-700 dark:scrollbar-track-gray-800 scrollbar-rounded">
+                        {" "}
+                        {/* approx height for 3 rows */}
+                        <table className="min-w-full text-sm text-left text-gray-700 dark:text-gray-300">
+                          <tbody>
+                            {selectedProject.tools
+                              .split(",")
+                              .map((tool, idx) => (
+                                <tr
+                                  key={idx}
+                                  className="border-b dark:border-gray-600"
+                                >
+                                  <td className="py-2 px-4">{idx + 1}</td>
+                                  <td className="py-2 px-4">{tool.trim()}</td>
+                                </tr>
+                              ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    ) : (
+                      <p className="text-gray-400 italic">
+                        No tools assigned yet
+                      </p>
+                    )}
                   </div>
 
-                  <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg shadow text-center">
-                    <p className="font-semibold text-green-600 dark:text-green-400 mb-2 flex items-center justify-center gap-2">
+                  {/* Consumables Table */}
+                  <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg shadow">
+                    <p className="font-semibold text-green-600 dark:text-green-400 mb-2 flex items-center gap-2">
                       <PackageCheck className="w-5 h-5" /> Consumables Table
                     </p>
-                    <div className="space-y-1">
-                      {selectedProject.consumables &&
-                      selectedProject.consumables.trim() !== "" ? (
-                        selectedProject.consumables
-                          .split(",")
-                          .map((item, idx) => (
-                            <p
-                              key={idx}
-                              className="text-gray-700 dark:text-gray-300"
-                            >
-                              {item.trim()}
-                            </p>
-                          ))
-                      ) : (
-                        <p className="text-gray-400 italic">
-                          No consumable assigned yet
-                        </p>
-                      )}
-                    </div>
+                    {selectedProject.consumables &&
+                    selectedProject.consumables.trim() !== "" ? (
+                      <div className="max-h-[100px] overflow-y-auto scrollbar-thin dark:scrollbar-thumb-gray-700 dark:scrollbar-track-gray-800 scrollbar-rounded">
+                        <table className="min-w-full text-sm text-left text-gray-700 dark:text-gray-300">
+                          <tbody>
+                            {selectedProject.consumables
+                              .split(",")
+                              .map((item, idx) => (
+                                <tr
+                                  key={idx}
+                                  className="border-b dark:border-gray-600"
+                                >
+                                  <td className="py-2 px-4">{idx + 1}</td>
+                                  <td className="py-2 px-4">{item.trim()}</td>
+                                </tr>
+                              ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    ) : (
+                      <p className="text-gray-400 italic">
+                        No consumables assigned yet
+                      </p>
+                    )}
                   </div>
 
-                  <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg shadow text-center">
-                    <p className="font-semibold text-purple-600 dark:text-purple-400 mb-2 flex items-center justify-center gap-2">
+                  {/* Vehicles Table */}
+                  <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg shadow">
+                    <p className="font-semibold text-purple-600 dark:text-purple-400 mb-2 flex items-center gap-2">
                       <Truck className="w-5 h-5" /> Vehicles Table
                     </p>
-                    <div className="space-y-1">
-                      {selectedProject.vehicles &&
-                      selectedProject.vehicles.trim() !== "" ? (
-                        selectedProject.vehicles.split(",").map((item, idx) => (
-                          <p
-                            key={idx}
-                            className="text-gray-700 dark:text-gray-300"
-                          >
-                            {item.trim()}
-                          </p>
-                        ))
-                      ) : (
-                        <p className="text-gray-400 italic">
-                          No vehicle assigned yet
-                        </p>
-                      )}
-                    </div>
+                    {selectedProject.vehicles &&
+                    selectedProject.vehicles.trim() !== "" ? (
+                      <div className="max-h-[100px] overflow-y-auto scrollbar-thin dark:scrollbar-thumb-gray-700 dark:scrollbar-track-gray-800 scrollbar-rounded">
+                        <table className="min-w-full text-sm text-left text-gray-700 dark:text-gray-300">
+                          <tbody>
+                            {selectedProject.vehicles
+                              .split(",")
+                              .map((item, idx) => (
+                                <tr
+                                  key={idx}
+                                  className="border-b dark:border-gray-600"
+                                >
+                                  <td className="py-2 px-4">{idx + 1}</td>
+                                  <td className="py-2 px-4">{item.trim()}</td>
+                                </tr>
+                              ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    ) : (
+                      <p className="text-gray-400 italic">
+                        No vehicles assigned yet
+                      </p>
+                    )}
                   </div>
                 </div>
               </div>
             )}
 
-            <div className="flex justify-end">
+            <div className="flex justify-end mt-4">
               <button
                 onClick={() => setViewModalOpen(false)}
                 className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
