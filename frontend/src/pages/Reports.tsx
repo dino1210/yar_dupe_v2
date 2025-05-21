@@ -70,7 +70,7 @@ export default function Reports() {
               </div>
             </div>
           </div>
-
+          {/* tables */}
           <div className="max-w-6xl mx-auto px-4 space-y-10 pb-16 pt-6">
             {(selectedFilter === "all" || selectedFilter === "consumables") && (
               <div className="rounded-2xl border border-gray-200 bg-white/90 p-6 shadow dark:border-gray-700 dark:bg-gray-900 transition-all">

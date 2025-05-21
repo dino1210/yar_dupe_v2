@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 07, 2025 at 02:25 AM
+-- Generation Time: May 07, 2025 at 02:25 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -183,11 +183,12 @@ CREATE TABLE `projects` (
 --
 
 INSERT INTO `projects` (`id`, `title`, `manager`, `person_in_charge`, `tools_equipment_used`, `consumables_used`, `vehicles_used`, `start_date`, `end_date`, `status`, `remarks`, `creator`, `location`) VALUES
-(128, 'sample', 'Admin', 'sample', 'tite', 'Cutting Disc 4\" 2.5mm', 'Isuzu Giga Crane Truck', '2025-05-05', '2025-05-06', 'Completed', NULL, 'Yard Admin', 'sample'),
-(129, 'Renovation', 'Itchoy', 'Ronald', 'Dartek Angle Grinder', 'Cutting Disc 4\" 2.5mm', 'Hino Dump Truck', '2025-05-06', '2025-05-06', 'Cancelled', NULL, 'Yard Admin', 'Makati'),
-(130, 'Testing 2', 'Itchoy', 'Ronald', 'try nga ', 'TITE, ASD', 'Hyundai HD320 Flatbed Truck', '2025-05-08', '2025-05-15', 'Upcoming', NULL, 'Yard Admin', 'Makati'),
-(131, 'Mcdo Renovation ', 'Itchoy', 'Ronald', 'try nga ', 'Cutting Disc 4\" 2.5mm', 'TITE', '2025-05-06', '2025-05-09', 'Ongoing', NULL, 'Yard Admin', 'Makati'),
-(132, 'Drainage Cleaning ', 'Itchoy', 'Gwapo', 'Makita Angle Grinder ', ' Ronald', 'testvec', '2025-05-10', '2025-05-20', 'Upcoming', NULL, 'Yard Admin', 'Manila');
+(133, 'Epson Philippines', 'Yard Admin', 'Crew Team A', 'Roofing Tools', 'Sealant, Brushes', 'Truck 1', '2025-05-01', '2025-05-03', 'Completed', 'Cleaning of Roofing', 'Yard Admin', 'Epson Plant'),
+(134, 'Teletech Lipa', 'Yard Admin', 'Crew Team B', 'Tiling Tools', 'Tile Adhesive', 'Van 2', '2025-04-26', '2025-04-28', 'Completed', 'Retiling and Urinal', 'Yard Admin', 'Lipa, Batangas'),
+(135, 'Shakeys', 'Yard Admin', 'Crew Team C', 'Piping Kit', 'PVC, Epoxy', 'Truck 2', '2025-04-15', '2025-04-17', 'Completed', 'Repiping', 'Yard Admin', 'Shakeys Branch'),
+(136, 'Mang Inasal', 'Yard Admin', 'Crew Team D', 'Ceiling Tools', 'Paint, Screws', 'Truck 3', '2025-03-10', '2025-03-12', 'Completed', 'Ceiling Rework', 'Yard Admin', 'Mang Inasal'),
+(137, 'Sohbi Kohgie', 'Yard Admin', 'Crew Team E', 'Painting Tools', 'Paints, Rollers', 'Van 3', '2025-02-20', '2025-02-22', 'Completed', 'Repainting and Electrical', 'Yard Admin', 'Laguna'),
+(138, 'Precision', 'Yard Admin', 'Crew Team F', 'Drain Tools', 'Sealant, Drain Hose', 'Truck 5', '2025-01-15', '2025-01-17', 'Completed', 'Drainage Work', 'Yard Admin', 'Calamba');
 
 -- --------------------------------------------------------
 
@@ -530,7 +531,7 @@ ALTER TABLE `consumables_logs`
 -- AUTO_INCREMENT for table `projects`
 --
 ALTER TABLE `projects`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=133;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=139;
 
 --
 -- AUTO_INCREMENT for table `tools`
