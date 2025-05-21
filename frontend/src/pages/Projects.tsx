@@ -564,7 +564,7 @@ export default function Projects() {
       </div>
 
       {/* PROJECTS GRID */}
-      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-2">
         {filteredProjects.map((proj) => (
           <div
             key={proj.id}
@@ -572,40 +572,47 @@ export default function Projects() {
               statusStyles[proj.status || "Upcoming"]
             }`}
           >
-            <div className="flex flex-col gap-4">
-              <h3 className="text-xl font-semibold truncate">{proj.title}</h3>
-              <p className="flex items-center gap-2">
-                {statusIcons[proj.status || "Upcoming"]} Status: {proj.status}
-              </p>
-              <p className="flex items-center gap-2">
-                <User2 className="w-5 h-5" /> Manager: {proj.manager}
-              </p>
-              <p className="flex items-center gap-2">
-                <UserRoundCheck className="w-5 h-5" /> PIC:{" "}
-                {proj.personInCharge || "Not Assigned"}
-              </p>
-              <p className="flex items-center gap-2">
-                <CalendarDays className="w-5 h-5" />{" "}
-                {formatDate(proj.startDate)} — {formatDate(proj.endDate)}
-              </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* LEFT COLUMN */}
+              <div className="space-y-2">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                  {proj.title}
+                </h3>
+                <p className="flex items-center gap-2 text-sm">
+                  {statusIcons[proj.status || "Upcoming"]} Status: {proj.status}
+                </p>
+                <p className="flex items-center gap-2 text-sm">
+                  <User2 className="w-4 h-4" /> Manager: {proj.manager}
+                </p>
+              </div>
 
-              <div className="flex justify-between items-center">
-                <button
-                  onClick={() => handleViewDetails(proj)}
-                  className="text-green-600 hover:underline flex items-center gap-1"
-                >
-                  <Search className="w-4 h-4" /> View
-                </button>
-
-                {/* Only show Edit if not Completed or Cancelled */}
-                {!["Completed", "Cancelled"].includes(proj.status || "") && (
+              {/* RIGHT COLUMN */}
+              <div className="space-y-2">
+                <p className="flex items-center gap-2 text-sm">
+                  <CalendarDays className="w-4 h-4" />{" "}
+                  {formatDate(proj.startDate)} — {formatDate(proj.endDate)}
+                </p>
+                <p className="flex items-center gap-2 text-sm">
+                  <UserRoundCheck className="w-4 h-4" /> PIC:{" "}
+                  {proj.personInCharge || "Not Assigned"}
+                </p>
+                <div className="flex gap-4 mt-2">
                   <button
-                    onClick={() => handleOpenModal(proj)}
-                    className="text-blue-600 hover:underline flex items-center gap-1"
+                    onClick={() => handleViewDetails(proj)}
+                    className="text-green-600 hover:underline flex items-center gap-1 text-sm"
                   >
-                    <Pencil className="w-4 h-4" /> Edit
+                    <Search className="w-4 h-4" /> View
                   </button>
-                )}
+
+                  {!["Completed", "Cancelled"].includes(proj.status || "") && (
+                    <button
+                      onClick={() => handleOpenModal(proj)}
+                      className="text-blue-600 hover:underline flex items-center gap-1 text-sm"
+                    >
+                      <Pencil className="w-4 h-4" /> Edit
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           </div>
